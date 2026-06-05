@@ -1,0 +1,47 @@
+.navbar {
+  min-height: 72px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff !important;
+}
+
+.logo-wrench {
+  width: 48px;
+  height: 48px;
+  background-color: #4391ea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-wrench i {
+  font-size: 20px !important;
+}
+
+.navbar-brand {
+  font-weight: 800 !important;
+}
+
+.nav-link {
+  color: #6b7280 !important;
+  font-weight: 500;
+  padding: 10px 16px !important;
+  transition: .3s;
+}
+
+.nav-link:hover {
+  color: #111827 !important;
+}
+
+.nav-link.active {
+  color: #111827 !important;
+  background-color: #f3f4f6;
+  border-radius: 14px;
+  font-weight: 600;
+}
+
+.btn-outline-dark,
+.btn-dark {
+  border-radius: 14px;
+  padding-inline: 18px;
+}

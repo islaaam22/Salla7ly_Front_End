@@ -1,0 +1,37 @@
+<app-navbar></app-navbar>
+<div class="container py-5" dir="rtl">
+
+  <!-- Header -->
+  <div class="text-center mb-5">
+    <span class="badge rounded-pill text-bg-primary mb-3">كيف يعمل</span>
+    <h1 class="fw-bold" style="font-size: 48px;">رحلة بسيطة من الطلب للحل</h1>
+    <p class="text-muted fs-5">بدون أسواق مفتوحة ولا مزايدات — نظام ترشيح ذكي يربطك بالفني المثالي مباشرة.</p>
+  </div>
+
+  <!-- Steps Grid -->
+  <div class="row g-4">
+    @for (step of steps; track step.number) {
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="step-icon">
+              <i class="{{ step.icon }}"></i>
+            </div>
+            <span class="step-number">{{ step.number }}</span>
+          </div>
+          <h5 class="fw-bold mt-3">{{ step.title }}</h5>
+          <p class="text-muted">{{ step.description }}</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- CTA Button -->
+  <div class="text-center mt-5">
+    <button (click)="goToRegister()" class="btn btn-primary btn-lg rounded-pill px-5">
+      ابدأ الآن مجاناً ←
+    </button>
+  </div>
+
+</div>
+<app-footer></app-footer>
