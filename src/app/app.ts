@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Register } from "./pages/register/register";
+import { Register } from './pages/register/register';
+
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,5 @@ import { Register } from "./pages/register/register";
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('salla7ly');
+  title = 'salla7ly';
 }
