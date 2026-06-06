@@ -1,0 +1,175 @@
+<div class="container-fluid px-0 min-vh-100">
+  <div class="row w-100 min-vh-100 g-0">
+    <!-- right side -->
+    <div class="col-lg-6 d-none d-lg-flex left-panel">
+      <div class="left-header features-items">
+        <i class="fa-solid fa-screwdriver-wrench me-2"></i>
+        <a routerLink="/" class="logo-link">صلحلي</a>
+      </div>
+
+      <div class="left-content">
+        <h1 class="fw-bold m-0">ابدا رحلتك</h1>
+        <h1 class="fw-bold mb-4">مع صلحلي اليوم</h1>
+        <div class="features">
+          <div class="features-items">
+            <i class="fa-solid fa-shield-halved me-2"></i>
+            <span>تحقق كامل من الفنيين</span>
+          </div>
+          <div class="features-items">
+            <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
+            <span>نظام عروض ذكي</span>
+          </div>
+          <div class="features-items">
+            <i class="fa-solid fa-bolt me-2"></i>
+            <span>استجابة سريعة</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="left-footer">© صلحلي 2025</div>
+    </div>
+
+    <!-- left side -->
+    <div class="col-lg-6 d-flex justify-content-center align-items-center">
+      <div class="form-wrapper">
+        <h3 class="fw-bold mt-3">أنشأ حسابك في صلحلي</h3>
+        <p class="text-muted">أختر نوع الحساب وأكمل بياناتك</p>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <button
+              (click)="selectRole('customer')"
+              class="btn customer rounded-4 p-4 w-100 d-flex align-items-center gap-4"
+              [class.active-role]="selectedRole === 'customer'"
+            >
+              <div
+                [class.active-icon]="selectedRole === 'customer'"
+                class="icon-circle d-flex justify-content-center align-items-center rounded-pill"
+              >
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="txt text-start">
+                <p class="mb-0 fw-bold">عميل</p>
+                <small class="text-muted">أبحث خدمات.</small>
+              </div>
+            </button>
+          </div>
+          <div class="col-md-4">
+            <button
+              (click)="selectRole('tech')"
+              class="btn tech rounded-4 p-4 w-100 d-flex align-items-center gap-4"
+              [class.active-role]="selectedRole === 'tech'"
+            >
+              <div
+                [class.active-icon]="selectedRole === 'tech'"
+                class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill"
+              >
+                <i class="fa-solid fa-helmet-safety"></i>
+              </div>
+              <div class="txt text-start">
+                <p class="mb-0 fw-bold">فني</p>
+                <small class="text-muted">أقدم خدمات.</small>
+              </div>
+            </button>
+          </div>
+          <div class="col-md-4">
+            <button
+              (click)="selectRole('admin')"
+              class="btn admin rounded-4 p-4 w-100 d-flex align-items-center gap-4"
+              [class.active-role]="selectedRole === 'admin'"
+            >
+              <div
+                [class.active-icon]="selectedRole === 'admin'"
+                class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill"
+              >
+                <i class="fa-solid fa-user-tie"></i>
+              </div>
+              <div class="txt text-start">
+                <p class="mb-0 fw-bold">مشرف</p>
+                <small class="text-muted">إدارة المنصة.</small>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <form>
+          <div class="my-4">
+            <label for="exampleInputName" class="form-label">الاسم الكامل</label>
+            <input
+              type="text"
+              class="form-control"
+              id="exampleInputName1"
+              placeholder="الاسم بالكامل"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">البريد الالكتروني</label>
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="example@gmail.com"
+            />
+            <div id="emailHelp" class="form-text">
+              We'll never share your email with anyone else.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">كلمة المرور</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" />
+          </div>
+          <button type="submit" class="btn w-100 rounded-pill mt-2 mb-3 p-3 fw-bold btn-primary">
+            إنشاء حساب
+          </button>
+          <p class="text-center d-flex align-content-center justify-content-center">
+            لديك حساب بالفعل ؟ <a href="">تسجيل دخول</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="reg-card py-5 rounded border px-3">
+    <a routerLink="" class="text-black">صلحلي</a>
+    <h3 class="fw-bold mt-3">أنشأ حسابك في صلحلي</h3>
+    <p class="text-muted">أختر نوع الحساب وأكمل بياناتك</p>
+
+    <div class="row g-3 mb-3">
+      <div class="col ">
+        <button class="btn customer active btn-light rounded-4 p-4 w-100 d-flex align-items-center gap-4">
+          <div class="icon-circle d-flex justify-content-center align-items-center rounded-pill">
+            <i class="fa-solid fa-user "></i>
+          </div>
+          <div class="txt text-start">
+            <p class="mb-0 fw-bold"> عميل</p>
+            <small class="text-muted ">بدور على فني لإصلاح في بيتي.</small>
+          </div>
+        </button>
+      </div>
+      <div class="col">
+        <button class="btn fanni d-flex align-items-center justify-content-center w-100 h-100 rounded-4 gap-4  p-4">
+          <div class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill">
+            <i class="fa-solid fa-helmet-safety"></i>
+          </div>
+          <div class="txt text-start">
+            <p class="mb-0 fw-bold"> فني</p>
+            <small class="text-muted">بدور على شغل وعملاء جدد.</small>
+          </div>
+        </button>
+      </div>
+      <div class="col">
+        <button class="btn fanni d-flex align-items-center justify-content-center w-100 h-100 rounded-4 gap-4  p-4">
+          <div class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill">
+            <i class="fa-solid fa-helmet-safety"></i>
+          </div>
+          <div class="txt text-start">
+            <p class="mb-0 fw-bold"> مشرف</p>
+            <small class="text-muted">بدور على شغل وعملاء جدد.</small>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div> -->
+</div>
