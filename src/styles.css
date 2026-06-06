@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --color-brand:        #1AACDC;
+  --color-brand-dark:   #0E8FC0;
+  --color-brand-darker: #0A6FA0;
+  --color-dark:         #1A1A2E;
+  --color-text-body:    #555B6E;
+  --gradient-start: #0D8BFF;
+  --gradient-end: #18D4E0;
+  /* Home page background */
+  --bg-home: linear-gradient(160deg, #E8F6FC 0%, #FFFFFF 60%, #F0F8FF 100%);
+
+  /* Register page left panel */
+  --bg-register-panel: linear-gradient(135deg, #1AACDC, #0E8FC0, #0A6FA0);
+}
+
+html {
+  direction: rtl;
+}
+
+body {
+  direction: rtl;
+  font-family: "Cairo", sans-serif;
+  margin: 0;
+  height: 100%;
+}

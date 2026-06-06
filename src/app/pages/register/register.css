@@ -1,0 +1,128 @@
+
+.customer,
+.tech,
+.admin{
+  border: 1px solid var(--color-brand-dark);
+  background: white;
+  transition: .3s;
+}
+
+.active-role{
+  border: 2px solid var(--color-brand-dark) !important;
+  background-color: #0a6ea013 !important;
+  
+}
+
+/* .role-card{
+    border: 1px solid #e5e7eb;
+  background: white;
+  transition: all .3s ease;
+}
+.role-card:hover{
+  border-color: var(--color-brand-dark);
+}
+.customer{
+  border: 2px solid var(--color-brand-dark);
+
+} */
+/* .active-icon{
+  background-color: #102c84;
+  color: white;
+}
+.active-role{
+  border: 2px solid var(--color-brand-dark);
+} */
+/* .customer:hover{
+  background-color: #0a6ea013;
+} */
+/* .icon-circle2{
+  color: black;
+  width: 50px;
+  height: 50px;
+  background-color: #e5e7eb;
+}
+.tech{
+  border: 1px solid #e5e7eb;
+}
+ .tech:hover{
+  border-color: var(--color-brand-dark);
+}
+.admin{
+  border: 1px solid #e5e7eb;
+}
+ .admin:hover{
+  border-color: var(--color-brand-dark);
+} */
+
+
+.form-wrapper{
+  width: 75%;
+  max-width: 650px;
+}
+
+.left-panel{
+  min-height: 100vh;
+  background: linear-gradient(
+        135deg,
+        #0D8BFF,
+        #18D4E0
+    );
+  color: white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.left-header{
+  padding: 30px;
+}
+.logo-link{
+  color: white;
+  text-decoration: none;
+  font-size: 32px;
+  font-weight: 700;
+}
+.left-content{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 550px;
+  margin: auto;
+}
+.left-content h1{
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 40px;
+}
+.features-items{
+  display: flex;
+  align-items: center;
+  gap: 15;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+.features-items i{
+  background-color: rgba(255, 255, 255, 0.352);
+  border: 1px solid ;
+  border-style: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.left-footer{
+  padding: 30px;
+  opacity: .8;
+}
+
+.btn-primary {
+  background: #1AACDC;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+}
+.btn-primary:hover { background: #0E8FC0; }
