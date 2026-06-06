@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Auth {
-  private apiUrl = 'https://localhost:7000/api';
+  private apiUrl = 'https://sala7ly.runasp.net/api';
 
   constructor(private http: HttpClient) {}
 
