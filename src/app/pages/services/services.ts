@@ -4,11 +4,11 @@ import { Footer } from "../../shared/footer/footer";
 import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: 'app-home',
-  imports: [Navbar, Footer,RouterLink],
-  templateUrl: './home.html',
-  styleUrl: './home.css',
+  selector: 'app-services',
+  imports: [Navbar, Footer, RouterLink],
+  templateUrl: './services.html',
+  styleUrl: './services.css',
 })
-export class Home {
+export class Services {
 
 }
