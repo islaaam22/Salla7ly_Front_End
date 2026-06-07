@@ -2,10 +2,20 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Contact } from './pages/contact/contact';
 import { HowItWorks } from './pages/how-it-works/how-it-works';
+import { Register } from './pages/register/register';
+import { Home } from './pages/home/home';
+import { WhoAreWe } from './pages/who-are-we/who-are-we';
+import { Services } from './pages/services/services';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'register', component: Register},
   { path: 'login', component: Login },
+  { path: 'home', component: Home },
   { path: 'contact', component: Contact },
   { path: 'how-it-works', component: HowItWorks },
+  { path: 'who-are-we', component: WhoAreWe },
+  { path: 'services', component: Services },
+  // { path: '404', component: Notfound },
+  { path: '**', redirectTo: 'home' },
 ];

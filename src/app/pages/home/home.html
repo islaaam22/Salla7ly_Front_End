@@ -1,24 +1,400 @@
-<p>home works!</p>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mt-3 p-2 rounded-3 fs-5 fw-bold">
-  <div class="container">
-    <a class="navbar-brand fw-bold"> TechNews </a>
+<app-navbar></app-navbar>
 
-    <ul class="nav offset-1">
-      <li>
-        <a class="nav-link" routerLinkActive="bg-primary-subtle rounded-2" routerLink="/home"
-          >Home</a
-        >
-      </li>
-      <li>
-        <a class="nav-link" routerLinkActive="bg-primary-subtle rounded-2" routerLink="/about"
-          >About</a
-        >
-      </li>
-      <li>
-        <a class="nav-link" routerLinkActive="bg-primary-subtle rounded-2" routerLink="/profile"
-          >Profile</a
-        >
-      </li>
-    </ul>
+<!-- section 1 main -->
+<section class="hero-section">
+  <div class="container">
+
+    <div class="row align-items-center min-vh-100">
+
+      <!-- Right Content -->
+      <div class="col-lg-6 text-center text-lg-end">
+
+        <div class="ai-badge mb-4">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          مدعومة بالذكاء الاصطناعي
+        </div>
+
+        <h1 class="hero-title">
+
+          صلحلي...
+
+          <span class="gradient-text">
+            أسرع
+          </span>
+
+          <br>
+
+          <span class="gradient-text">
+            وأسهل
+          </span>
+
+          طريقة
+
+          <br>
+
+          للوصول إلى فني
+
+          <br>
+
+          موثوق
+
+        </h1>
+
+        <p class="hero-description">
+
+          منصة ذكية تساعدك في العثور على أفضل فني للصيانة المنزلية بكل سهولة
+          وأمان، من السباكة والكهرباء للتكييف — فنيون موثوقون وأسعار واضحة.
+
+        </p>
+
+        <div class="d-flex gap-3 justify-content-center justify-content-lg-start mb-5">
+
+          <button routerLink="/register" class="btn btn-primary hero-btn">
+            اطلب خدمة الآن
+            <i class="fa-solid fa-arrow-left me-2"></i>
+          </button>
+
+          <button routerLink="/register" class="btn btn-dark hero-btn">
+            سجل كفني
+          </button>
+
+        </div>
+
+        <!-- <div class="rating-section">
+
+          <div class="stars mb-2">
+            ⭐⭐⭐⭐⭐
+          </div>
+
+          <div class="fw-bold">
+            4.9 من 5
+          </div>
+
+          <small class="text-muted">
+            أكثر من 12000 عميل راضٍ
+          </small>
+
+        </div> -->
+
+      </div>
+
+      <!-- Left Card -->
+      <div class="col-lg-6 mb-5 mb-lg-0 ">
+
+        <div class="service-card ">
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+            <div class="text-end">
+              <small class="text-muted d-block">طلب جديد</small>
+              <h4 class="fw-bold mb-0">صيانة تكييف</h4>
+            </div>
+
+            <span class="badge bg-success-subtle text-success px-3 py-2">
+              مؤكد
+            </span>
+          </div>
+
+          <div class="status-item">
+            <span>تم تصنيف الطلب بالذكاء الاصطناعي</span>
+            <i class="fa-solid fa-circle-check text-success"></i>
+          </div>
+
+          <div class="status-item">
+            <span>تم ترشيح 5 فنيين مؤهلين قريبين منك</span>
+            <i class="fa-solid fa-circle-check text-success"></i>
+          </div>
+
+          <div class="status-item">
+            <span>في انتظار اختيارك للفني المناسب</span>
+            <i class="fa-solid fa-wand-magic-sparkles text-primary"></i>
+          </div>
+
+          <hr>
+
+          <div class="text-end mb-3">
+            <small class="text-muted">فنيون مرشحون</small>
+          </div>
+
+          <div class="technician">
+
+            <div class="d-flex align-items-center gap-3">
+
+              <div class="avatar">أ</div>
+              <div>
+                <div class="fw-bold">م. أحمد فاروق</div>
+                <small class="text-muted">
+                  4.9
+                  <i class="fa-solid fa-star text-warning"></i>
+                </small>
+              </div>
+            </div>
+            <div class="price">250 ج</div>
+          </div>
+
+          <div class="technician">
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar">م</div>
+
+              <div>
+                <div class="fw-bold">م. محمد سعيد</div>
+
+                <small class="text-muted">
+                  4.8
+                  <i class="fa-solid fa-star text-warning"></i>
+                </small>
+              </div>
+            </div>
+            <div class="price">220 ج</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
-</nav>
+</section>
+
+<!-- section 2 our services -->
+<section class="py-5">
+  <div class="container ss">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <p class="text-primary fw-bold">خدماتنا</p>
+        <h1 class="fw-bold">اكتشف أفضل الخدمات المنزلية</h1>
+        <p class="text-muted">مجموعة شاملة من خدمات الصيانة المنزلية الاحترافية</p>
+      </div>
+    </div>
+    <div class="row g-4">
+
+      <div class="col">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-wrench fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> السباكة</h5>
+          <p class="text-muted mb-0">تسريبات، تركيب وصيانة</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-bolt fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> الكهرباء</h5>
+          <p class="text-muted mb-0">أعطال، تمديدات وإنارة </p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-snowflake fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> التكييف</h5>
+          <p class="text-muted mb-0">صيانة، تركيب، تبريد</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-hammer fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> النجارة</h5>
+          <p class="text-muted mb-0">أبواب، نوافذ، مطابخ  </p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-home fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> الأجهزه المنزلية</h5>
+          <p class="text-muted mb-0">  غسالات ,ثلاجات وأفران  </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- section 3 how it works -->
+<section class="py-5 how">
+  <div class="container ">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <p class="text-primary fw-bold">كيف يعمل</p>
+        <h1 class="fw-bold"> 3 خطوات بسيطة </h1>
+        <p class="text-muted"> من إنشاء الطلب لاستلام الخدمة في دقائق</p>
+      </div>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-clipboard-list fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> 1. أنشئ طلبك</h5>
+          <p class="text-muted mb-0">حدد الخدمة، وصف المشكلة، وموقعك</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-user-check fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> 2. اختر الفني</h5>
+          <p class="text-muted mb-0">اختر أفضل فني من خلال تقييماته</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-check-circle fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> 3. استلم الخدمة</h5>
+          <p class="text-muted mb-0">استلم الخدمة في الوقت المحدد</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- section 4 why choose us -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <p class="text-primary fw-bold">لماذا صلّحلي</p>
+        <h1 class="fw-bold">   خدمة تستحق ثقتك</h1>
+        <p class="text-muted">فريق من الخبراء المختصين في مجال الصيانة المنزلية</p>
+      </div>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-shield-halved fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2">فنيون موثوقون</h5>
+          <p class="text-muted mb-0">فنيون مؤهلون ومدربون بعناية لضمان جودة الخدمة</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-thumbs-up fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2">رضا العملاء</h5>
+          <p class="text-muted mb-0">أكثر من 12000 عميل راضٍ عن خدماتنا</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-headset fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2">دعم 24/7</h5>
+          <p class="text-muted mb-0">فريق دعم متاح على مدار الساعة لمساعدتك في أي وقت</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-tag fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2"> أسعار واضحة</h5>
+          <p class="text-muted mb-0">أسعار نهائية وواضحة بدون أي رسوم إضافية</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-shield-alt fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2">  تجربة امنة</h5>
+          <p class="text-muted mb-0">تجربة آمنة وموثوقة مع ضماناتنا</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-item card p-4 text-center h-100">
+          <i class="fa-solid fa-robot fa-2x mb-3 text-primary"></i>
+          <h5 class="fw-bold mb-2">ذكاء اصطناعي</h5>
+          <p class="text-muted mb-0">استخدام الذكاء الاصطناعي لتحسين تجربة المستخدم</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- seciton 5 customers reviews -->
+<section class="py-5 reviews">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <p class="text-primary fw-bold">آراء العملاء</p>
+        <h1 class="fw-bold"> ما يقوله عملاؤنا عن خدماتنا</h1>
+      </div>
+    </div>
+    <div class="row g-4 mt-3">
+
+      <!-- Card 1 -->
+      <div class="col-md-4">
+        <div class="card p-4">
+          <div style="color: #F59E0B;">⭐⭐⭐⭐⭐</div>
+          <p class="mt-3">" !    "منصة رائعة! الفنيون مهذبون ومحترفون والتقييمات بتساعد فعلاً في الاختيار.""</p>
+          <hr>
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar" style="background: #1AACDC;">ك</div>
+            <div>
+              <strong>كريم حسن</strong>
+              <div style="color: #888; font-size: 13px;">الجيزة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-md-4">
+        <div class="card p-4">
+          <div style="color: #F59E0B;">⭐⭐⭐⭐⭐</div>
+          <p class="mt-3">"جربت صلّحلي للتكييف، وصلني فني خلال ساعة وحل المشكلة"</p>
+          <hr>
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar" style="background: #6B7CDD;">م</div>
+            <div>
+              <strong>منى السيد</strong>
+              <div style="color: #888; font-size: 13px;">الإسكندرية</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-md-4">
+        <div class="card p-4">
+          <div style="color: #F59E0B;">⭐⭐⭐⭐⭐</div>
+          <p class="mt-3">"أول مرة ألاقي فني محترف بالسرعة دي والسعر مناسب جداً"</p>
+          <hr>
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar" style="background: #0E8FC0;">أ</div>
+            <div>
+              <strong>أحمد محمود</strong>
+              <div style="color: #888; font-size: 13px;">القاهرة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- section 6 ready to start -->
+<section class="py-5 ">
+  <div class="container ready pt-5">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <h1 class="text-white mb-3 fw-bold"> جاهز تجرب صلّحلي؟</h1>
+        <h6 class="fw-bold">    انضم لآلاف العملاء والفنيين على أسرع منصة صيانة منزلية في مصر. </h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center mb-3 ">
+        <button routerLink="/register" class="btn st rounded-pill btn-light fw-bold btn-lg">
+          إنشاء حسابك الآن
+          <i class="fa-solid fa-arrow-left m-0"></i>
+        </button>
+        <button routerLink="/services" class="btn know rounded-pill fw-bold btn-lg">
+          تعرف على خدماتنا
+        </button>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

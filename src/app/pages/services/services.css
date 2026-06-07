@@ -1,0 +1,47 @@
+.service-item{
+border:  solid #e2e8f0 1px;
+border-radius: 15px;
+padding: 20px;
+display: flex;
+align-items: center;
+
+
+}
+.service-item:hover{
+  border-color: #0d6efd;
+  box-shadow: 0 4px 20px rgba(13, 110, 253, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: translateY(-5px);
+}
+.service-item i{
+  font-size: 1.5rem;
+  color: #0d6efd;
+  background: #e0f2ff;
+  padding: 10px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.ready{
+  background: #f0f8ff;
+  padding: 20px;
+  border-radius: 15px;
+}
+.ready .st{
+  background: black;
+  color: white;
+  padding: 10px 20px;
+}
+.ready .st:hover{
+  transition: all 0.3s ease;
+  transform: translateY(-3px);
+}
+
+

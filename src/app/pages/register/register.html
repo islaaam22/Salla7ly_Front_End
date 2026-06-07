@@ -3,7 +3,7 @@
     <!-- right side -->
     <div class="col-lg-6 d-none d-lg-flex left-panel">
       <div class="left-header features-items">
-        <i class="fa-solid fa-screwdriver-wrench me-2"></i>
+        <i class="fa-solid fa-screwdriver-wrench ms-2"></i>
         <a routerLink="/" class="logo-link">صلحلي</a>
       </div>
 
@@ -12,15 +12,15 @@
         <h1 class="fw-bold mb-4">مع صلحلي اليوم</h1>
         <div class="features">
           <div class="features-items">
-            <i class="fa-solid fa-shield-halved me-2"></i>
+            <i class="fa-solid fa-shield-halved ms-2"></i>
             <span>تحقق كامل من الفنيين</span>
           </div>
           <div class="features-items">
-            <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
+            <i class="fa-solid fa-wand-magic-sparkles ms-2"></i>
             <span>نظام عروض ذكي</span>
           </div>
           <div class="features-items">
-            <i class="fa-solid fa-bolt me-2"></i>
+            <i class="fa-solid fa-bolt ms-2"></i>
             <span>استجابة سريعة</span>
           </div>
         </div>
@@ -30,7 +30,7 @@
     </div>
 
     <!-- left side -->
-    <div class="col-lg-6 d-flex justify-content-center align-items-center">
+    <div class="col-lg-6 d-flex justify-content-center align-items-center" style="background:#f5f7fa;">
       <div class="form-wrapper">
         <h3 class="fw-bold mt-3">أنشأ حسابك في صلحلي</h3>
         <p class="text-muted">أختر نوع الحساب وأكمل بياناتك</p>
@@ -92,39 +92,48 @@
           </div>
         </div>
 
-        <form>
+        <form (ngSubmit)="onLogin()">
           <div class="my-4">
-            <label for="exampleInputName" class="form-label">الاسم الكامل</label>
+            <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2">الاسم الكامل</label>
             <input
               type="text"
               class="form-control"
+              [(ngModel)]="name"
               id="exampleInputName1"
               placeholder="الاسم بالكامل"
-            />
+              style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;">
+
+            <div *ngIf="nameError" class="text-danger small mt-1 text-end">{{ nameError }}</div>
           </div>
 
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">البريد الالكتروني</label>
+            <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2">البريد الالكتروني</label>
             <input
               type="email"
               class="form-control"
+              [(ngModel)]="email"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               placeholder="example@gmail.com"
-            />
+              style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;">
+              <div *ngIf="emailError" class="text-danger small mt-1 text-end">{{ emailError }}</div>
+
             <div id="emailHelp" class="form-text">
               We'll never share your email with anyone else.
             </div>
           </div>
+
           <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">كلمة المرور</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" />
+            <label for="exampleInputPassword1" class="form-label fw-bold w-100 text-end mb-2">كلمة المرور</label>
+            <input type="password" class="form-control" name="password" [ngClass]="password" required style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;" id="exampleInputPassword1" />
+
+            <div *ngIf="passwordError" class="text-danger small mt-1 text-end">{{ passwordError }}</div>
           </div>
           <button type="submit" class="btn w-100 rounded-pill mt-2 mb-3 p-3 fw-bold btn-primary">
             إنشاء حساب
           </button>
           <p class="text-center d-flex align-content-center justify-content-center">
-            لديك حساب بالفعل ؟ <a href="">تسجيل دخول</a>
+            لديك حساب بالفعل ؟ <a routerLink="/login" class="text-decoration-none">تسجيل دخول</a>
           </p>
         </form>
       </div>
