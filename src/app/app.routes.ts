@@ -6,7 +6,7 @@ import { Register } from './pages/register/register';
 import { Home } from './pages/home/home';
 import { WhoAreWe } from './pages/who-are-we/who-are-we';
 import { Services } from './pages/services/services';
-
+// import { ForgotPassword } from './pages/forgot-password/forgot-password';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register},
@@ -18,4 +18,5 @@ export const routes: Routes = [
   { path: 'services', component: Services },
   // { path: '404', component: Notfound },
   { path: '**', redirectTo: 'home' },
+  // { path: 'forgot-password', component: ForgotPassword },
 ];
