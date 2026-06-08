@@ -59,10 +59,10 @@ export class Login {
 
     this.authService.login(this.email, this.password, this.selectedRole).subscribe({
       next: (res) => {
-        this.loading = false;
-        this.authService.saveToken(res.token, this.selectedRole);
-        this.router.navigate(['/home']);
-      },
+    this.loading = false;
+    this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
+    this.router.navigate(['/home']);
+  },
       error: (err) => {
         this.loading = false;
         this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
