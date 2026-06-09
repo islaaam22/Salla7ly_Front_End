@@ -6,6 +6,7 @@ import { Register } from './pages/register/register';
 import { Home } from './pages/home/home';
 import { WhoAreWe } from './pages/who-are-we/who-are-we';
 import { Services } from './pages/services/services';
+import { Notfound } from './pages/notfound/notfound';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,6 +17,6 @@ export const routes: Routes = [
   { path: 'how-it-works', component: HowItWorks },
   { path: 'who-are-we', component: WhoAreWe },
   { path: 'services', component: Services },
-  // { path: '404', component: Notfound },
-  { path: '**', redirectTo: 'home' },
+  { path: '404', component: Notfound },
+  { path: '**', redirectTo: '404' },
 ];

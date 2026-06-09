@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { RouterLink, RouterLinkActive, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { Router } from "@angular/router";
 import { Auth } from "../../services/auth";
+import { OnInit } from "@angular/core";
 
 @Component({
   selector: 'app-register',
@@ -12,12 +13,19 @@ import { Auth } from "../../services/auth";
   styleUrl: './register.css'
 })
 
-export class Register {
+export class Register implements OnInit {
   selectedRole: string = 'customer';
 
-selectRole(role: string) {
-  this.selectedRole = role;
-}
+  ngOnInit() {
+    const role = this.route.snapshot.queryParamMap.get('role');
+    if (role === 'tech' || role === 'technician') {
+      this.selectedRole = 'tech';
+    }
+  }
+
+  selectRole(role: string) {
+    this.selectedRole = role;
+  }
 loading = false;
 name: string = '';
 email: string = '';
@@ -26,8 +34,20 @@ errorMsg: string = '';
 nameError: string = '';
 emailError: string = '';
 passwordError: string = '';
+phoneNumber = '';
+imageUrl = '';
+experienceYears = 0;
+avgResponseTime = '';
+selectedFile: File | null = null;
 
-constructor(private router: Router, private authService: Auth) {}
+onFileSelected(event: any) {
+  if (event.target.files && event.target.files.length > 0) {
+    this.selectedFile = event.target.files[0];
+    // يمكنك هنا رفع الملف إلى الخادم أو معالجته كما تريد
+  }
+}
+
+constructor(private router: Router, private authService: Auth, private route: ActivatedRoute) {}
 
 validate(): boolean {
   this.nameError = '';
@@ -59,22 +79,72 @@ validate(): boolean {
   return valid;
 }
 
-onLogin() {
-    if (!this.validate()) return;
+onRegister() {
+  if (!this.validate()) return;
 
-    this.loading = true;
-    this.errorMsg = '';
+  this.loading = true;
+  this.errorMsg = '';
 
-    this.authService.login(this.email, this.password, this.selectedRole).subscribe({
+  const formData = new FormData();
+  formData.append('name', this.name);
+  formData.append('email', this.email);
+  formData.append('password', this.password);
+  formData.append('phoneNumber', this.phoneNumber);
+  if (this.selectedFile) {
+    formData.append('image', this.selectedFile);
+  }
+
+
+  // if (this.selectedRole === 'customer') {
+  //   const customerData = {
+  //     name: this.name,
+  //     email: this.email,
+  //     password: this.password,
+  //     phoneNumber: this.phoneNumber,
+  //     imageUrl: this.imageUrl,
+  //   };
+    this.authService.registerCustomer(formData).subscribe({
       next: (res) => {
         this.loading = false;
-        this.authService.saveToken(res.token, this.selectedRole);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.loading = false;
-        this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        this.errorMsg = err.error?.message || 'حدث خطأ أثناء إنشاء الحساب';
+      }
+    });
+
+    const formDataTech = new FormData();
+    formDataTech.append('name', this.name);
+    formDataTech.append('email', this.email);
+    formDataTech.append('password', this.password);
+    formDataTech.append('phoneNumber', this.phoneNumber);
+    formDataTech.append('experienceYears', this.experienceYears.toString());
+    formDataTech.append('avgResponseTime', this.avgResponseTime);
+    if (this.selectedFile) {
+      formDataTech.append('image', this.selectedFile);
+    }
+
+  // } else if (this.selectedRole === 'technician') {
+  //   const technicianData = {
+  //     name: this.name,
+  //     email: this.email,
+  //     password: this.password,
+  //     phoneNumber: this.phoneNumber,
+  //     imageUrl: this.imageUrl,
+  //     experienceYears: this.experienceYears,
+  //     avgResponseTime: this.avgResponseTime
+  //   };
+    this.authService.registerTechnician(formDataTech).subscribe({
+      next: (res) => {
+        this.loading = false;
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMsg = err.error?.message || 'حدث خطأ أثناء إنشاء الحساب';
       }
     });
   }
 }
+

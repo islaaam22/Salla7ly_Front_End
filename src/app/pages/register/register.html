@@ -30,7 +30,10 @@
     </div>
 
     <!-- left side -->
-    <div class="col-lg-6 d-flex justify-content-center align-items-center" style="background:#f5f7fa;">
+    <div
+      class="col-lg-6 d-flex justify-content-center align-items-center"
+      style="background: #f5f7fa"
+    >
       <div class="form-wrapper">
         <h3 class="fw-bold mt-3">أنشأ حسابك في صلحلي</h3>
         <p class="text-muted">أختر نوع الحساب وأكمل بياناتك</p>
@@ -92,43 +95,175 @@
           </div>
         </div>
 
-        <form (ngSubmit)="onLogin()">
-          <div class="my-4">
-            <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2">الاسم الكامل</label>
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="name"
-              id="exampleInputName1"
-              placeholder="الاسم بالكامل"
-              style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;">
+        <form (ngSubmit)="onRegister()">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
+                  >الاسم الكامل</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="name"
+                  [(ngModel)]="name"
+                  id="exampleInputName1"
+                  placeholder="الاسم بالكامل"
+                  style="
+                    height: 60px;
+                    border-radius: 18px;
+                    border: 1px solid #d9e1e8;
+                    padding: 0 24px;
+                  "
+                />
 
-            <div *ngIf="nameError" class="text-danger small mt-1 text-end">{{ nameError }}</div>
-          </div>
+                <div *ngIf="nameError" class="text-danger small mt-1 text-end">{{ nameError }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
+                  >البريد الالكتروني</label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  name="email"
+                  [(ngModel)]="email"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="example@gmail.com"
+                  style="
+                    height: 60px;
+                    border-radius: 18px;
+                    border: 1px solid #d9e1e8;
+                    padding: 0 24px;
+                  "
+                />
+                <div *ngIf="emailError" class="text-danger small mt-1 text-end">
+                  {{ emailError }}
+                </div>
 
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2">البريد الالكتروني</label>
-            <input
-              type="email"
-              class="form-control"
-              [(ngModel)]="email"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              placeholder="example@gmail.com"
-              style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;">
-              <div *ngIf="emailError" class="text-danger small mt-1 text-end">{{ emailError }}</div>
 
-            <div id="emailHelp" class="form-text">
-              We'll never share your email with anyone else.
+              </div>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label fw-bold w-100 text-end mb-2">كلمة المرور</label>
-            <input type="password" class="form-control" name="password" [ngClass]="password" required style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;" id="exampleInputPassword1" />
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label fw-bold w-100 text-end mb-2"
+                  >كلمة المرور</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  [(ngModel)]="password"
+                  required
+                  style="
+                    height: 60px;
+                    border-radius: 18px;
+                    border: 1px solid #d9e1e8;
+                    padding: 0 24px;
+                  "
+                  id="exampleInputPassword1"
+                />
 
-            <div *ngIf="passwordError" class="text-danger small mt-1 text-end">{{ passwordError }}</div>
+                <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
+                  {{ passwordError }}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <!-- <div *ngIf="selectedRole === 'customer'" class="form-text text-end"> -->
+                  <label for="exampleInputAddress" class="form-label fw-bold w-100 text-end mb-2"
+                    >رقم الهاتف</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="phoneNumber"
+                    [(ngModel)]="phoneNumber"
+                    id="exampleInputAddress"
+                    placeholder="رقم الهاتف"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                <!-- </div> -->
+              </div>
+            </div>
           </div>
+
+          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
+          <div class="row g-3 mb-3" >
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputAddress" class="form-label fw-bold w-100 text-end mb-2"
+                  >متوسط وقت الاستجابة</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="avgResponseTime"
+                  [(ngModel)]="avgResponseTime"
+                  id="exampleInputAddress"
+                  placeholder="متوسط وقت الاستجابة"
+                  style="
+                    height: 60px;
+                    border-radius: 18px;
+                    border: 1px solid #d9e1e8;
+                    padding: 0 24px;
+                  "
+                />
+              </div>
+            </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputAddress" class="form-label fw-bold w-100 text-end mb-2"
+                    >سنوات الخبرة</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="experienceYears"
+                    [(ngModel)]="experienceYears"
+                    id="exampleInputAddress"
+                    placeholder="سنوات الخبرة"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="mb-3">
+            <label for="exampleInputImageUrl" class="form-label fw-bold w-100 text-end mb-2"
+              >رابط الصورة الشخصية</label
+            >
+            <input
+              type="file"
+              class="form-control"
+              name="imageUrl"
+              accept="image/*"
+              change="onFileSelected($event)"
+              [(ngModel)]="imageUrl"
+              id="exampleInputImageUrl"
+              placeholder="رابط الصورة الشخصية"
+            />
+          </div>
+
           <button type="submit" class="btn w-100 rounded-pill mt-2 mb-3 p-3 fw-bold btn-primary">
             إنشاء حساب
           </button>
@@ -139,46 +274,4 @@
       </div>
     </div>
   </div>
-
-  <!-- <div class="reg-card py-5 rounded border px-3">
-    <a routerLink="" class="text-black">صلحلي</a>
-    <h3 class="fw-bold mt-3">أنشأ حسابك في صلحلي</h3>
-    <p class="text-muted">أختر نوع الحساب وأكمل بياناتك</p>
-
-    <div class="row g-3 mb-3">
-      <div class="col ">
-        <button class="btn customer active btn-light rounded-4 p-4 w-100 d-flex align-items-center gap-4">
-          <div class="icon-circle d-flex justify-content-center align-items-center rounded-pill">
-            <i class="fa-solid fa-user "></i>
-          </div>
-          <div class="txt text-start">
-            <p class="mb-0 fw-bold"> عميل</p>
-            <small class="text-muted ">بدور على فني لإصلاح في بيتي.</small>
-          </div>
-        </button>
-      </div>
-      <div class="col">
-        <button class="btn fanni d-flex align-items-center justify-content-center w-100 h-100 rounded-4 gap-4  p-4">
-          <div class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill">
-            <i class="fa-solid fa-helmet-safety"></i>
-          </div>
-          <div class="txt text-start">
-            <p class="mb-0 fw-bold"> فني</p>
-            <small class="text-muted">بدور على شغل وعملاء جدد.</small>
-          </div>
-        </button>
-      </div>
-      <div class="col">
-        <button class="btn fanni d-flex align-items-center justify-content-center w-100 h-100 rounded-4 gap-4  p-4">
-          <div class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill">
-            <i class="fa-solid fa-helmet-safety"></i>
-          </div>
-          <div class="txt text-start">
-            <p class="mb-0 fw-bold"> مشرف</p>
-            <small class="text-muted">بدور على شغل وعملاء جدد.</small>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div> -->
 </div>

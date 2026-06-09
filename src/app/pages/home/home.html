@@ -54,7 +54,7 @@
             <i class="fa-solid fa-arrow-left me-2"></i>
           </button>
 
-          <button routerLink="/register" class="btn btn-dark hero-btn">
+          <button [routerLink]="['/register']" [queryParams]="{ role: 'tech' }" class="btn btn-dark hero-btn">
             سجل كفني
           </button>
 

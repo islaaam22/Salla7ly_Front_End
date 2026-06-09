@@ -14,6 +14,14 @@ export class Auth {
     return this.http.post(`${this.apiUrl}/auth/login`, { email, password, role });
   }
 
+  registerCustomer(formData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register/customer`, formData);
+  }
+
+  registerTechnician(formData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register/technician`, formData);
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
