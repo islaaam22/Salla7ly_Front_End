@@ -1,0 +1,9 @@
+.otp-box:focus {
+  border-color: #1787e0 !important;
+  box-shadow: 0 0 0 3px rgba(23, 135, 224, 0.18);
+  outline: none;
+}
+
+.otp-box {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}

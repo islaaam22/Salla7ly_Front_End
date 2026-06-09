@@ -83,9 +83,19 @@
               placeholder="••••••••"
               required
               style="height:60px;border-radius:18px;border:1px solid #d9e1e8;padding:0 24px;">
-              <div *ngIf="passwordError" class="text-danger small mt-1 text-end">{{ passwordError }}</div>
-        </div>
 
+              <div *ngIf="passwordError" class="text-danger small mt-1 text-end">{{ passwordError }}</div>
+
+              <div class="text-end mt-2">
+                <a routerLink="/forgot-password"
+                   class="text-primary text-decoration-none"
+                   style="font-size:14px;">
+                  نسيت كلمة المرور؟
+                </a>
+              </div>
+              
+        </div>
+        
           <div *ngIf="errorMsg"
             class="alert alert-danger text-end">
             {{ errorMsg }}
