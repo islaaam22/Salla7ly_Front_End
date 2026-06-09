@@ -6,6 +6,7 @@ import { Register } from './pages/register/register';
 import { Home } from './pages/home/home';
 import { WhoAreWe } from './pages/who-are-we/who-are-we';
 import { Services } from './pages/services/services';
+import { Notfound } from './pages/notfound/notfound';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
@@ -22,5 +23,6 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
-  { path: '**', redirectTo: 'home' },
+  { path: '404', component: Notfound },
+  { path: '**', redirectTo: '404' },
 ];
