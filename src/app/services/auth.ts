@@ -15,12 +15,18 @@ export class Auth {
   }
 
   registerCustomer(formData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register/customer`, formData);
+    return this.http.post(`${this.apiUrl}/Customer/register`, formData);
   }
 
   registerTechnician(formData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register/technician`, formData);
+    return this.http.post(`${this.apiUrl}/Technician/register`, formData);
   }
+
+  registerAdmin(data: any)
+  {
+    return this.http.post(`${this.apiUrl}/Auth/register-admin`,data)
+  }
+
 forgotPassword(email: string): Observable<any> {
   return this.http.post(
     `${this.apiUrl}/Auth/forgot-password`,

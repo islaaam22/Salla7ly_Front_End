@@ -96,6 +96,300 @@
         </div>
 
         <form (ngSubmit)="onRegister()">
+          <div *ngIf="selectedRole === 'customer'" class="form-text text-end">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
+                    >الاسم الكامل</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="name"
+                    [(ngModel)]="customer.name"
+                    id="exampleInputName1"
+                    placeholder="الاسم بالكامل"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+
+                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">
+                    {{ nameError }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
+                    >البريد الالكتروني</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    [(ngModel)]="customer.email"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="example@gmail.com"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">
+                    {{ emailError }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedRole === 'customer'" class="form-text text-end">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputPassword1"
+                    class="form-label text-black fw-bold w-100 text-end mb-2"
+                    >كلمة المرور</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    [(ngModel)]="customer.password"
+                    required
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                    id="exampleInputPassword1"
+                  />
+
+                  <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
+                    {{ passwordError }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputAddress"
+                    class="form-label text-black fw-bold w-100 text-end mb-2"
+                    >رقم الهاتف</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="PhoneNumber"
+                    [(ngModel)]="customer.phoneNumber"
+                    id="exampleInputAddress"
+                    placeholder="رقم الهاتف"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedRole === 'customer'" class="form-text text-end">
+            <div class="mb-3">
+              <label
+                for="exampleInputImageUrl"
+                class="form-label text-black fw-bold w-100 text-end mb-2"
+                >رابط الصورة الشخصية</label
+              >
+              <input
+                type="file"
+                class="form-control"
+                name="imageUrl"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                id="exampleInputImageUrl"
+                placeholder="رابط الصورة الشخصية"
+                style="height: 60px; border-radius: 18px; border: 1px solid #d9e1e8; padding: 17px"
+              />
+            </div>
+          </div>
+
+          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
+                    >الاسم الكامل</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="name"
+                    [(ngModel)]="technician.name"
+                    id="exampleInputName1"
+                    placeholder="الاسم بالكامل"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+
+                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">
+                    {{ nameError }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
+                    >البريد الالكتروني</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    [(ngModel)]="technician.email"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="example@gmail.com"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">
+                    {{ emailError }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputPassword1"
+                    class="form-label text-black fw-bold w-100 text-end mb-2"
+                    >كلمة المرور</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    [(ngModel)]="technician.password"
+                    required
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                    id="exampleInputPassword1"
+                  />
+
+                  <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
+                    {{ passwordError }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputAddress"
+                    class="form-label text-black fw-bold w-100 text-end mb-2"
+                    >سنوات الخبرة</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="experienceYears"
+                    [(ngModel)]="technician.experienceYears"
+                    id="exampleInputAddress"
+                    placeholder="سنوات الخبرة"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputAddress"
+                    class="form-label text-black fw-bold w-100 text-end mb-2"
+                    >رقم الهاتف</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="phoneNumber"
+                    [(ngModel)]="technician.phoneNumber"
+                    id="exampleInputAddress"
+                    placeholder="رقم الهاتف"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label
+                    for="exampleInputImageUrl"
+                    class="form-label text-black fw-bold w-100 text-end mb-2"
+                    >رابط الصورة الشخصية</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    name="imageUrl"
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    id="exampleInputImageUrl"
+                    placeholder="رابط الصورة الشخصية"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 17px;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div *ngIf="selectedRole === 'admin'" class="form-text text-end">
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <div class="mb-3">
@@ -106,7 +400,7 @@
                   type="text"
                   class="form-control"
                   name="name"
-                  [(ngModel)]="name"
+                  [(ngModel)]="admin.name"
                   id="exampleInputName1"
                   placeholder="الاسم بالكامل"
                   style="
@@ -129,7 +423,7 @@
                   type="email"
                   class="form-control"
                   name="email"
-                  [(ngModel)]="email"
+                  [(ngModel)]="admin.email"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   placeholder="example@gmail.com"
@@ -143,125 +437,36 @@
                 <div *ngIf="emailError" class="text-danger small mt-1 text-end">
                   {{ emailError }}
                 </div>
-
-
               </div>
             </div>
           </div>
-
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label fw-bold w-100 text-end mb-2"
-                  >كلمة المرور</label
-                >
-                <input
-                  type="password"
-                  class="form-control"
-                  name="password"
-                  [(ngModel)]="password"
-                  required
-                  style="
-                    height: 60px;
-                    border-radius: 18px;
-                    border: 1px solid #d9e1e8;
-                    padding: 0 24px;
-                  "
-                  id="exampleInputPassword1"
-                />
-
-                <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
-                  {{ passwordError }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <!-- <div *ngIf="selectedRole === 'customer'" class="form-text text-end"> -->
-                  <label for="exampleInputAddress" class="form-label fw-bold w-100 text-end mb-2"
-                    >رقم الهاتف</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="phoneNumber"
-                    [(ngModel)]="phoneNumber"
-                    id="exampleInputAddress"
-                    placeholder="رقم الهاتف"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                <!-- </div> -->
-              </div>
-            </div>
           </div>
+          <div *ngIf="selectedRole === 'admin'" class="form-text text-end">
+            <div class="mb-3">
+              <label
+                for="exampleInputPassword1"
+                class="form-label text-black fw-bold w-100 text-end mb-2"
+                >كلمة المرور</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                [(ngModel)]="admin.password"
+                required
+                style="
+                  height: 60px;
+                  border-radius: 18px;
+                  border: 1px solid #d9e1e8;
+                  padding: 0 24px;
+                "
+                id="exampleInputPassword1"
+              />
 
-          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
-          <div class="row g-3 mb-3" >
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="exampleInputAddress" class="form-label fw-bold w-100 text-end mb-2"
-                  >متوسط وقت الاستجابة</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  name="avgResponseTime"
-                  [(ngModel)]="avgResponseTime"
-                  id="exampleInputAddress"
-                  placeholder="متوسط وقت الاستجابة"
-                  style="
-                    height: 60px;
-                    border-radius: 18px;
-                    border: 1px solid #d9e1e8;
-                    padding: 0 24px;
-                  "
-                />
+              <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
+                {{ passwordError }}
               </div>
             </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputAddress" class="form-label fw-bold w-100 text-end mb-2"
-                    >سنوات الخبرة</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="experienceYears"
-                    [(ngModel)]="experienceYears"
-                    id="exampleInputAddress"
-                    placeholder="سنوات الخبرة"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="mb-3">
-            <label for="exampleInputImageUrl" class="form-label fw-bold w-100 text-end mb-2"
-              >رابط الصورة الشخصية</label
-            >
-            <input
-              type="file"
-              class="form-control"
-              name="imageUrl"
-              accept="image/*"
-              change="onFileSelected($event)"
-              [(ngModel)]="imageUrl"
-              id="exampleInputImageUrl"
-              placeholder="رابط الصورة الشخصية"
-            />
           </div>
 
           <button type="submit" class="btn w-100 rounded-pill mt-2 mb-3 p-3 fw-bold btn-primary">
