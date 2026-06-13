@@ -13,7 +13,7 @@ import { Auth } from '../../services/auth';
 export class Login {
   email = '';
   password = '';
-  selectedRole: 'client' | 'tech' | 'admin' = 'client';
+  selectedRole: 'Customer' | 'Technician' | 'Admin' = 'Customer';
   loading = false;
   errorMsg = '';
 
@@ -23,7 +23,7 @@ export class Login {
 
   constructor(private router: Router, private authService: Auth) {}
 
-  selectRole(role: 'client' | 'tech' | 'admin') {
+  selectRole(role: 'Customer' | 'Technician' | 'Admin') {
     this.selectedRole = role;
   }
 
