@@ -10,10 +10,10 @@ export class Auth {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string, role: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { email, password, role });
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Auth/login`, { email, password });
   }
-
+ 
   registerCustomer(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/Customer/register`, formData);
   }
@@ -26,6 +26,7 @@ export class Auth {
   {
     return this.http.post(`${this.apiUrl}/Auth/register-admin`,data)
   }
+
 
 forgotPassword(email: string): Observable<any> {
   return this.http.post(
@@ -82,4 +83,10 @@ resetPassword(email: string, otp: string, newPassword: string): Observable<any> 
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  getUser(): any {
+  const data = localStorage.getItem('user');
+  return data ? JSON.parse(data) : null;
+}
+
 }

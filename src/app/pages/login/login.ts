@@ -51,22 +51,32 @@ export class Login {
     return valid;
   }
 
-  onLogin() {
+onLogin() {
     if (!this.validate()) return;
 
     this.loading = true;
     this.errorMsg = '';
 
-    this.authService.login(this.email, this.password, this.selectedRole).subscribe({
-      next: (res) => {
-    this.loading = false;
-    this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
-    this.router.navigate(['/home']);
-  },
-      error: (err) => {
+    this.authService.login(this.email, this.password).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+
+        const role = (res.role || this.selectedRole || '').toString().toLowerCase();
+        this.authService.saveToken(res.token, role, res.refreshToken);
+        localStorage.setItem('user', JSON.stringify(res));
+
+        if (role === 'technician' || role === 'tech') {
+          this.router.navigate(['/technician/profile']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      },
+      error: (err: any) => {
         this.loading = false;
         this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
       }
     });
   }
+
+
 }

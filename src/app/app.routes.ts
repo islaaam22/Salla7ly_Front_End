@@ -7,9 +7,16 @@ import { Home } from './pages/home/home';
 import { WhoAreWe } from './pages/who-are-we/who-are-we';
 import { Services } from './pages/services/services';
 import { Notfound } from './pages/notfound/notfound';
+
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
+
+import { TechnicianLayout } from './technician/layout/technician-layout';
+import { TechnicianProfile } from './technician/pages/profile/profile';
+import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
+import { AvailableRequests } from './technician/pages/available-requests/available-requests';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -23,6 +30,21 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
+
+
+  {
+    path: 'technician',
+    component: TechnicianLayout,
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'profile', component: TechnicianProfile },
+      { path: 'edit-profile', component: TechnicianEditProfile },
+      { path: 'available-requests', component: AvailableRequests },
+    ]
+  },
+
+  
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];
+

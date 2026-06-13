@@ -1,0 +1,48 @@
+<div class="d-flex" dir="rtl">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+    <i class="fa-solid fa-wrench"></i>
+  </div>
+  <span>صلحلي</span>
+</div>
+
+    <!-- Nav Items -->
+    <nav class="nav-section">
+      <a *ngFor="let item of navItems"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         class="nav-item">
+        <span>{{ item.label }}</span>
+        <i [class]="item.icon"></i>
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-details">
+          <div class="name">{{ technicianName }}</div>
+          <div class="role">فني</div>
+        </div>
+        <div class="user-avatar">{{ avatarLetter }}</div>
+      </div>
+
+      <button class="logout-btn" (click)="logout()">
+        <span>تسجيل الخروج</span>
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

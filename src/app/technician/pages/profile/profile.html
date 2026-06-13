@@ -1,0 +1,173 @@
+<div dir="rtl">
+  <!-- Header -->
+  <div class="text-end mb-4">
+    <h1 class="fw-bold" style="font-size:38px;color:#0f172a;">
+      الملف الشخصي
+    </h1>
+    <p class="text-muted" style="font-size:16px;">
+      معلومات حسابك وإحصائياتك.
+    </p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3 text-muted">جاري التحميل...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMsg && !loading"
+       class="alert alert-danger text-end"
+       style="border-radius:14px;">
+    {{ errorMsg }}
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading && profile" class="row g-4 align-items-start">
+
+    <!-- Left: Contact Info (col-8) -->
+    <div class="col-8">
+
+      <!-- Contact Card -->
+      <div class="bg-white rounded-4 p-4 mb-4"
+           style="border:1px solid #e8edf2;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+        <h5 class="fw-bold text-end mb-4" style="color:#0f172a;font-size:20px;">
+          معلومات الاتصال
+        </h5>
+
+        <!-- Email -->
+        <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3"
+             style="background:#f8fafc;border:1px solid #e8edf2;">
+          <i class="fa-regular fa-envelope" style="color:#1787e0;font-size:20px;"></i>
+          <div class="text-end">
+            <div style="font-size:12px;color:#94a3b8;">البريد</div>
+            <div class="fw-semibold" style="color:#0f172a;font-size:15px;">
+              {{ profile.email || '—' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3"
+             style="background:#f8fafc;border:1px solid #e8edf2;">
+          <i class="fa-solid fa-phone" style="color:#1787e0;font-size:20px;"></i>
+          <div class="text-end">
+            <div style="font-size:12px;color:#94a3b8;">الهاتف</div>
+            <div class="fw-semibold" style="color:#0f172a;font-size:15px;">
+              {{ profile.phoneNumber || '—' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="d-flex align-items-center justify-content-between p-3 rounded-3"
+             style="background:#f8fafc;border:1px solid #e8edf2;">
+          <i class="fa-regular fa-id-card" style="color:#1787e0;font-size:20px;"></i>
+          <div class="text-end">
+            <div style="font-size:12px;color:#94a3b8;">نبذة</div>
+            <div class="fw-semibold" style="color:#0f172a;font-size:15px;">
+              {{ profile.bio || '—' }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Stats Row -->
+      <div class="row g-3">
+        <div class="col-4">
+          <div class="bg-white rounded-4 p-4 text-center"
+               style="border:1px solid #e8edf2;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+            <i class="fa-solid fa-briefcase mb-2"
+               style="font-size:26px;color:#1787e0;display:block;"></i>
+            <div class="fw-bold" style="font-size:26px;color:#0f172a;">
+              {{ profile.completedJobs }}
+            </div>
+            <div class="text-muted" style="font-size:13px;">مهام منجزة</div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="bg-white rounded-4 p-4 text-center"
+               style="border:1px solid #e8edf2;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+            <i class="fa-solid fa-star mb-2"
+               style="font-size:26px;color:#f59e0b;display:block;"></i>
+            <div class="fw-bold" style="font-size:26px;color:#0f172a;">
+              {{ profile.overallRating }}
+            </div>
+            <div class="text-muted" style="font-size:13px;">
+              متوسط التقييم
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="bg-white rounded-4 p-4 text-center"
+               style="border:1px solid #e8edf2;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+            <i class="fa-solid fa-calendar mb-2"
+               style="font-size:26px;color:#1787e0;display:block;"></i>
+            <div class="fw-bold" style="font-size:26px;color:#0f172a;">
+              {{ profile.subscriptionTier }}
+            </div>
+            <div class="text-muted" style="font-size:13px;">نوع الاشتراك</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Avatar Card (col-4) -->
+    <div class="col-4">
+      <div class="bg-white rounded-4 p-4 text-center"
+           style="border:1px solid #e8edf2;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+
+        <!-- Avatar -->
+        <div class="mx-auto mb-3 rounded-circle d-flex justify-content-center
+                    align-items-center fw-bold text-white"
+             style="width:100px;height:100px;font-size:40px;
+                    background:linear-gradient(135deg,#1787e0,#30aaaa);">
+          {{ avatarLetter }}
+        </div>
+
+        <div class="fw-bold mb-1" style="font-size:20px;color:#0f172a;">
+          {{ profile.name }}
+        </div>
+        <div class="text-muted mb-3" style="font-size:14px;">
+          فني محترف
+        </div>
+
+        <!-- Badge -->
+        <div class="d-inline-flex align-items-center gap-1 px-3 py-1 rounded-pill mb-4"
+             [style.background]="profile.isApproved ? '#e8fdf2' : '#fff8e1'"
+             [style.color]="profile.isApproved ? '#1a7a47' : '#b45309'">
+          <i [class]="profile.isApproved
+             ? 'fa-solid fa-shield-check'
+             : 'fa-solid fa-triangle-exclamation'"
+             style="font-size:13px;"></i>
+          <small class="fw-semibold">
+            {{ profile.isApproved ? 'موثّق' : 'غير موثّق' }}
+          </small>
+        </div>
+
+        <!-- Edit Button -->
+        <a routerLink="/technician/edit-profile"
+           class="btn w-100 text-white fw-bold mb-2 d-flex align-items-center justify-content-center gap-2"
+           style="background:#0f172a;border-radius:12px;height:50px;font-size:16px;">
+          <i class="fa-solid fa-pen"></i> تعديل الملف
+        </a>
+
+        <!-- Verify Button -->
+        <a *ngIf="!profile.isApproved"
+           routerLink="/technician/verification"
+           class="btn w-100 fw-bold d-flex align-items-center justify-content-center gap-2"
+           style="border:2px solid #0f172a;border-radius:12px;
+                  height:50px;font-size:16px;color:#0f172a;">
+          <i class="fa-solid fa-shield"></i> ابدأ التوثيق
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

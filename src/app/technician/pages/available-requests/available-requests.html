@@ -1,0 +1,75 @@
+<div dir="rtl">
+
+  <!-- Header -->
+  <div class="text-end mb-4">
+    <h1 class="fw-bold" style="font-size:32px;color:#0f172a;">
+      طلبات متاحة
+    </h1>
+    <p class="text-muted" style="font-size:16px;">
+      قدّم عروضك على الطلبات المتاحة في منطقتك.
+    </p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3 text-muted">جاري التحميل...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMsg && !loading"
+       class="alert alert-danger text-end"
+       style="border-radius:14px;">
+    {{ errorMsg }}
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!loading && !errorMsg && requests.length === 0"
+       class="text-center py-5 text-muted">
+    <i class="fa-regular fa-folder-open mb-3" style="font-size:40px;"></i>
+    <p>لا توجد طلبات متاحة حالياً</p>
+  </div>
+
+  <!-- Requests List -->
+  <div *ngFor="let req of requests"
+       class="bg-white rounded-4 p-4 mb-3"
+       style="border:1px solid #e8edf2;">
+
+    <div class="d-flex justify-content-between align-items-start">
+
+      <!-- Apply Button -->
+      <button class="btn text-white fw-bold"
+              [disabled]="applyingId === req.id"
+              (click)="applyToRequest(req.id)"
+              style="background:#0f172a;border-radius:10px;height:42px;padding:0 20px;">
+        <i class="fa-solid fa-wrench me-2"></i>
+        {{ applyingId === req.id ? 'جاري التقديم...' : 'تقديم عرض' }}
+      </button>
+
+      <!-- Info -->
+      <div class="text-end flex-grow-1 mx-3">
+        <div class="d-flex align-items-center justify-content-end gap-2 mb-1">
+          <h5 class="fw-bold mb-0" style="color:#0f172a;">{{ req.title }}</h5>
+          <span class="badge rounded-pill"
+                [ngClass]="urgencyClass(req.urgency)">
+            {{ req.urgency }}
+          </span>
+        </div>
+        <p class="text-muted mb-2" style="font-size:15px;">{{ req.description }}</p>
+        <div class="d-flex justify-content-end gap-4 text-muted" style="font-size:14px;">
+          <span><i class="fa-regular fa-clock me-1"></i>{{ req.postedAgo }}</span>
+          <span><i class="fa-solid fa-location-dot me-1"></i>{{ req.location }}</span>
+        </div>
+      </div>
+
+      <!-- Icon -->
+      <div class="rounded-circle d-flex justify-content-center align-items-center"
+           style="width:42px;height:42px;background:#f0f7ff;color:#1787e0;flex-shrink:0;">
+        <i class="fa-solid fa-wrench"></i>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
