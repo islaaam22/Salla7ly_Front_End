@@ -59,14 +59,28 @@ export class Login {
 
     this.authService.login(this.email, this.password, this.selectedRole).subscribe({
       next: (res) => {
-    this.loading = false;
-    this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
-    this.router.navigate(['/home']);
-  },
+        this.loading = false;
+        this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
+        this.redirectByRole(this.selectedRole);
+      },
       error: (err) => {
         this.loading = false;
         this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
       }
     });
+  }
+
+  private redirectByRole(role: 'client' | 'tech' | 'admin') {
+    switch (role) {
+      case 'client':
+        this.router.navigate(['/customer/profile']);
+        break;
+      case 'tech':
+        this.router.navigate(['/technician']);
+        break;
+      case 'admin':
+        this.router.navigate(['/admin']);
+        break;
+    }
   }
 }

@@ -10,9 +10,7 @@ import { Notfound } from './pages/notfound/notfound';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
-import { NewRequest } from './pages/customer/new-request/new-request';
-import { MyRequests } from './pages/customer/my-requests/my-requests';
-import { Review } from './pages/customer/review/review';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register },
@@ -25,9 +23,6 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
-  { path: 'customer/new-request', component: NewRequest },
-  { path: 'customer/my-requests', component: MyRequests },
-{ path: 'customer/review/:id', component: Review },
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];

@@ -1,0 +1,124 @@
+<div class="container py-5" dir="rtl">
+
+  <!-- loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">جارٍ التحميل...</span>
+    </div>
+  </div>
+
+  <!-- error -->
+  <div *ngIf="error" class="alert alert-danger text-center">
+    تعذّر تحميل الملف الشخصي. حاول مرة أخرى.
+  </div>
+
+  <!-- content -->
+  <div *ngIf="customer && !loading">
+
+    <!-- header -->
+    <div class="text-center mb-5">
+      <h1 class="fw-bold">الملف الشخصي</h1>
+      <p class="text-muted">معلومات حسابك وإحصائياتك.</p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- left: contact info + stats -->
+      <div class="col-lg-8">
+
+        <!-- contact card -->
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-4">
+            <h5 class="fw-bold text-end mb-4">معلومات الاتصال</h5>
+
+            <div class="d-flex align-items-center justify-content-end bg-light rounded-3 p-3 mb-3">
+              <div class="text-end me-3">
+                <div class="text-muted small">البريد</div>
+                <div class="fw-semibold">{{ customer.email }}</div>
+              </div>
+              <span class="badge bg-primary-subtle text-primary p-2">✉</span>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-end bg-light rounded-3 p-3 mb-3">
+              <div class="text-end me-3">
+                <div class="text-muted small">الهاتف</div>
+                <div class="fw-semibold">{{ customer.phoneNumber }}</div>
+              </div>
+              <span class="badge bg-primary-subtle text-primary p-2">📞</span>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-end bg-light rounded-3 p-3">
+              <div class="text-end me-3">
+                <div class="text-muted small">العنوان</div>
+                <div class="fw-semibold">{{ customer.mainAddress }}</div>
+              </div>
+              <span class="badge bg-primary-subtle text-primary p-2">📍</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- stats -->
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center">
+              <div class="card-body py-4">
+                <div class="mb-2">📅</div>
+                <div class="fw-bold fs-4">{{ customer.memberSinceYear }}</div>
+                <div class="text-muted small">عضو منذ</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center">
+              <div class="card-body py-4">
+                <div class="mb-2">📋</div>
+                <div class="fw-bold fs-4">{{ customer.totalRequests }}</div>
+                <div class="text-muted small">إجمالي الطلبات</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center">
+              <div class="card-body py-4">
+                <div class="mb-2">⭐</div>
+                <div class="fw-bold fs-4">{{ customer.totalReviews }}</div>
+                <div class="text-muted small">التقييمات</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- right: profile sidebar -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center p-4">
+
+            <!-- avatar: show image if present, else initial -->
+            <div *ngIf="customer.imageUrl" class="mb-3">
+              <img [src]="customer.imageUrl" alt="{{ customer.name }}"
+                   class="rounded-circle"
+                   style="width: 110px; height: 110px; object-fit: cover;">
+            </div>
+            <div *ngIf="!customer.imageUrl"
+                 class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                 style="width: 110px; height: 110px; background: linear-gradient(135deg, #6a8cff, #d9a06b);">
+              <span class="fs-1 fw-bold text-white">{{ initial }}</span>
+            </div>
+
+            <h4 class="fw-bold mb-1">{{ customer.name }}</h4>
+            <p class="text-muted mb-3">عميل</p>
+
+            <!-- actions -->
+            <div class="d-grid gap-2 mt-3">
+              <button class="btn btn-dark">تعديل الملف ✏</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

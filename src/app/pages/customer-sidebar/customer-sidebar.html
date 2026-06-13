@@ -1,0 +1,61 @@
+<aside class="d-flex flex-column bg-white vh-100 p-3 border-start" dir="rtl" style="width: 280px; border-inline-start: 2px solid #e9ecef !important;">
+
+  <!-- brand -->
+  <div class="d-flex align-items-center justify-content-end gap-2 mb-4 pb-3 border-bottom">
+    <h4 class="fw-bold mb-0">صلّحلي</h4>
+    <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white"
+          style="width: 38px; height: 38px;">🔧</span>
+  </div>
+
+  <!-- nav -->
+  <nav class="flex-grow-1">
+    <ul class="nav flex-column gap-1">
+
+      <!-- placeholder items -->
+      <li class="nav-item" *ngFor="let item of navItems">
+        <a [href]="item.link"
+           class="nav-link d-flex align-items-center justify-content-end gap-2 text-dark px-3 py-2 rounded">
+          <span>{{ item.label }}</span>
+          <span class="text-muted">{{ item.icon }}</span>
+        </a>
+      </li>
+
+      <!-- the one real route: profile -->
+      <li class="nav-item">
+        <a routerLink="/customer/profile" routerLinkActive="active"
+           class="nav-link d-flex align-items-center justify-content-end gap-2 text-dark px-3 py-2 rounded">
+          <span>الملف الشخصي</span>
+          <span>👤</span>
+        </a>
+      </li>
+
+      <!-- settings placeholder -->
+      <li class="nav-item">
+        <a href="#"
+           class="nav-link d-flex align-items-center justify-content-end gap-2 text-dark px-3 py-2 rounded">
+          <span>الإعدادات</span>
+          <span class="text-muted">⚙</span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+
+  <!-- footer: user + logout, pushed to the bottom -->
+  <div class="mt-auto pt-4 border-top">
+    <div class="d-flex align-items-center justify-content-end gap-2 mb-3 mt-3">
+      <div class="text-end">
+        <div class="fw-semibold">dfsdfd</div>
+        <div class="text-muted small">عميل</div>
+      </div>
+      <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold"
+            style="width: 40px; height: 40px;">D</span>
+    </div>
+
+    <button class="btn btn-light border w-100 d-flex align-items-center justify-content-center gap-2">
+      <span>تسجيل الخروج</span>
+      <span>→</span>
+    </button>
+  </div>
+
+</aside>
