@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Auth } from '../../services/auth';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'app-customer-sidebar',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './customer-sidebar.html'
 })
-export class Sidebar {
-  // nav items: only the profile has a real route; the rest are placeholders
+export class CustomerSidebar implements OnInit {
+  userName = '';
+  userInitial = '?';
+
   navItems = [
     { label: 'لوحة التحكم',      icon: '▦',  link: '#' },
     { label: 'طلب جديد',         icon: '＋', link: '#' },
@@ -18,6 +21,21 @@ export class Sidebar {
     { label: 'المحفظة',          icon: '▭',  link: '#' },
     { label: 'الإشعارات',        icon: '🔔', link: '#' },
     { label: 'المحادثات',        icon: '💬', link: '#' },
-    { label: 'إعدادات الملف',    icon: '👥', link: '#' }
+    { label: 'الملف الشخصي',     icon: '👤', link: '/customer/profile' },
+    { label: 'الإعدادات',        icon: '⚙',  link: '#' }
   ];
+
+  constructor(private authService: Auth, private router: Router) {}
+
+  ngOnInit(): void {
+    // pull the logged-in user's name from storage (adjust if you store it differently)
+    const name = localStorage.getItem('name') ?? 'مستخدم';
+    this.userName = name;
+    this.userInitial = name.charAt(0)?.toUpperCase() ?? '?';
+  }
+
+  logout(): void {
+    this.authService.logout();          // clears token/role/refreshToken
+    this.router.navigate(['/login']);   // back to login
+  }
 }

@@ -13,7 +13,7 @@ import { Auth } from '../../services/auth';
 export class Login {
   email = '';
   password = '';
-  selectedRole: 'client' | 'tech' | 'admin' = 'client';
+  selectedRole: 'Customer' | 'Technician' | 'Admin' = 'Customer';
   loading = false;
   errorMsg = '';
 
@@ -23,7 +23,7 @@ export class Login {
 
   constructor(private router: Router, private authService: Auth) {}
 
-  selectRole(role: 'client' | 'tech' | 'admin') {
+  selectRole(role: 'Customer' | 'Technician' | 'Admin') {
     this.selectedRole = role;
   }
 
@@ -70,15 +70,15 @@ export class Login {
     });
   }
 
-  private redirectByRole(role: 'client' | 'tech' | 'admin') {
+  private redirectByRole(role: 'Customer' | 'Technician' | 'Admin') {
     switch (role) {
-      case 'client':
+      case 'Customer':
         this.router.navigate(['/customer/profile']);
         break;
-      case 'tech':
+      case 'Technician':
         this.router.navigate(['/technician']);
         break;
-      case 'admin':
+      case 'Admin':
         this.router.navigate(['/admin']);
         break;
     }

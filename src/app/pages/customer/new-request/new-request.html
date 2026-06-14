@@ -1,0 +1,186 @@
+<div class="new-request-wrapper" dir="rtl">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>طلب جديد</h1>
+    <p>أنشئ طلبك في خطوات بسيطة وسنرسله للفنيين لتقديم عروضهم.</p>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="step-item" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
+      <div class="step-circle">1</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep > 1"></div>
+    <div class="step-item" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
+      <div class="step-circle">2</div>
+    </div>
+    <div class="step-line" [class.active]="currentStep > 2"></div>
+    <div class="step-item" [class.active]="currentStep >= 3">
+      <div class="step-circle">3</div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="step-card">
+
+    <!-- ======= STEP 1: نوع الخدمة ======= -->
+    @if (currentStep === 1) {
+      <div class="step-content">
+        <h2>اختر نوع الخدمة</h2>
+        <p class="subtitle">اختر التصنيف الأقرب لمشكلتك.</p>
+
+        <div class="categories-grid">
+          @for (cat of categories; track cat.id) {
+            <div class="category-card" [class.selected]="selectedCategory === cat.id"
+                 (click)="selectCategory(cat.id)">
+              <i class="{{ cat.icon }}"></i>
+              <span>{{ cat.nameAr }}</span>
+            </div>
+          }
+        </div>
+
+        @if (errorMsg) {
+          <div class="alert-error">{{ errorMsg }}</div>
+        }
+
+        <div class="step-actions">
+          <button class="btn-next" (click)="nextStep()">التالي</button>
+        </div>
+      </div>
+    }
+
+    <!-- ======= STEP 2: تفاصيل الطلب ======= -->
+    @if (currentStep === 2) {
+      <div class="step-content">
+        <h2>تفاصيل الطلب</h2>
+        <p class="subtitle">قدّم تفاصيل واضحة للحصول على أفضل العروض.</p>
+
+        <div class="form-group">
+          <label>عنوان الطلب</label>
+          <input type="text" [(ngModel)]="form.title"
+                 placeholder="مثال: تصليح مكيف سبليت"
+                 [class.input-error]="submitted && !form.title.trim()" />
+          @if (submitted && !form.title.trim()) {
+            <span class="error-text">يرجى إدخال عنوان الطلب</span>
+          }
+        </div>
+
+       <div class="form-group">
+  <label>وصف تفصيلي</label>
+  <textarea [(ngModel)]="form.description" rows="5"
+            placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٢٠ كلمة)"
+            [class.input-error]="submitted && !isDescriptionValid()"></textarea>
+  @if (submitted && !isDescriptionValid()) {
+    <span class="error-text">يرجى إدخال وصف لا يقل عن ٢٠ كلمة ({{ getWordCount() }} كلمة حالياً)</span>
+  }
+  <span class="word-count" [class.valid]="isDescriptionValid()">
+    {{ getWordCount() }} كلمة
+  </span>
+</div>
+
+        <div class="form-group">
+          <label>صور المشكلة (اختياري — حتى 5)</label>
+          <div class="upload-box">
+            <i class="fa-solid fa-upload"></i>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>عنوان الخدمة</label>
+            <div class="input-icon">
+              <input type="text" [(ngModel)]="form.serviceAddress"
+                     placeholder="العنوان"
+                     [class.input-error]="submitted && !form.serviceAddress.trim()" />
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            @if (submitted && !form.serviceAddress.trim()) {
+              <span class="error-text">يرجى إدخال عنوان الخدمة</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>التاريخ المفضل</label>
+            <div class="input-icon">
+              <input type="date" [(ngModel)]="form.scheduledAt"
+                     [class.input-error]="submitted && !form.scheduledAt" />
+              <i class="fa-regular fa-calendar"></i>
+            </div>
+            @if (submitted && !form.scheduledAt) {
+              <span class="error-text">يرجى تحديد التاريخ</span>
+            }
+          </div>
+        </div>
+
+        @if (errorMsg) {
+          <div class="alert-error">{{ errorMsg }}</div>
+        }
+
+        <div class="step-actions">
+          <button class="btn-back" (click)="prevStep()">رجوع</button>
+          <button class="btn-next" (click)="nextStep()">التالي</button>
+        </div>
+      </div>
+    }
+
+    <!-- ======= STEP 3: مستوى الاستعجال ======= -->
+    @if (currentStep === 3) {
+      <div class="step-content">
+        <h2>مستوى الاستعجال</h2>
+        <p class="subtitle">اختر السرعة المطلوبة. الطلبات الطارئة تُرسل فوراً للفنيين.</p>
+
+        <div class="urgency-list">
+          @for (u of urgencyLevels; track u.value) {
+            <div class="urgency-card" [class.selected]="selectedUrgency === u.value"
+                 (click)="selectUrgency(u.value)">
+              <div class="urgency-info">
+                <span class="urgency-check">
+                  @if (selectedUrgency === u.value) {
+                    <i class="fa-solid fa-circle-check"></i>
+                  }
+                </span>
+                <div>
+                  <h4>{{ u.label }}</h4>
+                  <p>{{ u.desc }}</p>
+                </div>
+              </div>
+              <div class="urgency-icon" [style.background]="u.color">
+                <i class="{{ u.icon }}"></i>
+              </div>
+            </div>
+          }
+
+          <!-- جاهز للإرسال -->
+          <div class="urgency-card ready-card">
+            <div class="urgency-info">
+              <span></span>
+              <div>
+                <h4>جاهز للإرسال</h4>
+                <p>سترسل طلبك للفنيين وتستقبل العروض في صفحة "العروض المستلمة".</p>
+              </div>
+            </div>
+            <div class="urgency-icon" style="background:#6B7280;">
+              <i class="fa-solid fa-paper-plane"></i>
+            </div>
+          </div>
+        </div>
+
+        @if (errorMsg) {
+          <div class="alert-error">{{ errorMsg }}</div>
+        }
+        @if (successMsg) {
+          <div class="alert-success">{{ successMsg }}</div>
+        }
+
+        <div class="step-actions">
+          <button class="btn-back" (click)="prevStep()">رجوع</button>
+          <button class="btn-submit" [disabled]="loading" (click)="submitRequest()">
+            {{ loading ? 'جاري الإرسال...' : 'إرسال الطلب' }}
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

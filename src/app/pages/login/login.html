@@ -20,11 +20,11 @@
           <button
             class="btn flex-fill rounded-4 border-0 fw-semibold"
             [ngClass]="
-              selectedRole === 'client'
+              selectedRole === 'Customer'
                 ? 'bg-white shadow-sm text-dark'
                 : 'text-secondary bg-transparent'
             "
-            (click)="selectRole('client')"
+            (click)="selectRole('Customer')"
           >
             <i class="fa-regular fa-user me-2"></i>
             عميل
@@ -33,11 +33,11 @@
           <button
             class="btn flex-fill rounded-4 border-0 fw-semibold"
             [ngClass]="
-              selectedRole === 'tech'
+              selectedRole === 'Technician'
                 ? 'bg-white shadow-sm text-dark'
                 : 'text-secondary bg-transparent'
             "
-            (click)="selectRole('tech')"
+            (click)="selectRole('Technician')"
           >
             <i class="fa-solid fa-toolbox me-2"></i>
             فني
@@ -46,11 +46,11 @@
           <button
             class="btn flex-fill rounded-4 border-0 fw-semibold"
             [ngClass]="
-              selectedRole === 'admin'
+              selectedRole === 'Admin'
                 ? 'bg-white shadow-sm text-dark'
                 : 'text-secondary bg-transparent'
             "
-            (click)="selectRole('admin')"
+            (click)="selectRole('Admin')"
           >
             <i class="fa-solid fa-shield me-2"></i>
             مشرف

@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../services/customer-service';
 import { CustomerProfileDetails } from '../../models/customer-model';
 import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-customer-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink  ],
+  imports: [CommonModule, RouterLink],
   templateUrl: './customer-profile.html'
 })
 export class CustomerProfile implements OnInit {

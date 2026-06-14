@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Sidebar } from '../customer-sidebar/customer-sidebar';   // adjust path to your sidebar component
+import { CustomerSidebar } from '../customer-sidebar/customer-sidebar';
 
 @Component({
   selector: 'app-customer-layout',
   standalone: true,
-  imports: [RouterOutlet, Sidebar],
+  imports: [RouterOutlet, CustomerSidebar],
   templateUrl: './customer-layout.html'
 })
 export class CustomerLayout {}
