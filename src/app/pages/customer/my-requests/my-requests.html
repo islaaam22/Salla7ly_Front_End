@@ -1,0 +1,79 @@
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-header-text">
+      <h2>طلباتي</h2>
+      <p>كل طلباتك الحالية والسابقة في مكان واحد.</p>
+    </div>
+    <button class="btn-new-request" (click)="goToNewRequest()">
+      <i class="fa-solid fa-plus"></i>
+      طلب جديد
+    </button>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div style="text-align:center; padding:80px 0;">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (!loading && requests.length === 0) {
+    <div class="empty-state">
+      <i class="fa-solid fa-inbox"></i>
+      <p>مفيش طلبات لحد دلوقتي</p>
+      <button class="btn-new-request" (click)="goToNewRequest()">
+        ابدأ طلبك الأول
+      </button>
+    </div>
+  }
+
+  <!-- Requests -->
+  @if (!loading && requests.length > 0) {
+    <div class="requests-list">
+      @for (req of requests; track req.id) {
+        <div class="request-card">
+
+          <div class="card-top">
+            <div>
+              <h5 class="card-title">{{ req.title }}</h5>
+              <p class="card-technician">م. {{ req.technicianName ?? 'لم يُحدد بعد' }}</p>
+            </div>
+            <span [class]="'status-badge ' + getStatusClass(req.status)">
+              {{ getStatusLabel(req.status) }}
+            </span>
+          </div>
+
+          <div class="card-bottom">
+        <div class="card-actions">
+  <button class="btn-chat" (click)="goToChat(req.id)">
+    <i class="fa-regular fa-message"></i> محادثة الفني
+  </button>
+
+  @if (req.status?.toLowerCase() === 'completed') {
+    <button class="btn-review" (click)="goToReview(req.id)">
+      <i class="fa-regular fa-star"></i> تقييم الخدمة
+    </button>
+  } @else {
+    <button class="btn-details" (click)="goToOffers(req.id)">
+      عرض التفاصيل
+    </button>
+  }
+</div>
+
+            <div class="card-meta">
+              <span><i class="fa-regular fa-calendar"></i> {{ req.scheduledAt | date:'dd/MM/yyyy' }}</span>
+              @if (req.price) {
+                <span><i class="fa-solid fa-tag"></i> {{ req.price }} ج</span>
+              }
+            </div>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

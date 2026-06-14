@@ -14,6 +14,15 @@ import { Chat } from './pages/chat/chat';
 import { ChatWindow } from './pages/chat/chat-window/chat-window';
 import { ConversationList } from './pages/chat/conversation-list/conversation-list';
 import { MessageBuddle } from './pages/chat/message-buddle/message-buddle';
+import { CustomerProfile } from './pages/customer-profile/customer-profile';
+import { CustomerLayout } from './pages/customer-layout/customer-layout';
+
+import { CustomerEdit } from './pages/customer-edit/customer-edit';
+
+import { NewRequest } from './pages/customer/new-request/new-request';
+import { MyRequests } from './pages/customer/my-requests/my-requests';
+import { Review } from './pages/customer/review/review';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -31,6 +40,18 @@ export const routes: Routes = [
   // {path : 'chat-window' , component: ChatWindow},
   // {path : 'conversation-list' , component: ConversationList},
   // {path : 'message-buddle' , component: MessageBuddle},
+  {
+    path: 'customer',
+    component: CustomerLayout,
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'profile', component: CustomerProfile },
+      { path: 'edit', component: CustomerEdit },
+      { path: 'new-request', component: NewRequest },
+      { path: 'my-requests', component: MyRequests },
+      { path: 'review/:id', component: Review },
+    ]
+  },
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];

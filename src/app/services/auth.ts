@@ -63,13 +63,16 @@ resetPassword(email: string, otp: string, newPassword: string): Observable<any> 
     localStorage.removeItem('role');
   }
 
-  saveToken(token: string, role: string, refreshToken?: string) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('role', role);
-    if (refreshToken) {
-      localStorage.setItem('refreshToken', refreshToken);
-    }
+ saveToken(token: string, role: string, refreshToken?: string, userName?: string) {
+  localStorage.setItem('token', token);
+  localStorage.setItem('role', role);
+  if (refreshToken) {
+    localStorage.setItem('refreshToken', refreshToken);
   }
+  if (userName) {
+    localStorage.setItem('userName', userName);
+  }
+}
 
   getToken(): string | null {
     return localStorage.getItem('token');

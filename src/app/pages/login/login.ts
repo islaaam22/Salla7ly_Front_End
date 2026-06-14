@@ -13,7 +13,7 @@ import { Auth } from '../../services/auth';
 export class Login {
   email = '';
   password = '';
-  selectedRole: 'client' | 'tech' | 'admin' = 'client';
+  selectedRole: 'Customer' | 'Technician' | 'Admin' = 'Customer';
   loading = false;
   errorMsg = '';
 
@@ -23,7 +23,7 @@ export class Login {
 
   constructor(private router: Router, private authService: Auth) {}
 
-  selectRole(role: 'client' | 'tech' | 'admin') {
+  selectRole(role: 'Customer' | 'Technician' | 'Admin') {
     this.selectedRole = role;
   }
 
@@ -59,14 +59,28 @@ export class Login {
 
     this.authService.login(this.email, this.password, this.selectedRole).subscribe({
       next: (res) => {
-    this.loading = false;
-    this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
-    this.router.navigate(['/home']);
-  },
+        this.loading = false;
+        this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
+        this.redirectByRole(this.selectedRole);
+      },
       error: (err) => {
         this.loading = false;
         this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
       }
     });
+  }
+
+  private redirectByRole(role: 'Customer' | 'Technician' | 'Admin') {
+    switch (role) {
+      case 'Customer':
+        this.router.navigate(['/customer/profile']);
+        break;
+      case 'Technician':
+        this.router.navigate(['/technician']);
+        break;
+      case 'Admin':
+        this.router.navigate(['/admin']);
+        break;
+    }
   }
 }

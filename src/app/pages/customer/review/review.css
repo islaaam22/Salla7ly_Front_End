@@ -1,0 +1,43 @@
+.review-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rating-row:last-of-type {
+  border-bottom: none;
+}
+
+.rating-label {
+  font-weight: 600;
+  color: #1e293b;
+  min-width: 160px;
+  text-align: right;
+}
+
+.stars i {
+  font-size: 24px;
+  color: #d1d5db;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: color 0.2s;
+}
+
+.stars i.active {
+  color: #f59e0b;
+}
+
+.stars i:hover {
+  color: #f59e0b;
+}
