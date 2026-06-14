@@ -9,3 +9,8 @@ export interface CustomerProfileDetails {
   totalReviews: number;
   memberSinceYear: number;
 }
+export interface CustomerProfileUpdate {
+  name: string;
+  phoneNumber: string;
+  addressDetails: string;
+}

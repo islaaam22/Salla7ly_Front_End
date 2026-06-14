@@ -12,6 +12,7 @@ import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { CustomerProfile } from './pages/customer-profile/customer-profile';
 import { CustomerLayout } from './pages/customer-layout/customer-layout';
+import { CustomerEdit } from './pages/customer-edit/customer-edit';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -33,6 +34,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'profile', component: CustomerProfile },
+      { path: 'edit', component: CustomerEdit },
     ]
   },
 
