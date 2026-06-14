@@ -10,6 +10,10 @@ import { Notfound } from './pages/notfound/notfound';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
+import { Chat } from './pages/chat/chat';
+import { ChatWindow } from './pages/chat/chat-window/chat-window';
+import { ConversationList } from './pages/chat/conversation-list/conversation-list';
+import { MessageBuddle } from './pages/chat/message-buddle/message-buddle';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -23,6 +27,10 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
+  {path : 'chat' , component: Chat},
+  // {path : 'chat-window' , component: ChatWindow},
+  // {path : 'conversation-list' , component: ConversationList},
+  // {path : 'message-buddle' , component: MessageBuddle},
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];

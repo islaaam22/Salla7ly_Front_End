@@ -1,0 +1,7 @@
+.conv-item {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.conv-item:hover {
+  background: #f0f9fd;
+}
