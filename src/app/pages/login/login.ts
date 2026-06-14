@@ -51,7 +51,7 @@ export class Login {
     return valid;
   }
 
-  onLogin() {
+onLogin() {
     if (!this.validate()) return;
 
     this.loading = true;
