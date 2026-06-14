@@ -1,0 +1,82 @@
+<div class="container py-5" dir="rtl">
+
+  <!-- Breadcrumb -->
+  <div class="text-end mb-2">
+    <a routerLink="/customer/my-requests" class="text-primary text-decoration-none">
+      ← طلباتي
+    </a>
+  </div>
+
+  <div class="text-end mb-4">
+    <h2 class="fw-bold">تقييم الخدمة</h2>
+    <p class="text-muted">شاركنا تجربتك مع الخدمة رقم {{ requestId }}</p>
+  </div>
+
+  <div class="review-card">
+
+    <!-- التقييم العام -->
+    <div class="rating-row">
+      <span class="rating-label">التقييم العام</span>
+      <div class="stars">
+        @for (s of stars; track s) {
+          <i [class]="s <= ratings.overall ? 'fa-solid fa-star active' : 'fa-regular fa-star'"
+             (click)="setRating('overall', s)"></i>
+        }
+      </div>
+    </div>
+
+    <!-- جودة العمل -->
+    <div class="rating-row">
+      <span class="rating-label">جودة العمل</span>
+      <div class="stars">
+        @for (s of stars; track s) {
+          <i [class]="s <= ratings.quality ? 'fa-solid fa-star active' : 'fa-regular fa-star'"
+             (click)="setRating('quality', s)"></i>
+        }
+      </div>
+    </div>
+
+    <!-- التواصل -->
+    <div class="rating-row">
+      <span class="rating-label">التواصل</span>
+      <div class="stars">
+        @for (s of stars; track s) {
+          <i [class]="s <= ratings.communication ? 'fa-solid fa-star active' : 'fa-regular fa-star'"
+             (click)="setRating('communication', s)"></i>
+        }
+      </div>
+    </div>
+
+    <!-- الالتزام بالمواعيد -->
+    <div class="rating-row">
+      <span class="rating-label">الالتزام بالمواعيد</span>
+      <div class="stars">
+        @for (s of stars; track s) {
+          <i [class]="s <= ratings.punctuality ? 'fa-solid fa-star active' : 'fa-regular fa-star'"
+             (click)="setRating('punctuality', s)"></i>
+        }
+      </div>
+    </div>
+
+    <!-- رأيك -->
+    <div class="rating-row align-items-start">
+      <span class="rating-label">رأيك (اختياري)</span>
+      <textarea class="form-control text-end"
+                [(ngModel)]="comment"
+                placeholder="شاركنا تفاصيل تجربتك..."
+                rows="4">
+      </textarea>
+    </div>
+
+    @if (successMsg) {
+      <div class="alert alert-success text-end mt-3">{{ successMsg }}</div>
+    }
+
+    <button (click)="onSubmit()"
+            class="btn btn-primary w-100 mt-4 py-3 rounded-pill fw-bold fs-5"
+            [disabled]="loading">
+      {{ loading ? 'جاري الإرسال...' : 'إرسال التقييم' }}
+    </button>
+
+  </div>
+</div>
