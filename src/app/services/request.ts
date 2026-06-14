@@ -44,4 +44,10 @@ export class RequestService {
       headers: this.getHeaders()
     });
   }
+
+  getCategories(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/ServiceCategory`, {
+    headers: this.getHeaders()
+  });
+}
 }

@@ -51,36 +51,40 @@ export class Login {
     return valid;
   }
 
-  onLogin() {
-    if (!this.validate()) return;
+ onLogin() {
+  if (!this.validate()) return;
 
-    this.loading = true;
-    this.errorMsg = '';
+  this.loading = true;
+  this.errorMsg = '';
 
-    this.authService.login(this.email, this.password, this.selectedRole).subscribe({
-      next: (res) => {
-        this.loading = false;
-        this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
-        this.redirectByRole(this.selectedRole);
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-      }
-    });
-  }
-
-  private redirectByRole(role: 'client' | 'tech' | 'admin') {
-    switch (role) {
-      case 'client':
-        this.router.navigate(['/customer/profile']);
-        break;
-      case 'tech':
-        this.router.navigate(['/technician']);
-        break;
-      case 'admin':
-        this.router.navigate(['/admin']);
-        break;
+  this.authService.login(this.email, this.password, this.selectedRole).subscribe({
+   next: (res) => {
+  this.loading = false;
+  this.authService.saveToken(
+    res.token,
+    this.selectedRole,
+    res.refreshToken,
+    this.email.split('@')[0]  // هياخد الجزء قبل الـ @
+  );
+  this.redirectByRole(this.selectedRole);
+},
+    error: (err) => {
+      this.loading = false;
+      this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
     }
+  });
+}
+ private redirectByRole(role: 'Customer' | 'Technician' | 'Admin') {
+  switch (role) {
+    case 'Customer':
+      this.router.navigate(['/customer/profile']);
+      break;
+    case 'Technician':
+      this.router.navigate(['/technician']);
+      break;
+    case 'Admin':
+      this.router.navigate(['/admin']);
+      break;
   }
+}
 }

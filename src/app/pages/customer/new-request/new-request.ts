@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { RequestService } from '../../../services/request';
   templateUrl: './new-request.html',
   styleUrl: './new-request.css'
 })
-export class NewRequest {
+export class NewRequest implements OnInit {
   currentStep = 1;
   loading = false;
   errorMsg = '';
@@ -20,13 +20,7 @@ export class NewRequest {
   selectedCategory: number | null = null;
   selectedUrgency: number = 0;
 
-  categories = [
-    { id: 1, name: 'السباكة', icon: 'fa-solid fa-wrench' },
-    { id: 2, name: 'الكهرباء', icon: 'fa-solid fa-bolt' },
-    { id: 3, name: 'التكييف', icon: 'fa-solid fa-snowflake' },
-    { id: 4, name: 'النجارة', icon: 'fa-solid fa-hammer' },
-    { id: 5, name: 'الأجهزة', icon: 'fa-solid fa-tv' },
-  ];
+  categories: any[] = [];
 
   urgencyLevels = [
     { value: 0, label: 'عادي', desc: 'خلال ٢٤-٤٨ ساعة', icon: 'fa-solid fa-clock', color: '#1AACDC' },
@@ -49,6 +43,37 @@ export class NewRequest {
 
   constructor(private requestService: RequestService, private router: Router) {}
 
+  ngOnInit() {
+    this.requestService.getCategories().subscribe({
+      next: (res) => {
+        this.categories = res
+          .filter((c: any) => c.parentCategoryId === null)
+          .map((c: any) => ({
+            ...c,
+            icon: this.getIconByName(c.nameAr)
+          }));
+      },
+      error: () => {
+        this.categories = [
+          { id: 2, nameAr: 'سباكة', icon: 'fa-solid fa-wrench' },
+          { id: 4, nameAr: 'الأجهزة', icon: 'fa-solid fa-tv' },
+          { id: 5, nameAr: 'النجارة', icon: 'fa-solid fa-hammer' },
+          { id: 6, nameAr: 'التكييف', icon: 'fa-solid fa-snowflake' },
+          { id: 7, nameAr: 'الكهرباء', icon: 'fa-solid fa-bolt' },
+        ];
+      }
+    });
+  }
+
+  getIconByName(name: string): string {
+    if (name.includes('سباكة')) return 'fa-solid fa-wrench';
+    if (name.includes('كهرباء')) return 'fa-solid fa-bolt';
+    if (name.includes('تكييف')) return 'fa-solid fa-snowflake';
+    if (name.includes('نجارة')) return 'fa-solid fa-hammer';
+    if (name.includes('أجهزة')) return 'fa-solid fa-tv';
+    return 'fa-solid fa-tools';
+  }
+
   selectCategory(id: number) {
     this.selectedCategory = id;
     this.form.categoryId = id;
@@ -62,7 +87,7 @@ export class NewRequest {
   }
 
   getCategoryName(): string {
-    return this.categories.find(c => c.id === this.selectedCategory)?.name ?? '';
+    return this.categories.find(c => c.id === this.selectedCategory)?.nameAr ?? '';
   }
 
   getUrgencyLabel(): string {
@@ -118,51 +143,52 @@ export class NewRequest {
   }
 
   submitRequest() {
-  this.loading = true;
-  this.errorMsg = '';
+    this.loading = true;
+    this.errorMsg = '';
 
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  if (!token) {
-    this.loading = false;
-    this.errorMsg = 'يرجى تسجيل الدخول أولاً';
-    this.router.navigate(['/login']);
-    return;
-  }
-
-  const payload = {
-    title: this.form.title,
-    description: this.form.description,
-    imageUrls: this.form.imageUrls,
-    urgency: this.selectedUrgency,
-    bookingMode: this.form.bookingMode,
-    isEmergency: this.form.isEmergency,
-    scheduledAt: new Date(this.form.scheduledAt).toISOString(),
-    addressId: this.form.addressId,
-    categoryId: this.form.categoryId,
-  };
-
-  console.log('Token:', token);
-  console.log('Payload:', payload);
-
-  this.requestService.createRequest(payload).subscribe({
-    next: (res) => {
-      console.log('Success:', res);
+    if (!token) {
       this.loading = false;
-      this.successMsg = 'تم إرسال طلبك بنجاح!';
-      setTimeout(() => this.router.navigate(['/customer/my-requests']), 2000);
-    },
-    error: (err) => {
-      console.log('Error status:', err.status);
-      console.log('Error:', err);
-      this.loading = false;
-      if (err.status === 401) {
-        this.errorMsg = 'انتهت جلستك، يرجى تسجيل الدخول مرة أخرى';
-        this.router.navigate(['/login']);
-      } else {
-        this.errorMsg = err?.error?.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى';
-      }
+      this.errorMsg = 'يرجى تسجيل الدخول أولاً';
+      this.router.navigate(['/login']);
+      return;
     }
-  });
-}
+
+    const payload = {
+      title: this.form.title,
+      description: this.form.description,
+      imageUrls: this.form.imageUrls,
+      urgency: this.selectedUrgency,
+      bookingMode: this.form.bookingMode,
+      isEmergency: this.form.isEmergency,
+      scheduledAt: new Date(this.form.scheduledAt).toISOString(),
+      addressId: this.form.addressId,
+      categoryId: this.form.categoryId,
+    };
+
+    console.log('Token:', token);
+    console.log('Payload:', payload);
+
+    this.requestService.createRequest(payload).subscribe({
+      next: (res) => {
+        console.log('Success:', res);
+        this.loading = false;
+        this.successMsg = 'تم إرسال طلبك بنجاح!';
+        setTimeout(() => this.router.navigate(['/customer/my-requests']), 2000);
+      },
+      error: (err) => {
+        console.log('Error status:', err.status);
+        console.log('Error:', err);
+        this.loading = false;
+        if (err.status === 401) {
+          this.errorMsg = 'انتهت جلستك، يرجى تسجيل الدخول مرة أخرى';
+          this.router.navigate(['/login']);
+        } else {
+          this.errorMsg = err?.error?.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى';
+        }
+      }
+    });
+  }
+  
 }

@@ -10,6 +10,11 @@ import { Notfound } from './pages/notfound/notfound';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
+import { CustomerProfile } from './pages/customer-profile/customer-profile';
+import { CustomerLayout } from './pages/customer-layout/customer-layout';
+import { NewRequest } from './pages/customer/new-request/new-request';
+import { MyRequests } from './pages/customer/my-requests/my-requests';
+import { Review } from './pages/customer/review/review';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -23,6 +28,17 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
+  {
+    path: 'customer',
+    component: CustomerLayout,
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'profile', component: CustomerProfile },
+      { path: 'new-request', component: NewRequest },
+      { path: 'my-requests', component: MyRequests },
+      { path: 'review/:id', component: Review },
+    ]
+  },
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];
