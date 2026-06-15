@@ -1,30 +1,201 @@
-<div class="container-fluid vh-100 p-0 overflow-hidden" >
-  <div class="row g-0 h-100">
+<div class="container-fluid vh-100 p-0 overflow-hidden" dir="rtl">
+  <div class="d-flex h-100">
     <!-- القائمة - اليمين -->
-    <div class="col-4 h-100 border-start">
-      <app-conversation-list
-        [conversation]="conversations"
-        (conversationSelected)="onSelectConversation($event)"
-      >
-      </app-conversation-list>
+    
+    <div class="border-start bg-white d-flex flex-column" style="width: 340px; min-width: 340px">
+      <div class="p-3 border-bottom">
+        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: #1a1a2e">
+          <i class="fa-regular fa-comment-dots" style="color: #1aacdc"></i>
+          المحادثات
+        </h6>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="fa-solid fa-magnifying-glass text-muted"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control bg-light border-start-0"
+            placeholder="ابحث عن محادثة..."
+          />
+        </div>
+      </div>
+
+      <div class="overflow-auto flex-grow-1">
+        <div
+          *ngFor="let conv of conversations"
+          class="d-flex align-items-center gap-3 p-3 border-bottom conv-item"
+          [class.active-conv]="conv.requestId === selectedRequestId"
+          (click)="openConversation(conv.requestId)"
+          role="button"
+        >
+          <div
+            class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
+            style="width: 48px; height: 48px; background: #1aacdc; font-size: 20px"
+          >
+            {{ conv.otherPartyName[0] }}
+          </div>
+
+          <div class="flex-grow-1 overflow-hidden">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold text-truncate" style="color: #1a1a2e">{{
+                conv.otherPartyName
+              }}</span>
+              <small class="text-muted flex-shrink-0 ms-2" style="font-size: 11px">
+                {{ conv.lastMessageTime | date: 'shortTime' }}
+              </small>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+              <small class="text-muted text-truncate">{{ conv.lastMessage }}</small>
+              <span
+                *ngIf="conv.unreadCount > 0"
+                class="badge rounded-pill ms-2"
+                style="background: #1aacdc; font-size: 11px"
+              >
+                {{ conv.unreadCount }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="conversations.length === 0" class="text-center text-muted p-5">
+          <i class="fa-solid fa-inbox fs-2 d-block mb-2"></i>
+          لا توجد محادثات
+        </div>
+      </div>
     </div>
 
     <!-- الشات - اليسار -->
-    <div class="col-8 h-100">
-      <app-chat-window
-        *ngIf="selectedConversation"
-        [conversation]="selectedConversation!"
-        [messages]="messages"
-      >
-      </app-chat-window>
+    <div class="flex-grow-1 h-100 d-flex flex-column">
+      <ng-container *ngIf="selectedRequestId; else noChat">
+        <!-- Header -->
+        <div class="d-flex align-items-center gap-3 px-4 py-3 border-bottom bg-white shadow-sm">
+          <div
+            class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
+            style="width: 44px; height: 44px; background: #1aacdc; font-size: 18px"
+          >
+            {{ getSelectedConversation()?.otherPartyName?.[0] ?? '?' }}
+          </div>
+          <div class="flex-grow-1">
+            <div class="fw-semibold" style="color: #1a1a2e">
+              {{ getSelectedConversation()?.otherPartyName }}
+            </div>
+            <small class="text-muted" style="font-size: 12px">
+              <span *ngIf="isTyping"> <i class="fa-solid fa-ellipsis"></i> جاري الكتابة... </span>
+              <span *ngIf="!isTyping">متصل الآن</span>
+            </small>
+          </div>
+        </div>
 
-      <div
-        *ngIf="!selectedConversation"
-        class="h-100 d-flex flex-column align-items-center justify-content-center"
-      >
-        <i class=" fa-solid fa-comment mb-3 " style="font-size: 64px; color: #1aacdc"></i>
-        <p class="text-muted fs-5">اختر محادثة للبدء</p>
-      </div>
+        <!-- Load More -->
+        <div class="text-center py-2" style="background: #f0f2f5">
+          <button
+            class="btn btn-sm btn-light rounded-pill px-4 shadow-sm"
+            (click)="loadMoreMessages()"
+          >
+            <i class="fa-solid fa-arrow-up me-1"></i> تحميل المزيد
+          </button>
+        </div>
+
+        <!-- Messages -->
+        <div
+          class="flex-grow-1 overflow-auto px-4 py-3 d-flex flex-column gap-2"
+          style="background: #f0f2f5"
+          #messagesContainer
+        >
+          <div *ngIf="isLoading" class="text-center text-muted py-4">
+            <div class="spinner-border spinner-border-sm me-2" style="color: #1aacdc"></div>
+            جاري التحميل...
+          </div>
+
+          <div
+            *ngFor="let msg of messages"
+            class="d-flex mb-1"
+            [class.justify-content-start]="isMyMessage(msg)"
+            [class.justify-content-end]="!isMyMessage(msg)"
+          >
+            <div
+              class="px-3 py-2 rounded-4 shadow-sm"
+              style="max-width: 65%"
+              [style.background]="isMyMessage(msg) ? '#1AACDC' : '#ffffff'"
+              [style.color]="isMyMessage(msg) ? '#ffffff' : '#1A1A2E'"
+            >
+              <p class="mb-1" *ngIf="msg.messageType === 0">{{ msg.content }}</p>
+
+              <img
+                *ngIf="msg.messageType === 1"
+                [src]="msg.attachmentUrls?.[0]"
+                class="rounded-3 img-fluid"
+                style="max-width: 200px"
+              />
+
+              <audio
+                *ngIf="msg.messageType === 2"
+                [src]="msg.attachmentUrls?.[0]"
+                controls
+                class="w-100"
+              ></audio>
+
+              <div class="d-flex align-items-center justify-content-end gap-1 mt-1">
+                <small style="font-size: 10px; opacity: 0.7">{{
+                  msg.sentAt | date: 'shortTime'
+                }}</small>
+                <i
+                  *ngIf="isMyMessage(msg)"
+                  class="fa-solid"
+                  [class.fa-check-double]="msg.isRead"
+                  [class.fa-check]="!msg.isRead"
+                  [style.color]="msg.isRead ? '#ffffff' : 'rgba(255,255,255,0.7)'"
+                  style="font-size: 11px"
+                >
+                </i>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isTyping" class="d-flex">
+            <div class="bg-white rounded-4 px-3 py-2 shadow-sm text-muted">
+              <i class="fa-solid fa-ellipsis"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="px-4 py-3 border-top bg-white">
+          <div class="d-flex align-items-center gap-2">
+            <label
+              class="btn btn-light border rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0"
+              style="width: 40px; height: 40px"
+              title="إرفاق صورة"
+            >
+              <i class="fa-solid fa-paperclip text-muted"></i>
+              <input type="file" hidden accept="image/*" (change)="sendImage($event)" />
+            </label>
+
+            <input
+              type="text"
+              class="form-control rounded-pill"
+              [(ngModel)]="messageText"
+              (keyup)="onTyping()"
+              (keyup.enter)="sendMessage()"
+              placeholder="اكتب رسالتك..."
+            />
+
+            <button
+              class="btn rounded-circle text-white d-flex align-items-center justify-content-center flex-shrink-0"
+              style="width: 40px; height: 40px; background: #1aacdc"
+              (click)="sendMessage()"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noChat>
+        <div class="h-100 d-flex flex-column align-items-center justify-content-center">
+          <i class="fa-regular fa-comment-dots mb-3" style="font-size: 64px; color: #1aacdc"></i>
+          <p class="text-muted fs-5">اختر محادثة للبدء</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

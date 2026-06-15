@@ -5,3 +5,7 @@
 .conv-item:hover {
   background: #f0f9fd;
 }
+.active-conv {
+  background: #e8f7fc;
+  border-right: 3px solid #1AACDC;
+}

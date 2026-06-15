@@ -31,14 +31,14 @@
         class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
         style="width: 48px; height: 48px; background: #1aacdc; font-size: 20px"
       >
-        {{ conv.otherUserName[0] }}
+        {{ conv.otherPartyName?.[0] ?? '?' }}
       </div>
 
       <!-- Info -->
       <div class="flex-grow-1 overflow-hidden">
         <div class="d-flex justify-content-between align-items-center">
           <span class="fw-semibold text-truncate" style="color: #1a1a2e">
-            {{ conv.otherUserName }}
+            {{ conv.otherPartyName }}
           </span>
           <small class="text-muted flex-shrink-0 ms-2" style="font-size: 11px">
             {{ conv.lastMessageTime }}

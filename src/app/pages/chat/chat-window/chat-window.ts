@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ChatMessage, Conversation } from '../../../models/chat-message.model';
-import { ChatSingnalr } from '../../../services/chat-singnalr';
+import { ChatSignalRService } from '../../../services/chat-signalr';
 import { ChatApi } from '../../../services/chat-api';
 import { MessageBuddle } from "../message-buddle/message-buddle";
 import { FormsModule } from '@angular/forms';
@@ -20,13 +20,14 @@ export class ChatWindow implements OnChanges {
   isTyping = false;
 
   constructor(
-    private signalR: ChatSingnalr,
+    private signalR: ChatSignalRService,
     private chatApi: ChatApi
   ) {}
 
   ngOnChanges() {
     if (this.conversation) {
-      this.signalR.userTyping$.subscribe(requestId => {
+      this.signalR.userTyping$.subscribe(data => {
+        const requestId = typeof data === 'number' ? data : data.requestId;
         if (requestId === this.conversation.requestId) {
           this.isTyping = true;
           setTimeout(() => this.isTyping = false, 2000);
@@ -50,6 +51,6 @@ export class ChatWindow implements OnChanges {
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    this.chatApi.uploadFile(this.conversation.requestId, file).subscribe();
+    this.chatApi.uploadFile(this.conversation.requestId, file, 'Image').subscribe();
   }
 }

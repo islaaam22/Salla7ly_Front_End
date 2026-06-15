@@ -53,7 +53,7 @@ export class TechnicianLayout implements OnInit {
   {
     label: 'المحادثات',
     icon: 'fa-regular fa-message',
-    route: '/technician/messages'
+    route: '/technician/chat'
   },
   {
     label: 'الملف الشخصي',

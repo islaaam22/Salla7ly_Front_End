@@ -5,10 +5,10 @@
       class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
       style="width: 44px; height: 44px; background: #1aacdc; font-size: 18px"
     >
-      {{ conversation.otherUserName[0] }}
+      {{ conversation.otherPartyName[0] }}
     </div>
     <div class="flex-grow-1">
-      <div class="fw-semibold" style="color: #1a1a2e">{{ conversation.otherUserName }}</div>
+      <div class="fw-semibold" style="color: #1a1a2e">{{ conversation.otherPartyName }}</div>
       <small class="text-muted" style="font-size: 12px">
         <span *ngIf="isTyping"> <i class="fa-regular fa-comment-dots"></i> جاري الكتابة... </span>
         <span *ngIf="!isTyping">متصل الآن</span>

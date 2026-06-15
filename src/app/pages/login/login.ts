@@ -21,7 +21,10 @@ export class Login {
   emailError = '';
   passwordError = '';
 
-  constructor(private router: Router, private authService: Auth) {}
+  constructor(
+    private router: Router,
+    private authService: Auth,
+  ) {}
 
   selectRole(role: 'Customer' | 'Technician' | 'Admin') {
     this.selectedRole = role;
@@ -51,7 +54,7 @@ export class Login {
     return valid;
   }
 
-onLogin() {
+  onLogin() {
     if (!this.validate()) return;
 
     this.loading = true;
@@ -60,13 +63,20 @@ onLogin() {
     this.authService.login(this.email, this.password, this.selectedRole).subscribe({
       next: (res) => {
         this.loading = false;
-        this.authService.saveToken(res.token, this.selectedRole, res.refreshToken);
+
+        this.authService.saveToken(
+          res.token,
+          this.selectedRole,
+          res.refreshToken,
+          res.userName ?? res.name ?? this.email.split('@')[0],
+        );
         this.redirectByRole(this.selectedRole);
       },
+
       error: (err) => {
         this.loading = false;
         this.errorMsg = err.error?.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-      }
+      },
     });
   }
 
