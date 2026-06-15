@@ -7,9 +7,14 @@ import { Home } from './pages/home/home';
 import { WhoAreWe } from './pages/who-are-we/who-are-we';
 import { Services } from './pages/services/services';
 import { Notfound } from './pages/notfound/notfound';
+
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
+import { ChatComponent } from './pages/chat/chat';
+import { ChatWindow } from './pages/chat/chat-window/chat-window';
+import { ConversationList } from './pages/chat/conversation-list/conversation-list';
+import { MessageBuddle } from './pages/chat/message-buddle/message-buddle';
 import { CustomerProfile } from './pages/customer-profile/customer-profile';
 import { CustomerLayout } from './pages/customer-layout/customer-layout';
 
@@ -18,6 +23,12 @@ import { CustomerEdit } from './pages/customer-edit/customer-edit';
 import { NewRequest } from './pages/customer/new-request/new-request';
 import { MyRequests } from './pages/customer/my-requests/my-requests';
 import { Review } from './pages/customer/review/review';
+
+
+import { TechnicianLayout } from './technician/layout/technician-layout';
+import { TechnicianProfile } from './technician/pages/profile/profile';
+import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
+import { AvailableRequests } from './technician/pages/available-requests/available-requests';
 
 
 export const routes: Routes = [
@@ -32,6 +43,10 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
+  // {path : 'chat' , component: ChatComponent},
+  // {path : 'chat-window' , component: ChatWindow},
+  // {path : 'conversation-list' , component: ConversationList},
+  // {path : 'message-buddle' , component: MessageBuddle},
   {
     path: 'customer',
     component: CustomerLayout,
@@ -42,8 +57,26 @@ export const routes: Routes = [
       { path: 'new-request', component: NewRequest },
       { path: 'my-requests', component: MyRequests },
       { path: 'review/:id', component: Review },
+      { path: 'chat', component: ChatComponent },
+      { path: 'chat/:id', component: ChatComponent },
     ]
   },
+  {
+    path: 'technician',
+    component: TechnicianLayout,
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'profile', component: TechnicianProfile },
+      { path: 'edit-profile', component: TechnicianEditProfile },
+      { path: 'available-requests', component: AvailableRequests },
+      { path: 'chat', component: ChatComponent },
+      { path: 'chat/:id', component: ChatComponent },
+    ]
+  },
+
+
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];
+
+

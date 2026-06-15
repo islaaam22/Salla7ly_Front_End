@@ -10,8 +10,12 @@ export class Auth {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string, role: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { email, password, role });
+  login(email: string, password: string, role?: string): Observable<any> {
+    const body: any = { email, password };
+    if (role) {
+      body.role = role;
+    }
+    return this.http.post(`${this.apiUrl}/Auth/login`, body);
   }
 
   registerCustomer(formData: any): Observable<any> {
@@ -26,6 +30,7 @@ export class Auth {
   {
     return this.http.post(`${this.apiUrl}/Auth/register-admin`,data)
   }
+
 
 forgotPassword(email: string): Observable<any> {
   return this.http.post(
@@ -47,6 +52,21 @@ resetPassword(email: string, otp: string, newPassword: string): Observable<any> 
   });
 }
 
+saveToken(token: string, role: string, refreshToken?: string, userName?: string) {
+  localStorage.setItem('token', token);
+  localStorage.setItem('role', role);
+  if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+  if (userName) localStorage.setItem('userName', userName);
+
+  // استخرج الـ userId من الـ token
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    if (userId) localStorage.setItem('userId', userId);
+  } catch (e) {
+    console.error('Failed to parse token', e);
+  }
+}
 
   refreshToken(): Observable<any> {
     const token = this.getToken();
@@ -63,16 +83,7 @@ resetPassword(email: string, otp: string, newPassword: string): Observable<any> 
     localStorage.removeItem('role');
   }
 
- saveToken(token: string, role: string, refreshToken?: string, userName?: string) {
-  localStorage.setItem('token', token);
-  localStorage.setItem('role', role);
-  if (refreshToken) {
-    localStorage.setItem('refreshToken', refreshToken);
-  }
-  if (userName) {
-    localStorage.setItem('userName', userName);
-  }
-}
+
 
   getToken(): string | null {
     return localStorage.getItem('token');
@@ -85,4 +96,10 @@ resetPassword(email: string, otp: string, newPassword: string): Observable<any> 
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  getUser(): any {
+  const data = localStorage.getItem('user');
+  return data ? JSON.parse(data) : null;
+}
+
 }

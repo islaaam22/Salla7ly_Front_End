@@ -1,0 +1,6 @@
+/* .bubble-wrapper { display: flex; }
+.bubble-wrapper.mine { justify-content: flex-start; }
+.bubble-wrapper:not(.mine) { justify-content: flex-end; }
+.bubble { max-width: 65%; background: #f0f0f0; border-radius: 16px; padding: 10px 14px; position: relative; }
+.bubble-wrapper.mine .bubble { background: #1AACDC; color: white; }
+.bubble-time { font-size: 11px; opacity: 0.7; margin-top: 4px; display: block; text-align: left; } */
