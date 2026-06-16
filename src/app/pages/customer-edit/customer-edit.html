@@ -1,5 +1,4 @@
-<div class="container py-5" dir="rtl">
-
+<div class="container py-5" style="background-color: #f8f9fa;" dir="rtl">
   <!-- loading -->
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
@@ -9,7 +8,6 @@
 
   <!-- content -->
   <div *ngIf="!loading">
-
     <!-- header -->
     <div class="text-center mb-4">
       <small class="text-primary fw-semibold">حسابي</small>
@@ -18,7 +16,7 @@
     </div>
 
     <div class="d-flex justify-content-start mb-3">
-      <button class="btn btn-light border" (click)="goBack()">رجوع للملف الشخصي ←</button>
+      <button class="btn btn-light border rounded-4" (click)="goBack()">رجوع للملف الشخصي <i class="fa-solid fa-left-long"></i></button>
     </div>
 
     <!-- success message -->
@@ -26,39 +24,53 @@
 
     <!-- validation errors -->
     <div *ngIf="validationErrors.length > 0" class="alert alert-danger">
-      <ul class="mb-0 text-end" style="list-style: none; padding: 0;">
-        <li *ngFor="let msg of validationErrors">⚠ {{ msg }}</li>
+      <ul class="mb-0 text-end" style="list-style: none; padding: 0">
+        <li *ngFor="let msg of validationErrors"><i class="fa-solid fa-triangle-exclamation"></i> {{ msg }}</li>
       </ul>
     </div>
 
     <div class="row g-4">
-
       <!-- form -->
       <div class="col-lg-8">
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm border-1 rounded-4">
           <div class="card-body p-4">
-            <h5 class="fw-bold text-end mb-4">البيانات الشخصية 👤</h5>
+            <h5 class="fw-bold text-end mb-4"><i class="fa-solid fa-user text-primary ms-2"></i>البيانات الشخصية </h5>
 
             <div class="mb-3">
-              <label class="form-label text-end w-100">الاسم الكامل</label>
-              <input type="text" class="form-control text-end" [(ngModel)]="name"
-                     name="name" placeholder="الاسم الكامل">
+              <label class="form-label text-end w-100"><i class="fa-solid fa-address-card ms-2 text-body"></i>الاسم الكامل</label>
+              <input
+                type="text"
+                class="form-control text-end"
+                [(ngModel)]="name"
+                name="name"
+                placeholder="الاسم الكامل"
+              />
             </div>
 
             <div class="mb-3">
-              <label class="form-label text-end w-100">رقم الهاتف</label>
-              <input type="text" class="form-control text-end" [(ngModel)]="phoneNumber"
-                     name="phoneNumber" placeholder="+20 100 000 0000">
+              <label class="form-label text-end w-100"> <i class="fa-solid fa-phone ms-2"></i> رقم الهاتف</label>
+              <input
+                type="text"
+                class="form-control text-end"
+                [(ngModel)]="phoneNumber"
+                name="phoneNumber"
+                placeholder="+20 100 000 0000"
+              />
             </div>
 
             <div class="mb-4">
-              <label class="form-label text-end w-100">العنوان</label>
-              <input type="text" class="form-control text-end" [(ngModel)]="addressDetails"
-                     name="addressDetails" placeholder="مثال: المعادي، القاهرة">
+              <label class="form-label text-end w-100"> <i class="fa-solid fa-location-dot ms-2"></i> العنوان</label>
+              <input
+                type="text"
+                class="form-control text-end"
+                [(ngModel)]="mainAddress"
+                name="addressDetails"
+                placeholder="مثال: المعادي، القاهرة"
+              />
             </div>
 
             <button class="btn btn-primary" (click)="save()" [disabled]="saving">
-              {{ saving ? 'جارٍ الحفظ...' : 'حفظ التغييرات 💾' }}
+              {{ saving ? 'جارٍ الحفظ...' : 'حفظ التغييرات ' }}<i class="fa-solid fa-floppy-disk me-2"></i>
             </button>
           </div>
         </div>
@@ -66,18 +78,23 @@
 
       <!-- sidebar preview -->
       <div class="col-lg-4">
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm border-1 rounded-4" >
           <div class="card-body text-center p-4">
-            <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                 style="width: 110px; height: 110px; background: linear-gradient(135deg, #6a8cff, #d9a06b);">
+            <div
+              class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="
+                width: 110px;
+                height: 110px;
+                background: linear-gradient(135deg, #6a8cff, #d9a06b);
+              "
+            >
               <span class="fs-1 fw-bold text-white">{{ initial }}</span>
             </div>
             <h4 class="fw-bold mb-1">{{ name }}</h4>
-            <p class="text-muted">{{ email }} ✉</p>
+            <p class="text-muted">{{ email }} <i class="fa-solid fa-envelope"></i></p>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>

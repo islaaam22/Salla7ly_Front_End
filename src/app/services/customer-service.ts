@@ -18,7 +18,7 @@ export class CustomerService {
     const formData = new FormData();
     formData.append('Name', data.name);
     formData.append('PhoneNumber', data.phoneNumber);
-    formData.append('AddressDetails', data.addressDetails);
+    formData.append('AddressDetails', data.mainAddress);
 
     return this.http.put(`${this.baseUrl}/${id}`, formData);
   }

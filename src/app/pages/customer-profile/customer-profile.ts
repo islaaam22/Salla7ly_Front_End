@@ -8,7 +8,8 @@ import { RouterLink } from '@angular/router';
   selector: 'app-customer-profile',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './customer-profile.html'
+  templateUrl: './customer-profile.html',
+  styleUrl: './customer-profile.css'
 })
 export class CustomerProfile implements OnInit {
   customer?: CustomerProfileDetails;

@@ -1,18 +1,17 @@
 <div dir="rtl">
-
   <!-- Back -->
-  <a routerLink="/technician/profile"
-     class="d-inline-flex align-items-center gap-2 text-decoration-none text-dark mb-3"
-     style="font-size:15px;">
+  <a
+    routerLink="/technician/profile"
+    class="d-inline-flex align-items-center gap-2 text-decoration-none text-dark mb-3"
+    style="font-size: 15px"
+  >
     <i class="fa-solid fa-arrow-right"></i> رجوع
   </a>
 
   <!-- Header -->
   <div class="text-end mb-4">
-    <h1 class="fw-bold" style="font-size:32px;color:#0f172a;">
-      تعديل الملف الشخصي
-    </h1>
-    <p class="text-muted" style="font-size:16px;">
+    <h1 class="fw-bold" style="font-size: 32px; color: #0f172a">تعديل الملف الشخصي</h1>
+    <p class="text-muted" style="font-size: 16px">
       تحديث بياناتك الأساسية (الاسم، البريد، الهاتف، العنوان وكلمة المرور).
     </p>
   </div>
@@ -24,73 +23,102 @@
   </div>
 
   <div *ngIf="!loading" class="row g-4">
-
-    
     <!-- Left: Change Password -->
-     
+
     <div class="col-4">
-      <div class="bg-white rounded-4 p-4" style="border:1px solid #e8edf2;">
-        <h5 class="fw-bold text-end mb-4" style="color:#0f172a;">
-          <i class="fa-solid fa-lock me-2" style="color:#1787e0;"></i>
+      <div class="bg-white rounded-4 p-4" style="border: 1px solid #e8edf2">
+        <h5 class="fw-bold text-end mb-4" style="color: #0f172a">
+          <i class="fa-solid fa-lock me-2" style="color: #1787e0"></i>
           تغيير كلمة المرور
         </h5>
 
         <div class="mb-3">
-          <label class="form-label fw-bold w-100 text-end mb-1" style="font-size:14px;">
+          <label class="form-label fw-bold w-100 text-end mb-1" style="font-size: 14px">
             كلمة المرور الحالية
           </label>
-          <input type="password" class="form-control text-end"
-                 [(ngModel)]="currentPassword" name="currentPassword"
-                 style="height:50px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+          <input
+            type="password"
+            class="form-control text-end"
+            [(ngModel)]="currentPassword"
+            name="currentPassword"
+            style="height: 50px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-bold w-100 text-end mb-1" style="font-size:14px;">
+          <label class="form-label fw-bold w-100 text-end mb-1" style="font-size: 14px">
             كلمة المرور الجديدة
           </label>
-          <input type="password" class="form-control text-end"
-                 [(ngModel)]="newPassword" name="newPassword"
-                 style="height:50px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+          <input
+            type="password"
+            class="form-control text-end"
+            [(ngModel)]="newPassword"
+            name="newPassword"
+            style="height: 50px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-bold w-100 text-end mb-1" style="font-size:14px;">
+          <label class="form-label fw-bold w-100 text-end mb-1" style="font-size: 14px">
             تأكيد كلمة المرور
           </label>
-          <input type="password" class="form-control text-end"
-                 [(ngModel)]="confirmPassword" name="confirmPassword"
-                 style="height:50px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+          <input
+            type="password"
+            class="form-control text-end"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            style="height: 50px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
         </div>
 
-        <div *ngIf="passwordError" class="alert alert-danger text-end py-2 mb-3" style="border-radius:10px;font-size:14px;">
+        <div
+          *ngIf="passwordError"
+          class="alert alert-danger text-end py-2 mb-3"
+          style="border-radius: 10px; font-size: 14px"
+        >
           {{ passwordError }}
         </div>
-        <div *ngIf="passwordSuccess" class="alert text-end py-2 mb-3"
-             style="border-radius:10px;font-size:14px;background:#e8fdf2;border:1px solid #a3e6c3;color:#1a7a47;">
+        <div
+          *ngIf="passwordSuccess"
+          class="alert text-end py-2 mb-3"
+          style="
+            border-radius: 10px;
+            font-size: 14px;
+            background: #e8fdf2;
+            border: 1px solid #a3e6c3;
+            color: #1a7a47;
+          "
+        >
           {{ passwordSuccess }}
         </div>
 
-        <button class="btn w-100 text-white fw-bold"
-                [disabled]="passwordLoading"
-                (click)="onChangePassword()"
-                style="background:#0f172a;border-radius:12px;height:48px;">
+        <button
+          class="btn w-100 text-white fw-bold"
+          [disabled]="passwordLoading"
+          (click)="onChangePassword()"
+          style="background: #0f172a; border-radius: 12px; height: 48px"
+        >
           {{ passwordLoading ? 'جاري الحفظ...' : 'تحديث كلمة المرور' }}
         </button>
       </div>
     </div>
- 
 
     <!-- Right: Profile Form -->
     <div class="col-8">
-      <div class="bg-white rounded-4 p-4" style="border:1px solid #e8edf2;">
-
+      <div class="bg-white rounded-4 p-4" style="border: 1px solid #e8edf2">
         <!-- Avatar -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <div class="rounded-circle d-flex justify-content-center align-items-center fw-bold text-white"
-               style="width:70px;height:70px;font-size:28px;background:linear-gradient(135deg,#1787e0,#30aaaa);">
+          <div
+            class="rounded-circle d-flex justify-content-center align-items-center fw-bold text-white"
+            style="
+              width: 70px;
+              height: 70px;
+              font-size: 28px;
+              background: linear-gradient(135deg, #1787e0, #30aaaa);
+            "
+          >
             {{ avatarLetter }}
           </div>
-
         </div>
 
         <!-- Full Name -->
@@ -98,9 +126,13 @@
           <label class="form-label fw-bold w-100 text-end mb-1">
             <i class="fa-regular fa-user me-1"></i> الاسم الكامل
           </label>
-          <input type="text" class="form-control text-end"
-                 [(ngModel)]="fullName" name="fullName"
-                 style="height:54px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+          <input
+            type="text"
+            class="form-control text-end"
+            [(ngModel)]="fullName"
+            name="fullName"
+            style="height: 54px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
         </div>
 
         <!-- Email -->
@@ -108,9 +140,13 @@
           <label class="form-label fw-bold w-100 text-end mb-1">
             <i class="fa-regular fa-envelope me-1"></i> البريد الإلكتروني
           </label>
-          <input type="email" class="form-control text-end"
-                 [(ngModel)]="email" name="email"
-                 style="height:54px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+          <input
+            type="email"
+            class="form-control text-end"
+            [(ngModel)]="email"
+            name="email"
+            style="height: 54px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
         </div>
 
         <!-- Phone -->
@@ -118,69 +154,95 @@
           <label class="form-label fw-bold w-100 text-end mb-1">
             <i class="fa-solid fa-phone me-1"></i> رقم الهاتف
           </label>
-          <input type="text" class="form-control text-end"
-                 [(ngModel)]="phoneNumber" name="phoneNumber"
-                 placeholder="+20 1xx xxx xxxx"
-                 style="height:54px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+          <input
+            type="text"
+            class="form-control text-end"
+            [(ngModel)]="phoneNumber"
+            name="phoneNumber"
+            placeholder="+20 1xx xxx xxxx"
+            style="height: 54px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
         </div>
 
-
-<!-- Experience Years -->
-<div class="mb-3">
-  <label class="form-label fw-bold w-100 text-end mb-1">
-    <i class="fa-solid fa-briefcase me-1"></i> سنوات الخبرة
-  </label>
-  <input type="number" class="form-control text-end"
-         [(ngModel)]="experienceYears" name="experienceYears"
-         min="0" max="50"
-         style="height:54px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
-</div>
+        <!-- Experience Years -->
+        <div class="mb-3">
+          <label class="form-label fw-bold w-100 text-end mb-1">
+            <i class="fa-solid fa-briefcase me-1"></i> سنوات الخبرة
+          </label>
+          <input
+            type="number"
+            class="form-control text-end"
+            [(ngModel)]="experienceYears"
+            name="experienceYears"
+            min="0"
+            max="50"
+            style="height: 54px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
+        </div>
 
         <!-- Bio -->
         <div class="mb-4">
           <label class="form-label fw-bold w-100 text-end mb-1">
-        <i class="fa-regular fa-id-card me-1"></i> نبذة عنك
-      </label>
+            <i class="fa-regular fa-id-card me-1"></i> نبذة عنك
+          </label>
 
-        <textarea class="form-control text-end"
-          [(ngModel)]="bio" name="bio" rows="3"
-          placeholder="اكتب نبذة قصيرة عن خبرتك..."
-          style="border-radius:12px;border:1px solid #d9e1e8;padding:12px 16px;"></textarea>
-
+          <textarea
+            class="form-control text-end"
+            [(ngModel)]="bio"
+            name="bio"
+            rows="3"
+            placeholder="اكتب نبذة قصيرة عن خبرتك..."
+            style="border-radius: 12px; border: 1px solid #d9e1e8; padding: 12px 16px"
+          ></textarea>
         </div>
 
-<!-- Image URL -->
-<div class="mb-3">
-  <label class="form-label fw-bold w-100 text-end mb-1">
-    <i class="fa-solid fa-image me-1"></i> رابط الصورة الشخصية
-  </label>
-  <input type="text" class="form-control text-end"
-         [(ngModel)]="imageUrl" name="imageUrl"
-         placeholder="https://example.com/image.jpg"
-         style="height:54px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
-</div>
+        <!-- Image URL -->
+        <div class="mb-3">
+          <label class="form-label fw-bold w-100 text-end mb-1">
+            <i class="fa-solid fa-image me-1"></i> رابط الصورة الشخصية
+          </label>
+          <input
+            type="text"
+            class="form-control text-end"
+            [(ngModel)]="imageUrl"
+            name="imageUrl"
+            placeholder="https://example.com/image.jpg"
+            style="height: 54px; border-radius: 12px; border: 1px solid #d9e1e8; padding: 0 16px"
+          />
+        </div>
 
-
-        <div *ngIf="errorMsg" class="alert alert-danger text-end mb-3" style="border-radius:12px;">
+        <div *ngIf="errorMsg" class="alert alert-danger text-end mb-3" style="border-radius: 12px">
           {{ errorMsg }}
         </div>
-        <div *ngIf="successMsg" class="alert text-end mb-3"
-             style="border-radius:12px;background:#e8fdf2;border:1px solid #a3e6c3;color:#1a7a47;">
+        <div
+          *ngIf="successMsg"
+          class="alert text-end mb-3"
+          style="
+            border-radius: 12px;
+            background: #e8fdf2;
+            border: 1px solid #a3e6c3;
+            color: #1a7a47;
+          "
+        >
           {{ successMsg }}
         </div>
 
-        <button class="btn w-100 text-white fw-bold"
-                [disabled]="saving"
-                (click)="onSaveProfile()"
-                style="height:54px;border:none;border-radius:12px;font-size:18px;
-                       background:linear-gradient(90deg,#3eacdf,#4290d0);">
+        <button
+          class="btn btn-primary w-100 text-white fw-bold"
+          [disabled]="saving"
+          (click)="onSaveProfile()"
+          style="
+            height: 54px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+
+          "
+        >
           <i class="fa-regular fa-floppy-disk me-2"></i>
           {{ saving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
         </button>
-
       </div>
     </div>
-
   </div>
-
 </div>

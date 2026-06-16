@@ -47,7 +47,6 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
   padding: 13px 24px;
   cursor: pointer;
   transition: all 0.2s;
@@ -55,7 +54,7 @@
   color: #64748b;
   font-size: 15px;
   font-weight: 500;
-  border-right: 3px solid transparent;
+  border-right: 3px solid transparent ;
 }
 
 .nav-item:hover {
@@ -85,6 +84,7 @@
 .user-info {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
   margin-bottom: 12px;
 }
@@ -120,6 +120,7 @@
 .logout-btn {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   width: 100%;
   padding: 10px 0;
@@ -134,7 +135,9 @@
 
 .logout-btn:hover {
   opacity: 0.75;
-
+  background-color: red;
+  color: #fff;
+  border-radius: 50px;
 }
 
 .main-content {
