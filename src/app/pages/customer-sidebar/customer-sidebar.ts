@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
@@ -8,25 +7,29 @@ import { Auth } from '../../services/auth';
   selector: 'app-customer-sidebar',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
-  templateUrl: './customer-sidebar.html'
+  templateUrl: './customer-sidebar.html',
+  styleUrl: './customer-sidebar.css',
 })
 export class CustomerSidebar implements OnInit {
   userName = '';
   userInitial = '?';
 
   navItems = [
-    { label: 'لوحة التحكم',     icon: '▦',  link: '/customer/profile' },
-    { label: 'طلب جديد',        icon: '＋', link: '/customer/new-request' },
-    { label: 'طلباتي',          icon: '☰',  link: '/customer/my-requests' },
-    { label: 'العروض المستلمة', icon: '✎',  link: '#' },
-    { label: 'المحفظة',         icon: '▭',  link: '#' },
-    { label: 'الإشعارات',       icon: '🔔', link: '#' },
-    { label: 'المحادثات',       icon: '💬', link: '/customer/chat' },
-    { label: 'الملف الشخصي',   icon: '👤', link: '/customer/profile' },
-    { label: 'الإعدادات',       icon: '⚙',  link: '#' }
+    { label: 'لوحة التحكم', icon: 'fa-solid fa-table-cells-large', link: '#' },
+    { label: 'الملف الشخصي', icon: 'fa-regular fa-user', link: '/customer/profile' },
+    { label: 'طلب جديد', icon: 'fa-regular fa-clipboard', link: '/customer/new-request' },
+    { label: 'طلباتي', icon: 'fa-solid fa-briefcase', link: '/customer/my-requests' },
+    { label: 'العروض المستلمة', icon: 'fa-solid fa-cart-arrow-down', link: '#' },
+    { label: 'المحفظة', icon: 'fa-solid fa-wallet', link: '#' },
+    { label: 'الإشعارات', icon: 'fa-regular fa-bell', link: '#' },
+    { label: 'المحادثات', icon: 'fa-regular fa-message', link: '/customer/chat' },
+    // { label: 'الإعدادات', icon: 'fa-solid fa-gear', link: '#' },
   ];
 
-  constructor(private authService: Auth, private router: Router) {}
+  constructor(
+    private authService: Auth,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     const name = localStorage.getItem('userName') ?? 'مستخدم';

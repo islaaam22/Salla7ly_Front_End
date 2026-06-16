@@ -15,7 +15,7 @@ export class CustomerEdit implements OnInit {
   // form fields
   name = '';
   phoneNumber = '';
-  addressDetails = '';
+  mainAddress = '';
 
   // sidebar preview
   email = '';
@@ -39,7 +39,7 @@ export class CustomerEdit implements OnInit {
         this.name = data.name;
         this.phoneNumber = data.phoneNumber;
         this.email = data.email;
-        this.addressDetails = data.mainAddress;
+        this.mainAddress = data.mainAddress;
         this.loading = false;
       },
       error: () => {
@@ -61,7 +61,7 @@ export class CustomerEdit implements OnInit {
     this.customerService.updateProfile(this.customerId, {
       name: this.name,
       phoneNumber: this.phoneNumber,
-      addressDetails: this.addressDetails
+      mainAddress: this.mainAddress
     }).subscribe({
       next: () => {
         this.saving = false;

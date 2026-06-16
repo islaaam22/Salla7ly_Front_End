@@ -12,5 +12,5 @@ export interface CustomerProfileDetails {
 export interface CustomerProfileUpdate {
   name: string;
   phoneNumber: string;
-  addressDetails: string;
+  mainAddress: string;
 }
