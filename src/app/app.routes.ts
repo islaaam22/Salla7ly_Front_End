@@ -25,10 +25,12 @@ import { MyRequests } from './pages/customer/my-requests/my-requests';
 import { Review } from './pages/customer/review/review';
 
 
+
 import { TechnicianLayout } from './technician/layout/technician-layout';
 import { TechnicianProfile } from './technician/pages/profile/profile';
 import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
 import { AvailableRequests } from './technician/pages/available-requests/available-requests';
+import { TechnicianVerification } from './technician/pages/verification/verification';
 
 
 export const routes: Routes = [
@@ -71,6 +73,7 @@ export const routes: Routes = [
       { path: 'available-requests', component: AvailableRequests },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
+      { path: 'verification', component: TechnicianVerification },
     ]
   },
 
