@@ -30,7 +30,7 @@ import { TechnicianProfile } from './technician/pages/profile/profile';
 import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
 import { AvailableRequests } from './technician/pages/available-requests/available-requests';
 
-
+import { PreviousWorks } from './technician/pages/previous-works/previous-works';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register },
@@ -71,6 +71,8 @@ export const routes: Routes = [
       { path: 'available-requests', component: AvailableRequests },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
+
+      { path: 'previous-works', component: PreviousWorks },
     ]
   },
 
