@@ -1,0 +1,24 @@
+<!-- request-bids.component.html (Customer view) -->
+<h3>العروض المقدمة ({{ bidCount }})</h3>
+
+<div class="bid-card" *ngFor="let bid of bids">
+  <div class="tech-info">
+    <img [src]="bid.technicianImage || '/assets/default-avatar.png'" />
+    <span>{{ bid.technicianName }}</span>
+  </div>
+
+  <div class="bid-details">
+    <span class="price">{{ bid.price }} ج.م</span>
+    <span class="duration">{{ bid.estimatedDurationMinutes }} دقيقة</span>
+    <p class="message">{{ bid.proposalMessage }}</p>
+  </div>
+
+  <div class="bid-status" [ngClass]="bid.status">
+    {{ bid.status }}
+  </div>
+
+  <div class="actions" *ngIf="bid.status === 'pending'">
+    <button (click)="acceptBid(bid.id)">قبول</button>
+    <button (click)="rejectBid(bid.id)">رفض</button>
+  </div>
+</div>

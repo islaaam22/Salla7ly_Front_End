@@ -1,0 +1,23 @@
+<!-- submit-bid.component.html (Technician view) -->
+<form *ngIf="!myBidId" (ngSubmit)="submitBid()">
+  <input type="number" placeholder="السعر" [(ngModel)]="price" name="price" required />
+  <input
+    type="number"
+    placeholder="المدة المتوقعة (دقيقة)"
+    [(ngModel)]="estimatedDurationMinutes"
+    name="duration"
+    required
+  />
+  <textarea
+    placeholder="رسالة العرض"
+    [(ngModel)]="proposalMessage"
+    name="message"
+    required
+  ></textarea>
+  <button type="submit" [disabled]="isSubmitting">إرسال العرض</button>
+</form>
+
+<div *ngIf="myBidId" class="my-bid-status">
+  <p>تم إرسال عرضك. في انتظار رد العميل...</p>
+  <button (click)="withdrawBid()">سحب العرض</button>
+</div>
