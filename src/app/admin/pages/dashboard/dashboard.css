@@ -1,0 +1,22 @@
+:host{
+  display:block;
+  width:100%;
+}
+
+.dashboard-container{
+  direction: rtl;
+  text-align: right;
+  padding: 20px;
+}
+
+.dashboard-title{
+  font-size: 42px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.welcome-text{
+  font-size: 18px;
+  color: #6b7280;
+}

@@ -29,8 +29,14 @@ import { TechnicianLayout } from './technician/layout/technician-layout';
 import { TechnicianProfile } from './technician/pages/profile/profile';
 import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
 import { AvailableRequests } from './technician/pages/available-requests/available-requests';
+import { AssignedTasksComponent } from './technician/pages/assigned-tasks/assigned-tasks';
+import { TaskDetailsComponent } from './technician/pages/task-details/task-details';
 
 import { PreviousWorks } from './technician/pages/previous-works/previous-works';
+
+import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
+import { Dashboard } from './admin/pages/dashboard/dashboard';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register },
@@ -73,9 +79,18 @@ export const routes: Routes = [
       { path: 'chat/:id', component: ChatComponent },
 
       { path: 'previous-works', component: PreviousWorks },
+      { path: 'assigned-tasks', component: AssignedTasksComponent },
+      { path: 'task-details/:id', component: TaskDetailsComponent },
     ]
   },
-
+{
+  path: 'admin',
+  component: AdminLayout,
+  children: [
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: Dashboard }
+  ]
+},
 
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },

@@ -16,40 +16,53 @@ export class PreviousWorks implements OnInit {
   submitting = false;
   errorMsg = '';
   successMsg = '';
-
+  beforePreview = '';
+  afterPreview = '';
   technicianId = 1;
 
   form = {
     title: '',
     description: '',
-    beforeImageUrl: '',
-    afterImageUrl: '',
+    beforeImage: null as File | null,
+    afterImage: null as File | null,
   };
 
   constructor(private portfolioService: PortfolioService) {}
 
   ngOnInit() {
-    this.loadPortfolios();
-  }
-
-  loadPortfolios() {
-    this.loading = true;
-    this.portfolioService.getByTechnicianId(this.technicianId).subscribe({
+    this.portfolioService.getMyProfile().subscribe({
       next: (res) => {
-        this.portfolios = res;
-        this.loading = false;
+        this.technicianId = Number(res.id);
+        console.log('technicianId:', this.technicianId);
+        this.loadPortfolios();
       },
       error: () => {
-        this.loading = false;
+        this.loadPortfolios();
       }
     });
   }
+
+ loadPortfolios() {
+  this.loading = true;
+  this.portfolioService.getByTechnicianId(this.technicianId).subscribe({
+    next: (res) => {
+      console.log('Portfolio item:', res[0]); // ← ضيفي السطر ده
+      this.portfolios = res;
+      this.loading = false;
+    },
+    error: () => {
+      this.loading = false;
+    }
+  });
+}
 
   openModal() {
     this.showModal = true;
     this.errorMsg = '';
     this.successMsg = '';
-    this.form = { title: '', description: '', beforeImageUrl: '', afterImageUrl: '' };
+    this.beforePreview = '';
+    this.afterPreview = '';
+    this.form = { title: '', description: '', beforeImage: null, afterImage: null };
   }
 
   closeModal() {
@@ -60,12 +73,18 @@ export class PreviousWorks implements OnInit {
     const file = event.target.files[0];
     if (!file) return;
 
+    if (type === 'before') {
+      this.form.beforeImage = file;
+    } else {
+      this.form.afterImage = file;
+    }
+
     const reader = new FileReader();
     reader.onload = (e: any) => {
       if (type === 'before') {
-        this.form.beforeImageUrl = e.target.result;
+        this.beforePreview = e.target.result;
       } else {
-        this.form.afterImageUrl = e.target.result;
+        this.afterPreview = e.target.result;
       }
     };
     reader.readAsDataURL(file);
@@ -83,31 +102,51 @@ export class PreviousWorks implements OnInit {
     const payload = {
       technicianId: this.technicianId,
       caption: this.form.title,
-      imageUrl: this.form.beforeImageUrl || '',
-      type: 'before',
-      serviceRequestId: null
+      description: this.form.description,
+      beforeImage: this.form.beforeImage,
+      afterImage: this.form.afterImage,
     };
 
+    console.log('Payload:', payload);
+
     this.portfolioService.create(payload).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('Success:', res);
         this.submitting = false;
         this.successMsg = 'تم إضافة المشروع بنجاح!';
         this.loadPortfolios();
         setTimeout(() => this.closeModal(), 1500);
       },
-      error: () => {
+      error: (err) => {
+        console.log('Error:', err);
         this.submitting = false;
-        this.errorMsg = 'حدث خطأ، يرجى المحاولة مرة أخرى';
+        this.errorMsg = err?.error?.title ?? err?.error?.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى';
       }
     });
   }
 
-  deleteProject(id: number) {
-    if (!confirm('هل أنت متأكد من حذف هذا المشروع؟')) return;
+ showDeleteConfirm = false;
+deleteTargetId: number | null = null;
 
-    this.portfolioService.delete(id).subscribe({
-      next: () => this.loadPortfolios(),
-      error: () => alert('حدث خطأ أثناء الحذف')
-    });
-  }
+openDeleteConfirm(id: number) {
+  this.deleteTargetId = id;
+  this.showDeleteConfirm = true;
+}
+
+cancelDelete() {
+  this.showDeleteConfirm = false;
+  this.deleteTargetId = null;
+}
+
+confirmDelete() {
+  if (!this.deleteTargetId) return;
+  this.portfolioService.delete(this.deleteTargetId).subscribe({
+    next: () => {
+      this.showDeleteConfirm = false;
+      this.deleteTargetId = null;
+      this.loadPortfolios();
+    },
+    error: () => alert('حدث خطأ أثناء الحذف')
+  });
+}
 }
