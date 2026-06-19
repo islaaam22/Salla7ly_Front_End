@@ -77,10 +77,12 @@ saveToken(token: string, role: string, refreshToken?: string, userName?: string)
     });
   }
 
-  logout() {
+logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('role');
+    localStorage.removeItem('user');
+    // verification_status is intentionally kept across sessions
   }
 
 
