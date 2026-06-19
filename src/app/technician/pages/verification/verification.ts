@@ -16,23 +16,18 @@ type VerificationStatus = 'none' | 'pending' | 'approved' | 'rejected';
 export class TechnicianVerification implements OnInit {
   private apiUrl = 'https://sala7ly.runasp.net/api';
 
-  // View state
   loadingStatus = true;
   status: VerificationStatus = 'none';
   rejectionReason = '';
 
-  // Form fields
   nationalId = '';
   idFrontFile: File | null = null;
   idBackFile: File | null = null;
   idFrontPreview: string | null = null;
   idBackPreview: string | null = null;
-
   certificates: File[] = [];
-
   experienceYears: number | null = null;
   bio = '';
-
   submitting = false;
   errorMsg = '';
 
@@ -52,30 +47,60 @@ export class TechnicianVerification implements OnInit {
     return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 
-  // ── Load current verification status ───────────────────────────
+loadStatus() {
+    // Check localStorage FIRST before showing any loading spinner
+    const savedStatus = localStorage.getItem('verification_status');
+    if (
+      savedStatus === 'pending' ||
+      savedStatus === 'approved' ||
+      savedStatus === 'rejected'
+    ) {
+      this.status = savedStatus as VerificationStatus;
+      this.loadingStatus = false;
+      // Still sync with API in background silently
+      this.syncStatusFromApi();
+      return;
+    }
 
-  loadStatus() {
+    // No saved status — check API
     this.loadingStatus = true;
+    this.syncStatusFromApi();
+  }
 
-    this.http.get(`${this.apiUrl}/Technician/verification-status`, { headers: this.authHeaders() }).subscribe({
-      next: (data: any) => {
-        this.status = (data?.status || 'none').toLowerCase();
-        this.rejectionReason = data?.rejectionReason || '';
-        this.loadingStatus = false;
+  syncStatusFromApi() {
+    this.http.get(`${this.apiUrl}/Technician/mine`, { headers: this.authHeaders() }).subscribe({
+      next: (profile: any) => {
+        const techId = profile?.id;
+        if (!techId) {
+          this.loadingStatus = false;
+          return;
+        }
+
+        this.http.get(
+          `${this.apiUrl}/TechnicianVerification/technician/${techId}`,
+          { headers: this.authHeaders() }
+        ).subscribe({
+          next: (data: any) => {
+            const s = (data?.status || 'none').toLowerCase();
+            if (s === 'approved') this.status = 'approved';
+            else if (s === 'rejected') this.status = 'rejected';
+            else if (s === 'pending') this.status = 'pending';
+            else this.status = 'none';
+            this.rejectionReason = data?.rejectionReason || '';
+            localStorage.setItem('verification_status', this.status);
+            this.loadingStatus = false;
+          },
+          error: () => {
+            this.loadingStatus = false;
+          }
+        });
       },
-
       error: () => {
-        // If the endpoint doesn't exist yet or fails, just show the form
-        this.status = 'none';
         this.loadingStatus = false;
       }
-
     });
   }
 
-
-
-  // ── File handlers ───────────────────────────────────────────────
   onIdFrontSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -103,7 +128,6 @@ export class TechnicianVerification implements OnInit {
     this.certificates.splice(index, 1);
   }
 
-  // ── Validation ──────────────────────────────────────────────────
   validateForm(): boolean {
     this.errorMsg = '';
     if (!this.nationalId || this.nationalId.length !== 14) {
@@ -125,8 +149,6 @@ export class TechnicianVerification implements OnInit {
     return true;
   }
 
-  // ── Submit ──────────────────────────────────────────────────────
-
   onSubmitForReview() {
     if (!this.validateForm()) return;
 
@@ -134,19 +156,24 @@ export class TechnicianVerification implements OnInit {
     this.errorMsg = '';
 
     const formData = new FormData();
-    formData.append('NationalId', this.nationalId);
+    formData.append('IdNumber', this.nationalId);
     formData.append('ExperienceYears', this.experienceYears!.toString());
     formData.append('Bio', this.bio);
-    if (this.idFrontFile) formData.append('IdFrontImage', this.idFrontFile, this.idFrontFile.name);
-    if (this.idBackFile) formData.append('IdBackImage', this.idBackFile, this.idBackFile.name);
+    if (this.idFrontFile) formData.append('FrontImage', this.idFrontFile, this.idFrontFile.name);
+    if (this.idBackFile) formData.append('BackImage', this.idBackFile, this.idBackFile.name);
     this.certificates.forEach((cert) => {
-      formData.append('Certificates', cert, cert.name);
+      formData.append('DegreeCertificates', cert, cert.name);
     });
 
-    this.http.post(`${this.apiUrl}/Technician/verify`, formData, { headers: this.authHeaders() }).subscribe({
+    this.http.post(
+      `${this.apiUrl}/TechnicianVerification/submit`,
+      formData,
+      { headers: this.authHeaders() }
+    ).subscribe({
       next: () => {
         this.submitting = false;
         this.status = 'pending';
+        localStorage.setItem('verification_status', 'pending');
       },
       error: (err: any) => {
         this.submitting = false;
@@ -155,9 +182,8 @@ export class TechnicianVerification implements OnInit {
     });
   }
 
-  // ── Allow editing documents while pending ────────────────────────
   onEditDocuments() {
     this.status = 'none';
+    localStorage.removeItem('verification_status');
   }
-  
 }
