@@ -1,5 +1,4 @@
 <div class="page-wrapper" dir="rtl">
-
   <!-- Header -->
   <div class="page-header">
     <div>
@@ -34,11 +33,13 @@
       @for (item of portfolios; track item.id) {
         <div class="portfolio-card">
           <div class="card-images">
-
             <div class="image-box">
               <span class="image-label">قبل</span>
               @if (item.imageUrlBefore) {
-                <img [src]="'https://sala7ly.runasp.net' + item.imageUrlBefore" [alt]="item.title" />
+                <img
+                  [src]="'https://sala7ly.runasp.net' + item.imageUrlBefore"
+                  [alt]="item.title"
+                />
               } @else {
                 <div class="placeholder-img">
                   <i class="fa-regular fa-image"></i>
@@ -56,7 +57,6 @@
                 </div>
               }
             </div>
-
           </div>
 
           <div class="card-info">
@@ -78,23 +78,24 @@
   @if (showModal) {
     <div class="modal-overlay" (click)="closeModal()">
       <div class="modal-box" (click)="$event.stopPropagation()">
-
         <div class="modal-header">
+          <h3 class="text-end">إضافة مشروع جديد</h3>
           <button class="btn-close-modal" (click)="closeModal()">✕</button>
-          <h3>إضافة مشروع جديد</h3>
         </div>
 
         <div class="modal-body">
           <div class="form-group">
             <label>عنوان المشروع</label>
-            <input type="text" [(ngModel)]="form.title"
-                   placeholder="مثال: تركيب تكييف سبليت" />
+            <input type="text" [(ngModel)]="form.title" placeholder="مثال: تركيب تكييف سبليت" />
           </div>
 
           <div class="form-group">
             <label>الوصف</label>
-            <textarea [(ngModel)]="form.description" rows="3"
-                      placeholder="اشرح العمل الذي قمت به..."></textarea>
+            <textarea
+              [(ngModel)]="form.description"
+              rows="3"
+              placeholder="اشرح العمل الذي قمت به..."
+            ></textarea>
           </div>
 
           <div class="images-row">
@@ -102,28 +103,42 @@
               <label>صورة قبل</label>
               <div class="upload-box" (click)="beforeInput.click()">
                 @if (beforePreview) {
-                  <img [src]="beforePreview"
-                       style="width:100%;height:100%;object-fit:cover;border-radius:10px;" />
+                  <img
+                    [src]="beforePreview"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px"
+                  />
                 } @else {
                   <i class="fa-solid fa-upload"></i>
                 }
               </div>
-              <input #beforeInput type="file" accept="image/*" hidden
-                     (change)="onImageSelect($event, 'before')" />
+              <input
+                #beforeInput
+                type="file"
+                accept="image/*"
+                hidden
+                (change)="onImageSelect($event, 'before')"
+              />
             </div>
 
             <div class="form-group">
               <label>صورة بعد</label>
               <div class="upload-box" (click)="afterInput.click()">
                 @if (afterPreview) {
-                  <img [src]="afterPreview"
-                       style="width:100%;height:100%;object-fit:cover;border-radius:10px;" />
+                  <img
+                    [src]="afterPreview"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px"
+                  />
                 } @else {
                   <i class="fa-solid fa-upload"></i>
                 }
               </div>
-              <input #afterInput type="file" accept="image/*" hidden
-                     (change)="onImageSelect($event, 'after')" />
+              <input
+                #afterInput
+                type="file"
+                accept="image/*"
+                hidden
+                (change)="onImageSelect($event, 'after')"
+              />
             </div>
           </div>
 
@@ -140,32 +155,37 @@
             {{ submitting ? 'جاري الحفظ...' : 'حفظ المشروع' }}
           </button>
         </div>
-
       </div>
     </div>
   }
 
   @if (showDeleteConfirm) {
-  <div class="modal-overlay" (click)="cancelDelete()">
-    <div class="modal-box" style="max-width: 400px; text-align: center;" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>حذف المشروع</h3>
-      </div>
-      <div class="modal-body">
-        <i class="fa-regular fa-trash-can" style="font-size: 48px; color: #ef4444; margin-bottom: 16px;"></i>
-        <p style="font-size: 16px; color: #374151;">هل أنت متأكد من حذف هذا المشروع؟</p>
-        <p style="font-size: 14px; color: #9ca3af;">لا يمكن التراجع عن هذا الإجراء.</p>
-      </div>
-      <div class="modal-footer" style="display: flex; gap: 12px;">
-        <button class="btn-save" style="background: #ef4444; flex: 1;" (click)="confirmDelete()">
-          نعم، احذف
-        </button>
-        <button class="btn-save" style="background: #6b7280; flex: 1;" (click)="cancelDelete()">
-          إلغاء
-        </button>
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div
+        class="modal-box"
+        style="max-width: 400px; text-align: center"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-header">
+          <h3>حذف المشروع</h3>
+        </div>
+        <div class="modal-body">
+          <i
+            class="fa-regular fa-trash-can"
+            style="font-size: 48px; color: #ef4444; margin-bottom: 16px"
+          ></i>
+          <p style="font-size: 16px; color: #374151">هل أنت متأكد من حذف هذا المشروع؟</p>
+          <p style="font-size: 14px; color: #9ca3af">لا يمكن التراجع عن هذا الإجراء.</p>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 12px">
+          <button class="btn-save" style="background: #ef4444; flex: 1" (click)="confirmDelete()">
+            نعم، احذف
+          </button>
+          <button class="btn-save" style="background: #6b7280; flex: 1" (click)="cancelDelete()">
+            إلغاء
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-}
-
+  }
 </div>

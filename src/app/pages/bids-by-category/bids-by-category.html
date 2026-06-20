@@ -1,0 +1,162 @@
+<div class="container py-4" dir="rtl">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <a
+      routerLink="/customer/received-bids"
+      class="text-decoration-none text-muted"
+      style="font-size: 14px"
+    >
+      العروض المستلمة ←
+    </a>
+  </nav>
+
+  <div class="mt-4">
+    <h2 class="fw-bold mb-1" style="font-size: 32px; color: #0f172a">مقارنة العروض</h2>
+    <div class="d-flex align-items-center justify-content-end ms-5 fw-bold gap-2 text-success" style="font-size: 14px">
+      <i class="fa-solid fa-wifi"></i>
+      متصل   
+      </div>
+      <p class="text-muted mb-0">اختر أفضل عرض لطلبك رقم {{ groups[0].request.id }}</p>
+      
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    
+  </div>
+
+  <div *ngIf="!isLoading && groups.length === 0" class="text-center py-5 text-muted">
+    لا توجد طلبات مفتوحة في هذه الفئة
+  </div>
+
+  <div *ngFor="let group of groups" class="mb-5">
+    <!-- Top bar: connection status + total -->
+    <div class="d-flex align-items-center justify-content-between m-4">
+      <div class="d-flex align-items-center gap-3">
+        <h5 class="fw-bold mb-0">{{ group.request.title }}</h5>
+        <span
+          class="px-3 py-2 rounded-pill fw-semibold"
+          style="background: #e8f7fc; color: #1aacdc; font-size: 14px"
+        >
+          {{ group.bids.length }} عرض حالي
+        </span>
+        <span class="text-muted" style="font-size: 14px">إجمالي: {{ group.bids.length }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="group.bids.length === 0" class="text-muted text-center py-3">
+      لا توجد عروض على هذا الطلب حتى الآن<br><br>
+    </div>
+
+    <!-- Bid Cards -->
+    <div class="row g-3 mb-2">
+      <div *ngFor="let bid of group.bids" class="col-12 col-md-6 col-lg-4">
+        <div
+          class="rounded-4  shadow-sm h-100 p-4"
+          style="background-color: #f4f7f8; "
+          [style.opacity]="bid.status === 'rejected' ? '0.5' : '1'"
+        >
+          <!-- Top row: status badge -->
+          <div class="mb-3">
+            <span
+              class="badge rounded-pill px-3 py-2"
+              [ngClass]="{
+                'bg-light text-dark': bid.status === 'pending',
+                'bg-success text-white': bid.status === 'accepted',
+                'bg-secondary text-white': bid.status === 'rejected',
+              }"
+              style="font-size: 13px; font-weight: 600"
+            >
+              {{ getStatusLabel(bid.status) }}
+            </span>
+          </div>
+
+          <!-- Technician row -->
+          <div class="d-flex align-items-start justify-content-between mb-3">
+            <div class="text-end">
+              <div class="d-flex align-items-center gap-1 justify-content-end mb-1">
+                <span
+                  class="badge rounded-pill"
+                  style="background: #e7f8ee; color: #16a34a; font-size: 11px; padding: 4px 8px"
+                >
+                <h6 class="fw-bold mb-0" style="color: #0f172a"><a class="" style="text-decoration: none;" routerLink="/src/app/technician/pages/profile">م . {{ bid.technicianName }} </a></h6>
+                </span>
+                <span
+                  class="badge rounded-pill"
+                  style="background: #e7f8ee; color: #16a34a; font-size: 11px; padding: 4px 8px"
+                >
+                <i class="fa-solid fa-check-circle me-1"></i>موثّق
+                </span>
+              </div>
+              <div class="text-muted" style="font-size: 13px">
+                <i class="fa-solid fa-star" style="color: #f5b50a"></i>
+                {{ bid.technicianId || '4.9' }} · {{ bid.technicianId || '134' }} مهمة
+              </div>
+            </div>
+            <img
+              [src]="
+                bid.technicianImage ||
+                'https://ui-avatars.com/api/?name=' +
+                  bid.technicianName +
+                  '&background=eef1f4&color=666'
+              "
+              class="rounded-circle object-fit-cover flex-shrink-0"
+              width="52"
+              height="52"
+            />
+          </div>
+
+          <!-- Price -->
+          <div class="mb-2">
+            <span class="fw-bold" style="font-size: 34px; color: #1787e0">{{ bid.price }}</span>
+            <span class="text-muted ms-1" style="font-size: 15px">ج.م</span>
+          </div>
+
+          <!-- Duration + posted time -->
+          <div class="d-flex justify-content-between text-muted mb-3" style="font-size: 13px">
+            <span
+              ><i class="fa-regular fa-clock me-1"></i
+              >{{ formatDuration(bid.estimatedDurationMinutes) }}</span
+            >
+            <span>منذ {{ bid.submittedAt | date: 'shortTime' }}</span>
+          </div>
+
+          <!-- Message -->
+          <p class="text-muted text-end mb-3" style="font-size: 14px">
+            "{{ bid.proposalMessage }}"
+          </p>
+
+          <!-- Actions -->
+          <div *ngIf="bid.status === 'pending'" class="d-flex align-items-center gap-2">
+            <button
+              class="btn btn-light rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+              style="width: 42px; height: 42px"
+            >
+              <i class="fa-solid fa-xmark text-muted"></i>
+            </button>
+            <button
+              class="btn btn-light rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+              style="width: 42px; height: 42px"
+            >
+              <i class="fa-regular fa-comment-dots text-muted"></i>
+            </button>
+            <button
+              class="btn rounded-pill flex-grow-1 text-white fw-bold py-2"
+              style="background: #1787e0"
+              (click)="acceptBid(group, bid.id)"
+            >
+              <i class="fa-solid fa-check me-1"></i> قبول
+            </button>
+          </div>
+
+          <div
+            *ngIf="bid.status === 'accepted'"
+            class="text-center py-2 rounded-3 fw-semibold"
+            style="background: #e7f8ee; color: #16a34a"
+          >
+            ✅ تم قبول هذا العرض
+          </div>
+        </div>
+      </div>
+    </div>
+          <hr class="border-bottom border-dark rounded-4 m-0"> <br class="border-bottom ">
+
+  </div>
+</div>

@@ -34,6 +34,9 @@ import { AvailableRequests } from './technician/pages/available-requests/availab
 import { TechnicianVerification } from './technician/pages/verification/verification';
 
 import { PreviousWorks } from './technician/pages/previous-works/previous-works';
+import { BidComparisonComponent } from './pages/submit-bids/submit-bids';
+import { ReceivedBidsComponent } from './pages/received-bids/received-bids';
+import { BidsByCategoryComponent } from './pages/bids-by-category/bids-by-category';
 import { AssignedTasksComponent } from './technician/pages/assigned-tasks/assigned-tasks';
 import { TaskDetailsComponent } from './technician/pages/task-details/task-details';
 
@@ -71,6 +74,9 @@ export const routes: Routes = [
       { path: 'review/:id', component: Review },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
+      { path: 'received-bids', component: ReceivedBidsComponent},
+      { path: 'submit-bid/:id', component: BidComparisonComponent},
+      { path: 'bids-category/:categoryId', component: BidsByCategoryComponent}
     ]
   },
   {

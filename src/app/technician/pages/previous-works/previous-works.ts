@@ -7,7 +7,7 @@ import { PortfolioService } from '../../../services/portfolio-service';
   selector: 'app-previous-works',
   imports: [CommonModule, FormsModule],
   templateUrl: './previous-works.html',
-  styleUrl: './previous-works.css'
+  styleUrl: './previous-works.css',
 })
 export class PreviousWorks implements OnInit {
   portfolios: any[] = [];
@@ -38,23 +38,23 @@ export class PreviousWorks implements OnInit {
       },
       error: () => {
         this.loadPortfolios();
-      }
+      },
     });
   }
 
- loadPortfolios() {
-  this.loading = true;
-  this.portfolioService.getByTechnicianId(this.technicianId).subscribe({
-    next: (res) => {
-      console.log('Portfolio item:', res[0]); // ← ضيفي السطر ده
-      this.portfolios = res;
-      this.loading = false;
-    },
-    error: () => {
-      this.loading = false;
-    }
-  });
-}
+  loadPortfolios() {
+    this.loading = true;
+    this.portfolioService.getByTechnicianId(this.technicianId).subscribe({
+      next: (res) => {
+        console.log('Portfolio item:', res[0]); // ← ضيفي السطر ده
+        this.portfolios = res;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
+    });
+  }
 
   openModal() {
     this.showModal = true;
@@ -120,33 +120,34 @@ export class PreviousWorks implements OnInit {
       error: (err) => {
         console.log('Error:', err);
         this.submitting = false;
-        this.errorMsg = err?.error?.title ?? err?.error?.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى';
-      }
+        this.errorMsg =
+          err?.error?.title ?? err?.error?.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى';
+      },
     });
   }
 
- showDeleteConfirm = false;
-deleteTargetId: number | null = null;
+  showDeleteConfirm = false;
+  deleteTargetId: number | null = null;
 
-openDeleteConfirm(id: number) {
-  this.deleteTargetId = id;
-  this.showDeleteConfirm = true;
-}
+  openDeleteConfirm(id: number) {
+    this.deleteTargetId = id;
+    this.showDeleteConfirm = true;
+  }
 
-cancelDelete() {
-  this.showDeleteConfirm = false;
-  this.deleteTargetId = null;
-}
+  cancelDelete() {
+    this.showDeleteConfirm = false;
+    this.deleteTargetId = null;
+  }
 
-confirmDelete() {
-  if (!this.deleteTargetId) return;
-  this.portfolioService.delete(this.deleteTargetId).subscribe({
-    next: () => {
-      this.showDeleteConfirm = false;
-      this.deleteTargetId = null;
-      this.loadPortfolios();
-    },
-    error: () => alert('حدث خطأ أثناء الحذف')
-  });
-}
+  confirmDelete() {
+    if (!this.deleteTargetId) return;
+    this.portfolioService.delete(this.deleteTargetId).subscribe({
+      next: () => {
+        this.showDeleteConfirm = false;
+        this.deleteTargetId = null;
+        this.loadPortfolios();
+      },
+      error: () => alert('حدث خطأ أثناء الحذف'),
+    });
+  }
 }
