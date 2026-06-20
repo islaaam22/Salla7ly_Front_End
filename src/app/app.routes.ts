@@ -39,6 +39,9 @@ import { TaskDetailsComponent } from './technician/pages/task-details/task-detai
 
 import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Dashboard } from './admin/pages/dashboard/dashboard';
+import { AdminStatistics } from './admin/pages/statistics/statistics';
+import { AdminCustomers } from './admin/pages/customers/customers';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -92,7 +95,9 @@ export const routes: Routes = [
   component: AdminLayout,
   children: [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: Dashboard }
+    { path: 'dashboard', component: Dashboard },
+    { path: 'statistics', component: AdminStatistics },
+    { path: 'customers', component: AdminCustomers },
   ]
 },
 
