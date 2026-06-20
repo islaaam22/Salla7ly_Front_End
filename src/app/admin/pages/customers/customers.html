@@ -1,0 +1,393 @@
+<div dir="rtl">
+
+  <!-- Header -->
+  <div class="text-end mb-4">
+    <h1 class="fw-bold" style="font-size:32px;color:#0f172a;">
+      إدارة العملاء
+    </h1>
+    <p class="text-muted" style="font-size:16px;">
+      بحث، تعديل، وإدارة حسابات العملاء.
+    </p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3 text-muted">جاري التحميل...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMsg && !loading" class="alert alert-danger text-end" style="border-radius:14px;">
+    {{ errorMsg }}
+  </div>
+
+  <div *ngIf="!loading && !errorMsg" class="bg-white rounded-4 p-4 customers-page-card">
+
+    <!-- Tabs + Search -->
+    <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+
+      <!-- Search -->
+      <div class="position-relative flex-grow-1 customers-search-wrap">
+        <input
+          type="text"
+          class="form-control text-end customers-search-input"
+          [(ngModel)]="searchTerm"
+          placeholder="ابحث بالاسم، البريد..."
+        />
+        <i
+          class="fa-solid fa-magnifying-glass position-absolute customers-search-icon">
+        </i>
+      </div>
+
+      <!-- Tabs -->
+      <button
+        class="btn fw-semibold customers-tab-btn"
+        [class.active-tab]="activeTab === 'all'"
+        (click)="setTab('all')">
+        الكل ({{ countAll }})
+      </button>
+
+      <button
+        class="btn fw-semibold customers-tab-btn"
+        [class.active-tab]="activeTab === 'active'"
+        (click)="setTab('active')">
+        نشط ({{ countActive }})
+      </button>
+
+      <button
+        class="btn fw-semibold customers-tab-btn"
+        [class.active-tab]="activeTab === 'pending'"
+        (click)="setTab('pending')">
+        معلّق ({{ countPending }})
+      </button>
+
+    </div>
+
+    <!-- Table -->
+    <div class="customers-table-wrap">
+      <table class="w-100 customers-table">
+        <thead>
+          <tr>
+            <th class="text-end">الاسم</th>
+            <th class="text-end">الهاتف</th>
+            <th class="text-end">تاريخ التسجيل</th>
+            <th class="text-end">الحالة</th>
+            <th class="text-end">إجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let customer of filteredCustomers">
+
+            <!-- Name + Avatar -->
+            <td class="customer-name-cell">
+              <div class="customer-info">
+                <!-- Avatar on the RIGHT -->
+                <div class="customer-avatar-wrap">
+                  <img
+                    *ngIf="customer.imageUrl"
+                    [src]="customer.imageUrl"
+                    class="customer-avatar"
+                  />
+
+                  <div
+                    *ngIf="!customer.imageUrl"
+                    class="customer-avatar customer-avatar-fallback">
+                    {{ avatarLetter(customer.name) }}
+                  </div>
+                </div>
+
+                <!-- Text -->
+                <div class="customer-text">
+                  <div class="customer-name" [title]="customer.name">
+                    {{ customer.name }}
+                  </div>
+                  <div class="customer-email" [title]="customer.email">
+                    {{ customer.email }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Phone -->
+            <td class="text-end customer-phone-cell">
+              <span class="customer-phone-text">
+                {{ customer.phoneNumber || '—' }}
+              </span>
+            </td>
+
+            <!-- Registered date -->
+            <td class="text-end customer-date-cell">
+              {{ formatDate(customer.registeredAt) }}
+            </td>
+
+
+            <!-- Status -->
+            <td class="text-end customer-status-cell">
+              <span
+                class="customer-status-badge"
+                [style.background]="customer.isActive ? '#e8fdf2' : '#fff8e1'"
+                [style.color]="customer.isActive ? '#1a7a47' : '#b45309'">
+                {{ customer.isActive ? 'نشط' : 'معلّق' }}
+              </span>
+            </td>
+
+            <!-- Actions -->
+            <td class="customer-actions-cell">
+              <div class="customer-actions">
+                <button class="btn btn-sm p-0" (click)="onDelete(customer)" title="حذف">
+                  <i class="fa-solid fa-trash customer-action-delete"></i>
+                </button>
+
+                <button class="btn btn-sm p-0" (click)="onEdit(customer)" title="تعديل">
+                  <i class="fa-solid fa-pen customer-action-edit"></i>
+                </button>
+
+                <button class="btn btn-sm p-0" (click)="onView(customer)" title="عرض">
+                  <i class="fa-regular fa-eye customer-action-view"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="filteredCustomers.length === 0">
+            <td colspan="6" class="text-center py-5 text-muted">
+              لا يوجد عملاء مطابقون للبحث
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+ <!-- ============================================= -->
+<!-- VIEW MODAL -->
+<!-- ============================================= -->
+
+<div class="modal-overlay" *ngIf="showViewModal" (click)="closeViewModal()">
+  <div class="modal-box customer-view-modal" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="customer-view-header">
+      <button class="modal-close-btn" (click)="closeViewModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h4 class="customer-view-title">بيانات العميل</h4>
+    </div>
+
+    <div *ngIf="viewLoading" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div *ngIf="!viewLoading && viewCustomer" class="customer-view-content">
+
+      <!-- Avatar + Name -->
+      <div class="customer-view-profile">
+        <div
+          *ngIf="!viewCustomer.imageUrl"
+          class="customer-view-avatar customer-view-avatar-fallback">
+          {{ avatarLetter(viewCustomer.name) }}
+        </div>
+
+        <img
+          *ngIf="viewCustomer.imageUrl"
+          [src]="viewCustomer.imageUrl"
+          class="customer-view-avatar"
+          alt="avatar"
+        />
+
+        <div class="customer-view-profile-text">
+          <div class="customer-view-name">{{ viewCustomer.name }}</div>
+          <div class="customer-view-member">
+            عضو منذ {{ viewCustomer.memberSinceYear }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="customer-view-info-card">
+        <div class="customer-view-info-icon">
+          <i class="fa-regular fa-envelope"></i>
+        </div>
+
+        <div class="customer-view-info-text">
+          <div class="customer-view-info-label">البريد</div>
+          <div class="customer-view-info-value customer-view-email">
+            {{ viewCustomer.email || '—' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="customer-view-info-card">
+        <div class="customer-view-info-icon">
+          <i class="fa-solid fa-phone"></i>
+        </div>
+
+        <div class="customer-view-info-text">
+          <div class="customer-view-info-label">الهاتف</div>
+          <div class="customer-view-info-value">
+            {{ viewCustomer.phoneNumber || '—' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests + Reviews -->
+      <div class="customer-view-stats">
+        <div class="customer-view-stat-card">
+          <div class="customer-view-stat-icon bag">
+            <i class="fa-solid fa-bag-shopping"></i>
+          </div>
+
+          <div class="customer-view-stat-text">
+            <div class="customer-view-info-label">الطلبات</div>
+            <div class="customer-view-stat-value">
+              {{ viewCustomer.totalRequests }}
+            </div>
+          </div>
+        </div>
+
+        <div class="customer-view-stat-card">
+          <div class="customer-view-stat-icon star">
+            <i class="fa-solid fa-star"></i>
+          </div>
+
+          <div class="customer-view-stat-text">
+            <div class="customer-view-info-label">التقييمات</div>
+            <div class="customer-view-stat-value">
+              {{ viewCustomer.totalReviews }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+  <!-- ============================================= -->
+  <!-- EDIT MODAL -->
+  <!-- ============================================= -->
+  <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0" style="color:#0f172a;">تعديل بيانات العميل</h4>
+        <button class="modal-close-btn" (click)="closeEditModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div *ngIf="editLoading" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <div *ngIf="!editLoading">
+
+        <!-- Image -->
+        <div class="d-flex justify-content-center mb-4">
+          <label style="cursor:pointer;text-align:center;">
+            <img *ngIf="editCurrentImageUrl" [src]="editCurrentImageUrl"
+                 style="width:70px;height:70px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 8px;">
+            <div *ngIf="!editCurrentImageUrl"
+                 class="rounded-circle d-flex justify-content-center align-items-center fw-bold text-white mx-auto mb-2"
+                 style="width:70px;height:70px;font-size:26px;background:linear-gradient(135deg,#1787e0,#30aaaa);">
+              {{ avatarLetter(editName) }}
+            </div>
+            <small class="text-primary fw-semibold">
+              {{ editImageFile ? editImageFile.name : 'تغيير الصورة' }}
+            </small>
+            <input type="file" accept="image/*" hidden (change)="onEditImageSelected($event)">
+          </label>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold w-100 text-end mb-1">الاسم *</label>
+          <input type="text" class="form-control text-end"
+                 [(ngModel)]="editName" name="editName"
+                 style="height:50px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold w-100 text-end mb-1">رقم الهاتف *</label>
+          <input type="text" class="form-control text-end"
+                 [(ngModel)]="editPhone" name="editPhone"
+                 style="height:50px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold w-100 text-end mb-1">العنوان</label>
+          <input type="text" class="form-control text-end"
+                 [(ngModel)]="editAddress" name="editAddress"
+                 placeholder="المدينة، الحي، الشارع"
+                 style="height:50px;border-radius:12px;border:1px solid #d9e1e8;padding:0 16px;">
+        </div>
+
+        <div *ngIf="editErrorMsg" class="alert alert-danger text-end mb-3" style="border-radius:12px;">
+          {{ editErrorMsg }}
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn text-white fw-bold"
+                  [disabled]="editSaving"
+                  (click)="onSaveEdit()"
+                  style="background:#1787e0;border-radius:10px;padding:10px 28px;">
+            {{ editSaving ? 'جاري الحفظ...' : 'حفظ' }}
+          </button>
+          <button class="btn fw-bold"
+                  (click)="closeEditModal()"
+                  style="border:1px solid #d9e1e8;border-radius:10px;padding:10px 28px;">
+            إلغاء
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- DELETE CONFIRM MODAL -->
+  <!-- ============================================= -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+      <div class="d-flex justify-content-center mb-3">
+        <div class="rounded-circle d-flex justify-content-center align-items-center"
+             style="width:54px;height:54px;background:#fde8e8;">
+          <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;font-size:22px;"></i>
+        </div>
+      </div>
+
+      <h5 class="fw-bold mb-2" style="color:#0f172a;">حذف العميل؟</h5>
+      <p class="text-muted mb-4">
+        سيتم حذف "{{ deleteCustomer?.name }}" نهائياً. لا يمكن التراجع.
+      </p>
+
+      <div *ngIf="deleteErrorMsg" class="alert alert-danger text-center mb-3" style="border-radius:12px;">
+        {{ deleteErrorMsg }}
+      </div>
+
+      <div class="d-flex gap-2 justify-content-center">
+        <button class="btn text-white fw-bold"
+                [disabled]="deleting"
+                (click)="confirmDelete()"
+                style="background:#ef4444;border-radius:10px;padding:10px 28px;">
+          {{ deleting ? 'جاري الحذف...' : 'حذف' }}
+        </button>
+        <button class="btn fw-bold"
+                (click)="closeDeleteModal()"
+                style="border:1px solid #d9e1e8;border-radius:10px;padding:10px 28px;">
+          إلغاء
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
