@@ -1,0 +1,126 @@
+<div class="page-wrapper" dir="rtl">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a (click)="goBack()" class="back-link">← المهام الموكلة</a>
+    <h2>تفاصيل المهمة</h2>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div style="text-align: center; padding: 80px 0">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  }
+
+  @if (!loading && request) {
+    <div class="details-layout">
+
+      <!-- Main Content -->
+      <div class="main-content">
+
+        <!-- Request Info Card -->
+        <div class="info-card">
+          <div class="card-header-row">
+            <span [class]="'status-badge ' + getStatusClass(request.status)">
+              {{ getStatusLabel(request.status) }}
+            </span>
+            <h3>{{ request.title }}</h3>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <i class="fa-regular fa-calendar"></i>
+              <div>
+                <span class="label">الموعد</span>
+                <span class="value">{{ request.scheduledAt | date:'dd/MM/yyyy - hh:mm a' }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <span class="label">العنوان</span>
+                <span class="value">{{ request.address ?? 'غير محدد' }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="fa-solid fa-wrench"></i>
+              <div>
+                <span class="label">نوع الخدمة</span>
+                <span class="value">{{ request.categoryName ?? 'غير محدد' }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="fa-regular fa-user"></i>
+              <div>
+                <span class="label">العميل</span>
+                <span class="value">{{ request.customerName ?? 'غير محدد' }}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (request.description) {
+            <div class="description">
+              <h5>وصف المشكلة</h5>
+              <p>{{ request.description }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Images -->
+        @if (request.imageUrls?.length > 0) {
+          <div class="info-card">
+            <h5>صور المشكلة</h5>
+            <div class="images-grid">
+              @for (img of request.imageUrls; track img) {
+                <div class="img-box">
+                  <img [src]="img" alt="صورة المشكلة" />
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Actions -->
+        <div class="info-card actions-card">
+          <h5>إجراءات</h5>
+          @if (successMsg) {
+            <div class="alert-success">{{ successMsg }}</div>
+          }
+          @if (errorMsg) {
+            <div class="alert-error">{{ errorMsg }}</div>
+          }
+          <div class="actions-row">
+            <button class="btn-complete" [disabled]="completing"
+                    (click)="completeRequest()">
+              <i class="fa-solid fa-circle-check"></i>
+              {{ completing ? 'جاري...' : 'بدء المهمة' }}
+            </button>
+            <button class="btn-cancel" (click)="goBack()">
+              إلغاء
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Side Panel -->
+      <div class="side-panel">
+        <div class="info-card">
+          @if (request.price) {
+            <div class="price-box">
+              <span class="price-label">السعر المتفق عليه</span>
+              <span class="price-value">{{ request.price }} ج</span>
+            </div>
+          }
+          <button class="btn-chat" (click)="goToChat()">
+            <i class="fa-regular fa-message"></i>
+            محادثة العميل
+          </button>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

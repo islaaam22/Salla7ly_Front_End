@@ -6,11 +6,13 @@ import { RequestService } from '../../../services/request';
 
 @Component({
   selector: 'app-new-request',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './new-request.html',
   styleUrl: './new-request.css'
 })
 export class NewRequest implements OnInit {
+
   currentStep = 1;
   loading = false;
   errorMsg = '';
@@ -22,6 +24,9 @@ export class NewRequest implements OnInit {
 
   categories: any[] = [];
 
+  // 🔥 IMPORTANT: files instead of base64
+  selectedFiles: File[] = [];
+
   urgencyLevels = [
     { value: 0, label: 'عادي', desc: 'خلال ٢٤-٤٨ ساعة', icon: 'fa-solid fa-clock', color: '#1AACDC' },
     { value: 1, label: 'عاجل', desc: 'خلال بضع ساعات', icon: 'fa-solid fa-triangle-exclamation', color: '#F59E0B' },
@@ -31,17 +36,19 @@ export class NewRequest implements OnInit {
   form = {
     title: '',
     description: '',
-    imageUrls: [] as string[],
     urgency: 0,
     bookingMode: 0,
     isEmergency: false,
     scheduledAt: '',
     addressId: 1,
     categoryId: 0,
-    serviceAddress: '',
+    serviceAddress: ''
   };
 
-  constructor(private requestService: RequestService, private router: Router) {}
+  constructor(
+    private requestService: RequestService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.requestService.getCategories().subscribe({
@@ -52,15 +59,6 @@ export class NewRequest implements OnInit {
             ...c,
             icon: this.getIconByName(c.nameAr)
           }));
-      },
-      error: () => {
-        this.categories = [
-          { id: 2, nameAr: 'سباكة', icon: 'fa-solid fa-wrench' },
-          { id: 4, nameAr: 'الأجهزة', icon: 'fa-solid fa-tv' },
-          { id: 5, nameAr: 'النجارة', icon: 'fa-solid fa-hammer' },
-          { id: 6, nameAr: 'التكييف', icon: 'fa-solid fa-snowflake' },
-          { id: 7, nameAr: 'الكهرباء', icon: 'fa-solid fa-bolt' },
-        ];
       }
     });
   }
@@ -86,14 +84,6 @@ export class NewRequest implements OnInit {
     this.form.isEmergency = value === 2;
   }
 
-  getCategoryName(): string {
-    return this.categories.find(c => c.id === this.selectedCategory)?.nameAr ?? '';
-  }
-
-  getUrgencyLabel(): string {
-    return this.urgencyLevels.find(u => u.value === this.selectedUrgency)?.label ?? '';
-  }
-
   getWordCount(): number {
     return this.form.description.trim().split(/\s+/).filter(w => w).length;
   }
@@ -106,11 +96,9 @@ export class NewRequest implements OnInit {
     this.submitted = true;
     this.errorMsg = '';
 
-    if (this.currentStep === 1) {
-      if (!this.selectedCategory) {
-        this.errorMsg = 'يرجى اختيار نوع الخدمة';
-        return;
-      }
+    if (this.currentStep === 1 && !this.selectedCategory) {
+      this.errorMsg = 'يرجى اختيار نوع الخدمة';
+      return;
     }
 
     if (this.currentStep === 2) {
@@ -127,19 +115,29 @@ export class NewRequest implements OnInit {
         return;
       }
       if (!this.form.scheduledAt) {
-        this.errorMsg = 'يرجى تحديد التاريخ المفضل';
+        this.errorMsg = 'يرجى تحديد التاريخ';
         return;
       }
     }
 
-    this.submitted = false;
     this.currentStep++;
   }
 
   prevStep() {
-    this.errorMsg = '';
-    this.submitted = false;
     this.currentStep--;
+  }
+
+  // 🔥 FILE UPLOAD FIXED
+  onFileSelected(event: any) {
+    const files = event.target.files;
+    if (!files) return;
+
+    const max = 5;
+
+    for (let i = 0; i < files.length; i++) {
+      if (this.selectedFiles.length >= max) break;
+      this.selectedFiles.push(files[i]);
+    }
   }
 
   submitRequest() {
@@ -149,46 +147,34 @@ export class NewRequest implements OnInit {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      this.loading = false;
-      this.errorMsg = 'يرجى تسجيل الدخول أولاً';
       this.router.navigate(['/login']);
       return;
     }
 
-    const payload = {
-      title: this.form.title,
-      description: this.form.description,
-      imageUrls: this.form.imageUrls,
-      urgency: this.selectedUrgency,
-      bookingMode: this.form.bookingMode,
-      isEmergency: this.form.isEmergency,
-      scheduledAt: new Date(this.form.scheduledAt).toISOString(),
-      addressId: this.form.addressId,
-      categoryId: this.form.categoryId,
-    };
+    const formData = new FormData();
 
-    console.log('Token:', token);
-    console.log('Payload:', payload);
+    formData.append('title', this.form.title);
+    formData.append('description', this.form.description);
+    formData.append('urgency', this.selectedUrgency.toString());
+    formData.append('categoryId', this.form.categoryId.toString());
+    formData.append('addressId', this.form.addressId.toString());
+    formData.append('scheduledAt', new Date(this.form.scheduledAt).toISOString());
+    formData.append('serviceAddress', this.form.serviceAddress);
 
-    this.requestService.createRequest(payload).subscribe({
-      next: (res) => {
-        console.log('Success:', res);
+    this.selectedFiles.forEach(file => {
+      formData.append('images', file);
+    });
+
+    this.requestService.createRequest(formData).subscribe({
+      next: () => {
         this.loading = false;
-        this.successMsg = 'تم إرسال طلبك بنجاح!';
+        this.successMsg = 'تم إرسال الطلب بنجاح!';
         setTimeout(() => this.router.navigate(['/customer/my-requests']), 2000);
       },
-      error: (err) => {
-        console.log('Error status:', err.status);
-        console.log('Error:', err);
+      error: () => {
         this.loading = false;
-        if (err.status === 401) {
-          this.errorMsg = 'انتهت جلستك، يرجى تسجيل الدخول مرة أخرى';
-          this.router.navigate(['/login']);
-        } else {
-          this.errorMsg = err?.error?.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى';
-        }
+        this.errorMsg = 'حدث خطأ أثناء الإرسال';
       }
     });
   }
-  
 }

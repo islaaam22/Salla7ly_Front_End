@@ -86,10 +86,10 @@ export class Login {
         this.router.navigate(['/customer/profile']);
         break;
       case 'Technician':
-        this.router.navigate(['/technician']);
+        this.router.navigate(['/technician/profile']);
         break;
       case 'Admin':
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/admin/dashboard']);
         break;
     }
   }
