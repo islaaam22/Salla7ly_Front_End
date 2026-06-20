@@ -25,15 +25,26 @@ import { MyRequests } from './pages/customer/my-requests/my-requests';
 import { Review } from './pages/customer/review/review';
 
 
+
 import { TechnicianLayout } from './technician/layout/technician-layout';
 import { TechnicianProfile } from './technician/pages/profile/profile';
 import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
 import { AvailableRequests } from './technician/pages/available-requests/available-requests';
 
+import { TechnicianVerification } from './technician/pages/verification/verification';
+
 import { PreviousWorks } from './technician/pages/previous-works/previous-works';
 import { BidComparisonComponent } from './pages/submit-bids/submit-bids';
 import { ReceivedBidsComponent } from './pages/received-bids/received-bids';
 import { BidsByCategoryComponent } from './pages/bids-by-category/bids-by-category';
+import { AssignedTasksComponent } from './technician/pages/assigned-tasks/assigned-tasks';
+import { TaskDetailsComponent } from './technician/pages/task-details/task-details';
+
+import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
+import { Dashboard } from './admin/pages/dashboard/dashboard';
+import { AdminStatistics } from './admin/pages/statistics/statistics';
+import { AdminCustomers } from './admin/pages/customers/customers';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -79,10 +90,22 @@ export const routes: Routes = [
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
 
+     { path: 'verification', component: TechnicianVerification },
       { path: 'previous-works', component: PreviousWorks },
+      { path: 'assigned-tasks', component: AssignedTasksComponent },
+      { path: 'task-details/:id', component: TaskDetailsComponent },
     ]
   },
-
+{
+  path: 'admin',
+  component: AdminLayout,
+  children: [
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: Dashboard },
+    { path: 'statistics', component: AdminStatistics },
+    { path: 'customers', component: AdminCustomers },
+  ]
+},
 
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },

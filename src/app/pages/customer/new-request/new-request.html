@@ -79,12 +79,29 @@
   </span>
 </div>
 
-        <div class="form-group">
-          <label>صور المشكلة (اختياري — حتى 5)</label>
-          <div class="upload-box">
-            <i class="fa-solid fa-upload"></i>
-          </div>
-        </div>
+<div class="form-group">
+  <label>صور المشكلة (اختياري — حتى 5)</label>
+
+  <input
+    type="file"
+    #fileInput
+    multiple
+    accept="image/*"
+    (change)="onFileSelected($event)"
+    hidden
+  />
+
+  <div class="upload-box" (click)="fileInput.click()">
+    <i class="fa-solid fa-upload"></i>
+  </div>
+
+  <!-- preview -->
+  <div class="preview-list" *ngIf="selectedFiles.length > 0">
+    <span *ngFor="let f of selectedFiles">
+      {{ f.name }}
+    </span>
+  </div>
+</div>
 
         <div class="form-row">
           <div class="form-group">
