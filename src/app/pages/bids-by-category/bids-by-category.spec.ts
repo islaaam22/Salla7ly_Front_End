@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubmitBids } from './submit-bids';
+import { BidsByCategory } from './bids-by-category';
 
-describe('SubmitBids', () => {
-  let component: SubmitBids;
-  let fixture: ComponentFixture<SubmitBids>;
+describe('BidsByCategory', () => {
+  let component: BidsByCategory;
+  let fixture: ComponentFixture<BidsByCategory>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubmitBids]
+      imports: [BidsByCategory]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SubmitBids);
+    fixture = TestBed.createComponent(BidsByCategory);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

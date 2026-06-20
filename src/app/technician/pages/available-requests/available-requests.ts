@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Auth } from '../../../services/auth';
+import { BiddingSignalRService } from '../../../services/bidding-signalr';
 
 @Component({
   selector: 'app-available-requests',
@@ -11,12 +14,11 @@ import { Auth } from '../../../services/auth';
   templateUrl: './available-requests.html',
   styleUrl: './available-requests.css',
 })
-export class AvailableRequests implements OnInit {
+export class AvailableRequests implements OnInit, OnDestroy {
   requests: any[] = [];
   loading = true;
   errorMsg = '';
 
-  // Modal
   showModal = false;
   selectedRequestId: number | null = null;
   bidPrice = '';
@@ -25,15 +27,23 @@ export class AvailableRequests implements OnInit {
   submitting = false;
 
   private apiUrl = 'https://sala7ly.runasp.net/api';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
     private authService: Auth,
+    private signalR: BiddingSignalRService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.loadRequests();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.signalR.disconnect();
   }
 
   private authHeaders(): HttpHeaders {
@@ -49,6 +59,7 @@ export class AvailableRequests implements OnInit {
       next: (data: any) => {
         this.requests = Array.isArray(data) ? data : (data.items || []);
         this.loading = false;
+        this.connectSignalR();
       },
       error: (err: any) => {
         this.loading = false;
@@ -59,6 +70,27 @@ export class AvailableRequests implements OnInit {
         }
       }
     });
+  }
+
+  private connectSignalR(): void {
+    const token = this.authService.getToken();
+    if (!token) return;
+
+    const ready = this.signalR.isConnected
+      ? Promise.resolve()
+      : this.signalR.connect(token);
+
+    ready.then(() => this.listenToLiveUpdates());
+  }
+
+  private listenToLiveUpdates(): void {
+    // لو فيه طلب جديد فتحه عميل آخر، نضيفه للقائمة لو لسه ملوش
+    this.signalR.bidAccepted$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ requestId }) => {
+        // الطلب اتقفل لأن عرض اتقبل عليه — نشيله من القائمة
+        this.requests = this.requests.filter(r => r.id !== requestId);
+      });
   }
 
   openBidModal(requestId: number) {
@@ -75,31 +107,31 @@ export class AvailableRequests implements OnInit {
   }
 
   submitBid() {
-  if (!this.bidPrice || !this.bidMessage || !this.selectedRequestId) return;
-  this.submitting = true;
+    if (!this.bidPrice || !this.bidMessage || !this.selectedRequestId) return;
+    this.submitting = true;
 
-  const body = {
-    price: Number(this.bidPrice),
-    estimatedDurationMinutes: this.bidTime ? Number(this.bidTime) : 60,
-    proposalMessage: this.bidMessage
-  };
+    const body = {
+      price: Number(this.bidPrice),
+      estimatedDurationMinutes: this.bidTime ? Number(this.bidTime) : 60,
+      proposalMessage: this.bidMessage
+    };
 
-  this.http.post(
-    `${this.apiUrl}/requests/${this.selectedRequestId}/bids`,
-    body,
-    { headers: this.authHeaders() }
-  ).subscribe({
-    next: () => {
-      this.submitting = false;
-      this.closeModal();
-      this.requests = this.requests.filter(r => r.id !== this.selectedRequestId);
-    },
-    error: (err) => {
-      this.submitting = false;
-      console.error('Bid error:', err);
-    }
-  });
-}
+    this.http.post(
+      `${this.apiUrl}/requests/${this.selectedRequestId}/bids`,
+      body,
+      { headers: this.authHeaders() }
+    ).subscribe({
+      next: () => {
+        this.submitting = false;
+        this.closeModal();
+        this.requests = this.requests.filter(r => r.id !== this.selectedRequestId);
+      },
+      error: (err) => {
+        this.submitting = false;
+        console.error('Bid error:', err);
+      }
+    });
+  }
 
   urgencyClass(urgency: string): string {
     switch ((urgency || '').toLowerCase()) {

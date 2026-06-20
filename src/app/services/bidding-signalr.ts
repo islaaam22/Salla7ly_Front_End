@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
-import { ReceivedBids } from '../pages/received-bids/received-bids';
 import { Bid } from '../models/bid-models';
 
 @Injectable({ providedIn: 'root' })
@@ -28,7 +27,8 @@ export class BiddingSignalRService {
   connect(token: string): Promise<void> {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl(this.hubUrl, {
-        accessTokenFactory: () => token
+        accessTokenFactory: () => token,
+        transport: signalR.HttpTransportType.LongPolling
       })
       .withAutomaticReconnect()
       .build();
@@ -51,19 +51,15 @@ export class BiddingSignalRService {
     this.connection.on('NewBidReceived', (bid: Bid) => {
       this.newBidSubject.next(bid);
     });
-
     this.connection.on('BidCountUpdated', (data: { requestId: number; count: number }) => {
       this.bidCountSubject.next(data);
     });
-
     this.connection.on('BidAccepted', (data: { bidId: number; requestId: number }) => {
       this.bidAcceptedSubject.next(data);
     });
-
     this.connection.on('BidRejected', (data: { bidId: number }) => {
       this.bidRejectedSubject.next(data);
     });
-
     this.connection.on('BidWithdrawn', (data: { bidId: number }) => {
       this.bidWithdrawnSubject.next(data);
     });

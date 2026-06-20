@@ -1,23 +1,139 @@
-<!-- submit-bid.component.html (Technician view) -->
-<form *ngIf="!myBidId" (ngSubmit)="submitBid()">
-  <input type="number" placeholder="السعر" [(ngModel)]="price" name="price" required />
-  <input
-    type="number"
-    placeholder="المدة المتوقعة (دقيقة)"
-    [(ngModel)]="estimatedDurationMinutes"
-    name="duration"
-    required
-  />
-  <textarea
-    placeholder="رسالة العرض"
-    [(ngModel)]="proposalMessage"
-    name="message"
-    required
-  ></textarea>
-  <button type="submit" [disabled]="isSubmitting">إرسال العرض</button>
-</form>
+<div class="container py-4" dir="rtl">
 
-<div *ngIf="myBidId" class="my-bid-status">
-  <p>تم إرسال عرضك. في انتظار رد العميل...</p>
-  <button (click)="withdrawBid()">سحب العرض</button>
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/customer/my-bids" class="text-decoration-none text-primary">
+          العروض المستلمة
+        </a>
+      </li>
+      <li class="breadcrumb-item active">مقارنة العروض</li>
+    </ol>
+  </nav>
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <div>
+      <h3 class="fw-bold mb-1">مقارنة العروض</h3>
+      <p class="text-muted mb-0">اختر أفضل عرض لطلبك رقم {{ requestId }}</p>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <!-- Live Badge -->
+      <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+        <span class="live-dot me-1"></span>
+        متصل — تحديث فوري
+      </span>
+
+      <!-- Count -->
+      <span class="badge bg-primary px-3 py-2 rounded-pill fs-6">
+        {{ bids.length }} عرض حالي
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <!-- Bids Grid -->
+  <div *ngIf="!isLoading" class="row g-4">
+    <div
+      *ngFor="let bid of bids"
+      class="col-12 col-md-6 col-xl-4"
+    >
+      <div
+        class="card border-0 shadow-sm rounded-4 h-100 bid-card"
+        [ngClass]="{
+          'border-success border-2': bid.status === 'accepted',
+          'opacity-50':              bid.status === 'rejected'
+        }"
+      >
+        <div class="card-body p-4 d-flex flex-column gap-3">
+
+          <!-- Status + Verified -->
+          <div class="d-flex align-items-center justify-content-between">
+            <span
+              class="badge rounded-pill px-3"
+              [ngClass]="{
+                'bg-warning text-dark': bid.status === 'pending',
+                'bg-success':           bid.status === 'accepted',
+                'bg-secondary':         bid.status === 'rejected',
+                'bg-danger':            bid.status === 'withdrawn'
+              }"
+            >
+              {{ getStatusLabel(bid.status) }}
+            </span>
+
+            <span class="badge bg-success bg-opacity-10 text-success">
+              <i class="fa-solid fa-clipboard-check me-1"></i>موثق
+            </span>
+          </div>
+
+          <!-- Technician -->
+          <div class="d-flex align-items-center gap-3">
+            <img
+              [src]="bid.technicianImage || 'assets/default-avatar.png'"
+              [alt]="bid.technicianName"
+              class="rounded-circle object-fit-cover"
+              width="52" height="52"
+            />
+            <div>
+              <h6 class="fw-bold mb-0">م. {{ bid.technicianName }}</h6>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="fw-bold fs-3 text-dark">
+            {{ bid.price }} <small class="fs-6 text-muted">ج.م</small>
+          </div>
+
+          <!-- Duration + Time -->
+          <div class="d-flex gap-3 text-muted small">
+            <span>
+              <i class="fa-solid fa-clock"></i>
+              {{ formatDuration(bid.estimatedDurationMinutes) }}
+            </span>
+            <span>منذ {{ bid.submittedAt | date: 'shortTime' }}</span>
+          </div>
+
+          <!-- Message -->
+          <p class="text-muted fst-italic mb-0 small">
+            "{{ bid.proposalMessage }}"
+          </p>
+
+          <!-- Actions -->
+          <div
+            *ngIf="bid.status === 'pending'"
+            class="d-flex align-items-center gap-2 mt-auto"
+          >
+            <button class="btn btn-outline-danger btn-sm rounded-circle px-2">
+              <i class="fa-solid fa-x"></i>
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-circle px-2">
+              <i class="bi bi-chat-dots"></i>
+            </button>
+            <button
+              class="btn btn-primary rounded-pill flex-grow-1"
+              (click)="acceptBid(bid.id)"
+            >
+              <i class="fa-regular fa-comment-dots me-1"></i> قبول
+            </button>
+          </div>
+
+          <!-- Accepted Banner -->
+          <div
+            *ngIf="bid.status === 'accepted'"
+            class="alert alert-success text-center mb-0 py-2 rounded-3"
+          >
+            ✅ تم قبول هذا العرض
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

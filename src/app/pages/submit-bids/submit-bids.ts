@@ -1,83 +1,113 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { BidApiService } from '../../services/bid-api';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { BiddingSignalRService } from '../../services/bidding-signalr';
-import { CommonModule } from '@angular/common';
+import { RequestService } from '../../services/bid-api';
+import { Bid } from '../../models/bid-models';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-submit-bids',
-  imports: [CommonModule, FormsModule],
+  selector: 'app-bid-comparison',
   templateUrl: './submit-bids.html',
-  styleUrl: './submit-bids.css',
+  imports: [CommonModule, FormsModule]
 })
-export class SubmitBids implements OnInit, OnDestroy{
-   requestId!: number;
-  price = 0;
-  proposalMessage = '';
-  estimatedDurationMinutes = 60;
-  myBidId: number | null = null;
-  isSubmitting = false;
-  private subs = new Subscription();
+export class BidComparisonComponent implements OnInit, OnDestroy {
+  requestId!: number;
+  bids: Bid[] = [];
+  isLoading = true;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private bidApi: BidApiService,
-    private biddingHub: BiddingSignalRService
+    private route: ActivatedRoute,
+    private requestService: RequestService,
+    private signalR: BiddingSignalRService
   ) {}
 
-  async ngOnInit() {
-    const token = localStorage.getItem('token')!;
-    if (!this.biddingHub.isConnected) {
-      await this.biddingHub.connect(token);
-    }
-
-    // Listen for accept/reject on bids I submitted
-    this.subs.add(
-      this.biddingHub.bidAccepted$.subscribe(data => {
-        if (data.bidId === this.myBidId) {
-          alert('تم قبول عرضك! 🎉');
-        }
-      })
-    );
-
-    this.subs.add(
-      this.biddingHub.bidRejected$.subscribe(data => {
-        if (data.bidId === this.myBidId) {
-          alert('تم رفض عرضك.');
-        }
-      })
-    );
+  ngOnInit(): void {
+    this.requestId = +this.route.snapshot.paramMap.get('id')!;
+    this.loadBids();
+    this.listenToSignalR();
   }
 
-  submitBid() {
-    this.isSubmitting = true;
-    this.bidApi.submitBid(this.requestId, {
-      price: this.price,
-      proposalMessage: this.proposalMessage,
-      estimatedDurationMinutes: this.estimatedDurationMinutes
-    }).subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.myBidId = res.data.id;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.signalR.leaveRequest(this.requestId);
+  }
+
+  private loadBids(): void {
+    console.log('Calling getBidsByRequest with:', this.requestId);
+    this.requestService.getBidsByRequest(this.requestId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: bids => {
+          console.log('Bids received:', bids);
+          this.bids = bids;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false; }
+      });
+  }
+
+  private listenToSignalR(): void {
+    // عرض جديد يضاف فوراً
+    this.signalR.newBidReceived$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(bid => {
+        if (bid.serviceRequestId === this.requestId) {
+          // تأكد مش موجود
+          const exists = this.bids.some(b => b.id === bid.id);
+          if (!exists) this.bids = [bid, ...this.bids];
         }
-        this.isSubmitting = false;
-      },
-      error: (err) => {
-        console.error('Submit failed:', err);
-        this.isSubmitting = false;
-      }
-    });
+      });
+
+    // لو عرض اتسحب
+    this.signalR.bidWithdrawn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ bidId }) => {
+        this.bids = this.bids.filter(b => b.id !== bidId);
+      });
+
+    // لو عرض اتقبل
+    this.signalR.bidAccepted$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ bidId }) => {
+        this.bids = this.bids.map(b =>
+          b.id === bidId ? { ...b, status: 'accepted' } : { ...b, status: 'rejected' }
+        );
+      });
   }
 
-  withdrawBid() {
-    if (!this.myBidId) return;
-    this.bidApi.withdrawBid(this.myBidId).subscribe({
-      next: () => { this.myBidId = null; },
-      error: (err) => console.error('Withdraw failed:', err)
-    });
+  acceptBid(bidId: number): void {
+    this.requestService.acceptBid(bidId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.bids = this.bids.map(b =>
+            b.id === bidId ? { ...b, status: 'accepted' } : { ...b, status: 'rejected' }
+          );
+        }
+      });
   }
 
-  ngOnDestroy() {
-    this.subs.unsubscribe();
+  formatDuration(minutes: number): string {
+    if (minutes < 60) return `${minutes} دقيقة`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return m > 0 ? `${h} ساعة و ${m} دقيقة` : `${h} ساعة`;
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      pending: 'قيد المراجعة',
+      accepted: 'مقبول',
+      rejected: 'مرفوض',
+      withdrawn: 'مسحوب',
+      expired: 'منتهي'
+    };
+    return labels[status] ?? status;
   }
 }

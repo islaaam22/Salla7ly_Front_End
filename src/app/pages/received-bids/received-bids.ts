@@ -1,95 +1,140 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { BidApiService } from '../../services/bid-api';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subject, forkJoin } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { RequestService } from '../../services/bid-api';
 import { BiddingSignalRService } from '../../services/bidding-signalr';
-import { Bid } from '../../models/bid-models';
-import { CommonModule } from '@angular/common';
+import { Auth } from '../../services/auth';
+import { ServiceRequest, Category, RequestsByCategory } from '../../models/request.model';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-received-bids',
-  imports: [CommonModule, FormsModule],
   templateUrl: './received-bids.html',
-  styleUrl: './received-bids.css',
+  styleUrls: ['./received-bids.css'],
+  imports: [FormsModule, CommonModule],
 })
-export class ReceivedBids implements OnInit, OnDestroy{
- requestId!: number;
-  bids: Bid[] = [];
-  bidCount = 0;
-  private subs = new Subscription();
+export class ReceivedBidsComponent implements OnInit, OnDestroy {
+  groupedRequests: RequestsByCategory[] = [];
+  isLoading = true;
+  private destroy$ = new Subject<void>();
+
+  bidCounts: { [requestId: number]: number } = {};
 
   constructor(
-    private bidApi: BidApiService,
-    private biddingHub: BiddingSignalRService,
-    private route: ActivatedRoute
+    private requestService: RequestService,
+    private signalR: BiddingSignalRService,
+    private auth: Auth,
+    private router: Router,
   ) {}
 
-  async ngOnInit() {
-    this.requestId = Number(this.route.snapshot.paramMap.get('requestId'));
-    const token = localStorage.getItem('token')!;
+  ngOnInit(): void {
+    this.loadData();
+  }
 
-    if (!this.biddingHub.isConnected) {
-      await this.biddingHub.connect(token);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.signalR.disconnect();
+  }
+
+  private loadData(): void {
+    console.log('🟢 loadData called');
+    forkJoin({
+    requests: this.requestService.getMyRequests(),
+    categories: this.requestService.getCategories()
+  }).pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: ({ requests, categories }) => {
+        const openRequests = requests.filter(r => r.status === 'open');
+        this.groupByCategory(openRequests, categories);
+        this.isLoading = false;
+
+        // جيب عدد العروض الفعلي لكل طلب
+        this.loadInitialBidCounts(openRequests);
+
+        this.connectSignalR().then(() => {
+          openRequests.forEach(r => this.signalR.joinRequest(r.id));
+        });
+      },
+      error: () => { this.isLoading = false; }
+    });
+}
+
+private loadInitialBidCounts(requests: ServiceRequest[]): void {
+  requests.forEach(req => {
+    this.requestService.getBidsByRequest(req.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (bids) => {
+          this.bidCounts[req.id] = bids.length;
+        },
+        error: () => {
+          this.bidCounts[req.id] = 0;
+        }
+      });
+  });
+  }
+
+  private groupByCategory(requests: ServiceRequest[], categories: Category[]): void {
+    const map = new Map<number, RequestsByCategory>();
+
+    requests.forEach((req) => {
+      if (!map.has(req.categoryId)) {
+        const category = categories.find((c) => c.id === req.categoryId) ?? {
+          id: req.categoryId,
+          name: 'غير محدد',
+        };
+        map.set(req.categoryId, { category, requests: [], totalBids: 0 });
+      }
+      map.get(req.categoryId)!.requests.push(req);
+    });
+
+    this.groupedRequests = Array.from(map.values());
+  }
+
+  private connectSignalR(): Promise<void> {
+    const token = this.auth.getToken();
+    if (!token) return Promise.resolve();
+
+    if (this.signalR.isConnected) {
+      this.subscribeToLiveUpdates();
+      return Promise.resolve();
     }
 
-    // Load existing bids via REST
-    this.bidApi.getBidsByRequest(this.requestId).subscribe(res => {
-      if (res.success && res.data) this.bids = res.data;
-    });
-
-    // Join the SignalR room for this request
-    await this.biddingHub.joinRequest(this.requestId);
-
-    // Listen for new bids in real-time
-    this.subs.add(
-      this.biddingHub.newBidReceived$.subscribe(bid => {
-        if (bid.serviceRequestId === this.requestId) {
-          this.bids = [...this.bids, bid];
-        }
-      })
-    );
-
-    this.subs.add(
-      this.biddingHub.bidCountUpdated$.subscribe(data => {
-        if (data.requestId === this.requestId) {
-          this.bidCount = data.count;
-        }
-      })
-    );
-
-    this.subs.add(
-      this.biddingHub.bidWithdrawn$.subscribe(data => {
-        this.bids = this.bids.filter(b => b.id !== data.bidId);
-      })
-    );
-  }
-
-  acceptBid(bidId: number) {
-    this.bidApi.acceptBid(bidId).subscribe({
-      next: () => {
-        // Mark accepted bid, remove rejected ones from view
-        this.bids = this.bids.map(b =>
-          b.id === bidId ? { ...b, status: 'accepted' } : { ...b, status: 'rejected' }
-        );
-      },
-      error: (err) => console.error('Accept failed:', err)
+    return this.signalR.connect(token).then(() => {
+      this.subscribeToLiveUpdates();
     });
   }
 
-  rejectBid(bidId: number) {
-    this.bidApi.rejectBid(bidId).subscribe({
-      next: () => {
-        this.bids = this.bids.map(b =>
-          b.id === bidId ? { ...b, status: 'rejected' } : b
-        );
-      },
-      error: (err) => console.error('Reject failed:', err)
+  private subscribeToLiveUpdates(): void {
+    this.signalR.newBidReceived$.pipe(takeUntil(this.destroy$)).subscribe((bid) => {
+      this.bidCounts[bid.serviceRequestId] = (this.bidCounts[bid.serviceRequestId] || 0) + 1;
     });
+
+    this.signalR.bidCountUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ requestId, count }) => {
+        this.bidCounts[requestId] = count;
+      });
   }
 
-  async ngOnDestroy() {
-    await this.biddingHub.leaveRequest(this.requestId);
-    this.subs.unsubscribe();
+  // كاتيجوري واحدة بس → روح على أول طلب فيها (الصفحة هتعرض كل طلبات الكاتيجوري دي)
+  goToCategory(group: RequestsByCategory): void {
+    this.router.navigate(['/customer/bids-category', group.category.id]);
+  }
+
+  getBidCount(requests: ServiceRequest[]): number {
+    return requests.reduce((sum, r) => sum + (this.bidCounts[r.id] ?? 0), 0);
+  }
+
+  getUrgencyLabel(urgency: string): string {
+    const labels: Record<string, string> = {
+      low: 'عادي',
+      medium: 'عاجل',
+      high: 'طارئ',
+    };
+    return labels[urgency] ?? urgency;
   }
 }

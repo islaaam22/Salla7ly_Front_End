@@ -31,8 +31,10 @@ import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-prof
 import { AvailableRequests } from './technician/pages/available-requests/available-requests';
 
 import { PreviousWorks } from './technician/pages/previous-works/previous-works';
-import { SubmitBids } from './pages/submit-bids/submit-bids';
-import { ReceivedBids } from './pages/received-bids/received-bids';
+import { BidComparisonComponent } from './pages/submit-bids/submit-bids';
+import { ReceivedBidsComponent } from './pages/received-bids/received-bids';
+import { BidsByCategoryComponent } from './pages/bids-by-category/bids-by-category';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register },
@@ -61,8 +63,9 @@ export const routes: Routes = [
       { path: 'review/:id', component: Review },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
-      { path: 'received-bids', component: ReceivedBids},
-      { path: 'submit-bid', component: SubmitBids},
+      { path: 'received-bids', component: ReceivedBidsComponent},
+      { path: 'submit-bid/:id', component: BidComparisonComponent},
+      { path: 'bids-category/:categoryId', component: BidsByCategoryComponent}
     ]
   },
   {
