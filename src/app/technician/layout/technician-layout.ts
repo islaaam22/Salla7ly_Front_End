@@ -11,60 +11,19 @@ import { Auth } from '../../services/auth';
 })
 export class TechnicianLayout implements OnInit {
   technicianName = '';
-  technicianRole = 'فني محترف';
   avatarLetter = '';
 
   navItems = [
-    {
-      label: 'لوحة التحكم',
-      icon: 'fa-solid fa-table-cells-large',
-      route: '/technician/dashboard',
-    },
-    {
-      label: 'طلبات متاحة',
-      icon: 'fa-regular fa-clipboard',
-      route: '/technician/available-requests',
-    },
-    {
-      label: 'المهام الموكلة',
-      icon: 'fa-solid fa-briefcase',
-      route: '/technician/assigned-tasks',
-    },
-    {
-      label: 'الأرباح',
-      icon: 'fa-solid fa-dollar-sign',
-      route: '/technician/earnings',
-    },
-    {
-      label: 'أعمالي السابقة',
-      icon: 'fa-regular fa-image',
-      route: '/technician/previous-works',
-    },
-    {
-      label: 'التوثيق',
-      icon: 'fa-regular fa-shield',
-      route: '/technician/verification',
-    },
-    {
-      label: 'الإشعارات',
-      icon: 'fa-regular fa-bell',
-      route: '/technician/notifications',
-    },
-    {
-      label: 'المحادثات',
-      icon: 'fa-regular fa-message',
-      route: '/technician/chat',
-    },
-    {
-      label: 'الملف الشخصي',
-      icon: 'fa-regular fa-user',
-      route: '/technician/profile',
-    },
-    {
-      label: 'الإعدادات',
-      icon: 'fa-solid fa-gear',
-      route: '/technician/settings',
-    },
+    { label: 'لوحة التحكم', icon: 'fa-solid fa-table-cells-large', route: '/technician/dashboard' },
+    { label: 'طلبات متاحة', icon: 'fa-regular fa-clipboard', route: '/technician/available-requests' },
+    { label: 'المهام الموكلة', icon: 'fa-solid fa-briefcase', route: '/technician/assigned-tasks' },
+    { label: 'الأرباح', icon: 'fa-solid fa-dollar-sign', route: '/technician/earnings' },
+    { label: 'أعمالي السابقة', icon: 'fa-regular fa-image', route: '/technician/previous-works' },
+    { label: 'التوثيق', icon: 'fa-regular fa-shield', route: '/technician/verification' },
+    { label: 'الإشعارات', icon: 'fa-regular fa-bell', route: '/technician/notifications' },
+    { label: 'المحادثات', icon: 'fa-regular fa-message', route: '/technician/chat' },
+    { label: 'الملف الشخصي', icon: 'fa-regular fa-user', route: '/technician/profile' },
+    { label: 'الإعدادات', icon: 'fa-solid fa-gear', route: '/technician/settings' },
   ];
 
   constructor(
@@ -78,8 +37,12 @@ export class TechnicianLayout implements OnInit {
     this.avatarLetter = this.technicianName.charAt(0).toUpperCase();
   }
 
-  logout() {
+ logout() {
     this.authService.logout();
+    localStorage.removeItem('user');
+    // NOTE: verification_status is kept intentionally so the pending screen
+    // shows correctly after re-login without needing the API to respond
     this.router.navigate(['/login']);
   }
 }
+
