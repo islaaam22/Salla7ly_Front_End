@@ -1,21 +1,16 @@
 .navbar {
   min-height: 72px;
   border-bottom: 1px solid #e5e7eb;
-  background: #fff !important;
+  background: #eee !important;
 }
 
-.logo-wrench {
+.logo {
   width: 48px;
   height: 48px;
-  background-color: #4391ea;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.logo-wrench i {
-  font-size: 20px !important;
 }
 
 .navbar-brand {
@@ -26,22 +21,39 @@
   color: #6b7280 !important;
   font-weight: 500;
   padding: 10px 16px !important;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .nav-link:hover {
   color: #111827 !important;
 }
+.nav-link:hover {
+  transition: all 0.3s ease;
+  transform: translateY(-5px);
+}
 
 .nav-link.active {
-  color: #111827 !important;
+  color: #0a0f1e !important;
   background-color: #f3f4f6;
   border-radius: 14px;
   font-weight: 600;
 }
 
-.btn-outline-dark,
-.btn-dark {
+.log {
+  font-weight: bold;
   border-radius: 14px;
   padding-inline: 18px;
+}
+.log:hover {
+  background-color: #fff;
+}
+.reg {
+  background-color: #e8620a;
+  color: white;
+  font-weight: bold;
+  border-radius: 14px;
+  padding-inline: 18px;
+}
+.reg:hover {
+  background-color: #ff6600;
 }

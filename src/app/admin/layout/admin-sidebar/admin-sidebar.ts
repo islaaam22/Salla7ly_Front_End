@@ -22,7 +22,7 @@ export class AdminSidebar {
     { label: 'العروض', icon: 'fa-solid fa-tags', link: '/admin/offers' },
     { label: 'المحافظ', icon: 'fa-solid fa-wallet', link: '/admin/wallets' },
     { label: 'التقييمات', icon: 'fa-regular fa-star', link: '/admin/reviews' },
-    { label: 'الإعدادات', icon: 'fa-solid fa-gear', link: '/admin/settings' },
+    // { label: 'الإعدادات', icon: 'fa-solid fa-gear', link: '/admin/settings' },
   ];
 
   constructor(private router: Router) {}

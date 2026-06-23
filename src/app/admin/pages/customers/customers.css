@@ -72,6 +72,13 @@
   font-weight: 600;
 }
 
+tbody tr {
+  transition: background 0.15s ease;
+}
+tbody tr:hover {
+  background: var(--color-background-secondary); /* أو #f8fafc */
+}
+
 .customers-table tbody tr {
   border-bottom: 1px solid #f0f4f8;
 }
@@ -139,6 +146,10 @@
   border-radius: 50%;
   object-fit: cover;
   display: block;
+  transition: transform 0.2s ease;
+}
+tbody tr:hover .customer-avatar {
+  transform: scale(1.06);
 }
 
 .customer-avatar-fallback {
@@ -231,6 +242,41 @@
 .customer-action-delete {
   color: #ef4444;
   font-size: 15px;
+}
+
+.customer-action-delete,
+.customer-action-edit,
+.customer-action-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  transition: background 0.15s, transform 0.12s, color 0.15s;
+}
+.customer-action-delete:hover {
+  background: #FCEBEB;
+  color: #A32D2D;
+  transform: scale(1.1);
+}
+.customer-action-edit:hover {
+  background: #e8f3ff;
+  color: #185FA5;
+  transform: scale(1.1);
+}
+.customer-action-view:hover {
+  background: var(--color-background-secondary);
+  transform: scale(1.1);
+}
+
+.customers-tab-btn {
+  transition: all 0.18s ease;
+}
+.customers-tab-btn:hover:not(.active-tab) {
+  background: #f8fafc;
+  border-color: #d0dae6;
+  color: #0f172a;
 }
 
 .customer-action-edit {

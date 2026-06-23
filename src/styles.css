@@ -1,29 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-  --color-brand:        #1AACDC;
-  --color-brand-dark:   #0E8FC0;
-  --color-brand-darker: #0A6FA0;
-  --color-dark:         #1A1A2E;
-  --color-text-body:    #555B6E;
-  --gradient-start: #0D8BFF;
-  --gradient-end: #18D4E0;
-  /* Home page background */
-  --bg-home: linear-gradient(160deg, #E8F6FC 0%, #FFFFFF 60%, #F0F8FF 100%);
-
-  /* Register page left panel */
-  --bg-register-panel: linear-gradient(135deg, #1AACDC, #0E8FC0, #0A6FA0);
+  --ink: #0a0f1e;
+  --ink2: #1a2235;
+  --sand: #f5f0e8;
+  --sand2: #ede8dc;
+  --orange: #e8620a;
+  --orange2: #ff7a1a;
+  --orange-pale: #fff1e8;
+  --slate: #5c6880;
+  --white: #ffffff;
+  --card-bg: #fafaf8;
 }
 
 html {
   direction: rtl;
+  scroll-behavior: smooth;
 }
+body{font-family:'Cairo',sans-serif;background:var(--sand);color:var(--ink);overflow-x:hidden}
 
-body {
-  direction: rtl;
-  font-family: "Cairo", sans-serif;
-  margin: 0;
-  height: 100%;
-}
-* {
-  font-family: 'Cairo', sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+

@@ -1,0 +1,138 @@
+<!-- wallet.html -->
+<div class="d-flex min-vh-100" dir="rtl">
+  <app-customer-sidebar></app-customer-sidebar>
+  <main class="flex-grow-1 overflow-auto">
+    <div class="p-5 bg-body-secondary">
+  <!-- Header -->
+  <div class="text-end mb-4">
+    <h1 class="fw-bold" style="font-size: 32px; color: #1a1a2e">المحفظة</h1>
+    <p class="text-muted">إدارة رصيدك ومعاملاتك المالية.</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <!-- Balance Widget -->
+    <div class="col-12 col-lg-8">
+      <div
+        class="rounded-4 wallet p-4 h-100 text-white d-flex flex-column justify-content-between"
+        style="background: linear-gradient(135deg, #16a0e6, #05b9f5); cursor: pointer"
+      >
+        <div class="text-end mb-3">
+          <p class="mb-1 opacity-75" style="font-size: 14px; font-weight: bold">الرصيد الحالي</p>
+          <h2 class="fw-bold mb-0" style="font-size: 38px">{{ balance | number: '1.0-0' }} ج.م</h2>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn paid fw-semibold rounded-4 flex-grow-1 flex-md-grow-0">
+            طرق الدفع
+          </button>
+          <button
+            class="btn btn-light charge fw-semibold rounded-4 flex-grow-1 flex-md-grow-0"
+            style="color: #0f1f3d; border-radius: 10px; padding: 10px 22px"
+            (click)="openTopUpModal()"
+          >
+            <i class="fa-solid fa-plus ms-1"></i> شحن الرصيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Widget -->
+    <div class="col-12 col-lg-4">
+      <div
+        class="bg-white wallet rounded-4 p-4 h-100"
+        style="border: 1px solid #e8edf2; cursor: pointer"
+      >
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div
+            class="rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 44px; height: 44px; background: #e8f7fc; color: #1aacdc"
+          >
+            <i class="fa-regular fa-credit-card"></i>
+          </div>
+        </div>
+
+        <h6 class="fw-bold mb-1" style="color: #1a1a2e">بطاقة افتراضية</h6>
+        <p class="text-muted mb-3" style="letter-spacing: 2px" dir="ltr">**** **** **** 4343</p>
+
+        <a
+          href="#"
+          class="text-decoration-none fw-semibold"
+          style="color: #1aacdc; font-size: 14px"
+        >
+          إدارة البطاقات
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions -->
+  <div class="bg-white rounded-4 p-4" style="border: 1px solid #e8edf2">
+    <h6 class="fw-bold text-end mb-4" style="color: #1a1a2e">آخر المعاملات</h6>
+
+    <div
+      *ngFor="let tx of transactions"
+      class="d-flex align-items-center justify-content-between py-3"
+      style="border-bottom: 3px solid #f0f2f5"
+    >
+      <!-- Info + Icon -->
+      <div class="d-flex align-items-center gap-3">
+        <div
+          class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+          [style.background]="tx.type === 'in' ? '#e7f8ee' : '#fdeaea'"
+          [style.color]="tx.type === 'in' ? '#16a34a' : '#dc2626'"
+          style="width: 38px; height: 38px;"
+        >
+          <i
+            class=" fa-solid"
+            [class.fa-down-left-and-up-right-to-center]="tx.type === 'in'"
+            [class.fa-up-right-and-down-left-from-center]="tx.type === 'out'"
+          ></i>
+        </div>
+        <div class="text-end">
+          <div class="fw-semibold" style="color: #1a1a2e; font-size: 15px">{{ tx.title }}</div>
+          <small class="text-muted">{{ tx.date }}</small>
+        </div>
+      </div>
+      <!-- Amount -->
+      <span class="fw-bold" [style.color]="tx.type === 'in' ? '#16a34a' : '#dc2626'">
+        {{ tx.type === 'in' ? '+' : '-' }}{{ tx.amount }} ج.م
+      </span>
+    </div>
+
+    <div *ngIf="transactions.length === 0" class="text-center text-muted py-4">
+      لا توجد معاملات حتى الآن
+    </div>
+  </div>
+
+  <!-- Top Up Modal -->
+  <div
+    *ngIf="showTopUpModal"
+    class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+    style="background: rgba(0, 0, 0, 0.5); z-index: 1050"
+  >
+    <div class="bg-white rounded-4 p-4" style="width: 100%; max-width: 420px" dir="rtl">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <button class="btn btn-light rounded-circle" (click)="closeTopUpModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h5 class="fw-bold mb-0">شحن الرصيد</h5>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">المبلغ (ج.م)</label>
+        <input
+          type="number"
+          class="form-control text-end"
+          [(ngModel)]="topUpAmount"
+          placeholder="مثال: 100"
+        />
+      </div>
+
+      <button class="btn w-100 text-white fw-bold py-3 rounded-3" style="background: #1aacdc">
+        <i class="fa-solid fa-plus me-2"></i> تأكيد الشحن
+      </button>
+    </div>
+  </div>
+    </div>
+  </main>
+</div>

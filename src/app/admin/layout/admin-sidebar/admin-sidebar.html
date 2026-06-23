@@ -1,7 +1,6 @@
 <aside
-  class="d-flex flex-column bg-white vh-100 p-3 border-end"
-  dir="rtl"
-  style="width: 280px; border-inline-end: 2px solid #e9ecef !important"
+  class="d-flex flex-column bg-white p-3 border-end position-sticky top-0"
+  style="width: 280px; height: 100vh; border-inline-end: 2px solid #e9ecef !important; position: sticky; top: 0;"
 >
   <!-- Brand -->
   <div class="d-flex align-items-center justify-content-start gap-2 mb-4 pb-3 border-bottom">
@@ -11,30 +10,24 @@
     >
       <i class="fa-solid fa-wrench"></i>
     </span>
-
     <h4 class="fw-bold mb-0">صلّحلي</h4>
   </div>
 
   <!-- Nav -->
-  <nav class="flex-grow-1">
-    <ul class="nav flex-column gap-1">
-      @for (item of navItems; track item.label) {
-        <li class="nav-item">
-          <a
-            [routerLink]="item.link"
-            routerLinkActive="active"
-            class="nav-link d-flex align-items-center justify-content-start gap-2 text-dark px-3 py-2 rounded"
-          >
-            <i [class]="item.icon + ' text-muted'"></i>
-            <span>{{ item.label }}</span>
-          </a>
-        </li>
-      }
-    </ul>
-  </nav>
+  <nav class="nav-section">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.link"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <span>{{ item.label }}</span>
+        <i [class]="item.icon"></i>
+      </a>
+    </nav>
 
   <!-- Footer -->
-  <div class="mt-auto pt-4 border-top">
+  <div class="mt-auto  border-top">
     <div class="d-flex align-items-center justify-content-start gap-2 mb-3 mt-3">
       <span
         class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold"
@@ -51,7 +44,7 @@
 
     <button
       (click)="logout()"
-      class="btn btn-light border w-100 d-flex align-items-center justify-content-center gap-2"
+      class="btn btn-danger border w-100 d-flex align-items-center justify-content-center gap-2"
     >
       <span>→</span>
       <span>تسجيل الخروج</span>
