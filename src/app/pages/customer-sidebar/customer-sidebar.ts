@@ -20,7 +20,7 @@ export class CustomerSidebar implements OnInit {
     { label: 'طلب جديد', icon: 'fa-regular fa-clipboard', link: '/customer/new-request' },
     { label: 'طلباتي', icon: 'fa-solid fa-briefcase', link: '/customer/my-requests' },
     { label: 'العروض المستلمة', icon: 'fa-solid fa-cart-arrow-down', link: './received-bids' },
-    { label: 'المحفظة', icon: 'fa-solid fa-wallet', link: '#' },
+    { label: 'المحفظة', icon: 'fa-solid fa-wallet', link: '/wallet' },
     { label: 'الإشعارات', icon: 'fa-regular fa-bell', link: '#' },
     { label: 'المحادثات', icon: 'fa-regular fa-message', link: '/customer/chat' },
     // { label: 'الإعدادات', icon: 'fa-solid fa-gear', link: '#' },

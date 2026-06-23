@@ -1,9 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-white px-4 sticky-top" dir="rtl">
   <div class="container-fluid">
-
-    <a class="navbar-brand fw-bold fs-3 text-dark d-flex align-items-center gap-2" routerLink="/">
-      <div class="logo-wrench">
-        <i class="fa-solid fa-wrench text-white"></i>
+    <a class="navbar-brand fw-bold fs-3 text-dark d-flex align-items-center gap-4" routerLink="/">
+      <div class="logo">
+        <img src="images/Logo.jpg" alt="" style="width: 60px" />
       </div>
 
       <span>صلّحلي</span>
@@ -13,56 +12,48 @@
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
-      data-bs-target="#navMenu">
+      data-bs-target="#navMenu"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navMenu">
-
       <ul class="navbar-nav mx-auto gap-3">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active"
-             [routerLinkActiveOptions]="{exact:true}">
+          <a
+            class="nav-link"
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
             الرئيسية
           </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/how-it-works" routerLinkActive="active">
-            كيف يعمل
-          </a>
+          <a class="nav-link" routerLink="/how-it-works" routerLinkActive="active"> كيف يعمل </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/services" routerLinkActive="active">
-            الخدمات
-          </a>
+          <a class="nav-link" routerLink="/services" routerLinkActive="active"> الخدمات </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/who-are-we" routerLinkActive="active">
-            من نحن
-          </a>
+          <a class="nav-link" routerLink="/who-are-we" routerLinkActive="active"> من نحن </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/contact" routerLinkActive="active">
-            تواصل معنا
-          </a>
+          <a class="nav-link" routerLink="/contact" routerLinkActive="active"> تواصل معنا </a>
         </li>
       </ul>
 
-     <div class="d-flex gap-3">
-  <button (click)="goToLogin()" class="btn btn-outline-dark rounded-pill px-4">
-    تسجيل الدخول
-  </button>
+      <div class="d-flex gap-3">
+        <button (click)="goToLogin()" class="btn log rounded-pill px-4">
+          تسجيل الدخول
+        </button>
 
-  <button (click)="goToRegister()" class="btn btn-dark rounded-pill px-4">
-    إنشاء حساب
-  </button>
-</div>
-
+        <button (click)="goToRegister()" class="btn reg rounded-pill px-4">إنشاء حساب</button>
+      </div>
     </div>
-
   </div>
 </nav>

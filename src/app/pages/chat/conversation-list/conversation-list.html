@@ -31,7 +31,7 @@
         class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
         style="width: 48px; height: 48px; background: #1aacdc; font-size: 20px"
       >
-        {{ conv.otherPartyName?.[0] ?? '?' }}
+        {{ conv.otherPartyName[0] || '?' }}
       </div>
 
       <!-- Info -->

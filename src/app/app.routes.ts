@@ -12,9 +12,6 @@ import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { ChatComponent } from './pages/chat/chat';
-import { ChatWindow } from './pages/chat/chat-window/chat-window';
-import { ConversationList } from './pages/chat/conversation-list/conversation-list';
-import { MessageBuddle } from './pages/chat/message-buddle/message-buddle';
 import { CustomerProfile } from './pages/customer-profile/customer-profile';
 import { CustomerLayout } from './pages/customer-layout/customer-layout';
 
@@ -23,8 +20,6 @@ import { CustomerEdit } from './pages/customer-edit/customer-edit';
 import { NewRequest } from './pages/customer/new-request/new-request';
 import { MyRequests } from './pages/customer/my-requests/my-requests';
 import { Review } from './pages/customer/review/review';
-
-
 
 import { TechnicianLayout } from './technician/layout/technician-layout';
 import { TechnicianProfile } from './technician/pages/profile/profile';
@@ -44,7 +39,7 @@ import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Dashboard } from './admin/pages/dashboard/dashboard';
 import { AdminStatistics } from './admin/pages/statistics/statistics';
 import { AdminCustomers } from './admin/pages/customers/customers';
-
+import { Wallet } from './pages/wallet/wallet';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -58,10 +53,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
-  // {path : 'chat' , component: ChatComponent},
-  // {path : 'chat-window' , component: ChatWindow},
-  // {path : 'conversation-list' , component: ConversationList},
-  // {path : 'message-buddle' , component: MessageBuddle},
+  { path: 'wallet', component: Wallet },
   {
     path: 'customer',
     component: CustomerLayout,
@@ -74,10 +66,10 @@ export const routes: Routes = [
       { path: 'review/:id', component: Review },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
-      { path: 'received-bids', component: ReceivedBidsComponent},
-      { path: 'submit-bid/:id', component: BidComparisonComponent},
-      { path: 'bids-category/:categoryId', component: BidsByCategoryComponent}
-    ]
+      { path: 'received-bids', component: ReceivedBidsComponent },
+      { path: 'submit-bid/:id', component: BidComparisonComponent },
+      { path: 'bids-category/:categoryId', component: BidsByCategoryComponent },
+    ],
   },
   {
     path: 'technician',
@@ -90,25 +82,23 @@ export const routes: Routes = [
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
 
-     { path: 'verification', component: TechnicianVerification },
+      { path: 'verification', component: TechnicianVerification },
       { path: 'previous-works', component: PreviousWorks },
       { path: 'assigned-tasks', component: AssignedTasksComponent },
       { path: 'task-details/:id', component: TaskDetailsComponent },
-    ]
+    ],
   },
-{
-  path: 'admin',
-  component: AdminLayout,
-  children: [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: Dashboard },
-    { path: 'statistics', component: AdminStatistics },
-    { path: 'customers', component: AdminCustomers },
-  ]
-},
+  {
+    path: 'admin',
+    component: AdminLayout,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: Dashboard },
+      { path: 'statistics', component: AdminStatistics },
+      { path: 'customers', component: AdminCustomers },
+    ],
+  },
 
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];
-
-
