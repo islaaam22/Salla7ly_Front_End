@@ -1,0 +1,344 @@
+<div dir="rtl" class="requests-page">
+
+  <!-- Header -->
+  <div class="requests-header">
+    <div class="requests-header-content">
+      <h1 class="requests-page-title">إدارة الطلبات</h1>
+      <p class="requests-page-subtitle">
+        جميع الطلبات على المنصة مع إمكانية البحث والتعديل والحذف.
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3 text-muted">جاري التحميل...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMsg && !loading" class="alert alert-danger text-end requests-alert">
+    {{ errorMsg }}
+  </div>
+
+  <div *ngIf="!loading && !errorMsg">
+
+    <!-- Toolbar -->
+    <div class="requests-toolbar">
+
+      <!-- Search -->
+      <div class="requests-search-wrap">
+        <input
+          type="text"
+          class="form-control requests-search-input text-end"
+          [(ngModel)]="searchTerm"
+          placeholder="ابحث بالرقم، العنوان، أو العميل..."
+        />
+      </div>
+
+      <!-- Tabs -->
+      <div class="requests-tabs">
+        <button
+          class="btn requests-tab-btn"
+          [class.active-tab]="activeTab === 'all'"
+          (click)="setTab('all')">
+          الكل ({{ countAll }})
+        </button>
+
+        <button
+          class="btn requests-tab-btn"
+          [class.active-tab]="activeTab === 'open'"
+          (click)="setTab('open')">
+          مفتوح للعروض ({{ countOpen }})
+        </button>
+
+        <button
+          class="btn requests-tab-btn"
+          [class.active-tab]="activeTab === 'assigned'"
+          (click)="setTab('assigned')">
+          قيد التنفيذ ({{ countAssigned }})
+        </button>
+
+        <button
+          class="btn requests-tab-btn"
+          [class.active-tab]="activeTab === 'emergency'"
+          (click)="setTab('emergency')">
+          طارئ ({{ countEmergency }})
+        </button>
+
+        <button
+          class="btn requests-tab-btn"
+          [class.active-tab]="activeTab === 'completed'"
+          (click)="setTab('completed')">
+          مكتمل ({{ countCompleted }})
+        </button>
+
+        <button
+          class="btn requests-tab-btn"
+          [class.active-tab]="activeTab === 'cancelled'"
+          (click)="setTab('cancelled')">
+          ملغي ({{ countCancelled }})
+        </button>
+      </div>
+    </div>
+
+    <!-- Request Cards -->
+    <div *ngFor="let req of filteredRequests" class="request-card">
+      <div class="request-row">
+
+        <!-- RIGHT SIDE : CONTENT -->
+        <div class="request-content">
+          <div class="request-title-line">
+            <span class="request-title">{{ req.title }}</span>
+            <span class="request-id">— #R{{ req.id }}</span>
+          </div>
+
+          <div class="request-details">
+            <span class="request-customer">العميل: {{ req.customerName }}</span>
+            <span class="request-separator">·</span>
+            <span>{{ urgencyLabel(req.urgency) }}</span>
+            <span class="request-separator">·</span>
+            <span>{{ formatDate(req.scheduledAt) }}</span>
+
+            <span *ngIf="req.isEmergency" class="fire-icon">
+              <i class="fa-solid fa-fire"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- LEFT SIDE : ACTIONS -->
+        <div class="request-actions">
+          <span class="request-status-badge"
+                [style.background]="statusColor(req.status)"
+                [style.color]="statusTextColor(req.status)">
+            {{ statusLabel(req.status) }}
+          </span>
+
+          <button class="action-btn action-btn-view" (click)="onView(req)" title="عرض">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+
+          <button class="action-btn action-btn-edit" (click)="onEdit(req)" title="تعديل">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+
+          <button class="action-btn action-btn-delete" (click)="onDelete(req)" title="حذف">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="filteredRequests.length === 0" class="requests-empty-state">
+      <i class="fa-regular fa-folder-open requests-empty-icon"></i>
+      لا توجد طلبات مطابقة
+    </div>
+
+  </div>
+
+  <!-- ============================================= -->
+  <!-- VIEW MODAL -->
+  <!-- ============================================= -->
+  <div class="modal-overlay" *ngIf="showViewModal" (click)="closeViewModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-header-row">
+        <h4 class="modal-title">تفاصيل الطلب</h4>
+        <button class="modal-close-btn" (click)="closeViewModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div *ngIf="viewLoading" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <div *ngIf="!viewLoading && viewRequest">
+
+        <div class="modal-request-top">
+          <div class="text-end">
+            <div class="modal-request-title">{{ viewRequest.title }}</div>
+            <div class="modal-request-id">#R{{ viewRequest.id }}</div>
+          </div>
+
+          <span class="request-status-badge"
+                [style.background]="statusColor(viewRequest.status)"
+                [style.color]="statusTextColor(viewRequest.status)">
+            {{ statusLabel(viewRequest.status) }}
+          </span>
+        </div>
+
+        <div *ngIf="viewRequest.description" class="modal-info-box text-end mb-3">
+          <div class="modal-info-label">الوصف</div>
+          <div class="modal-info-value">{{ viewRequest.description }}</div>
+        </div>
+
+        <div class="row g-3 mb-3 mt-1">
+          <div class="col-md-6 col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">العميل</div>
+              <div class="modal-info-value fw-semibold">{{ viewRequest.customerName }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">الفئة</div>
+              <div class="modal-info-value fw-semibold">{{ viewRequest.categoryName }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">الأولوية</div>
+              <div class="modal-info-value fw-semibold">{{ urgencyLabel(viewRequest.urgency) }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">موعد التنفيذ</div>
+              <div class="modal-info-value fw-semibold">{{ formatDate(viewRequest.scheduledAt) }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">طارئ</div>
+              <div class="modal-info-value fw-semibold"
+                   [style.color]="viewRequest.isEmergency ? '#ef4444' : '#16a34a'">
+                {{ viewRequest.isEmergency ? 'نعم' : 'لا' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">العنوان</div>
+              <div class="modal-info-value fw-semibold">{{ viewRequest.address || '—' }}</div>
+            </div>
+          </div>
+
+          <div *ngIf="viewRequest.aiPriceMin || viewRequest.aiPriceMax" class="col-12">
+            <div class="modal-info-box text-end">
+              <div class="modal-info-label">النطاق السعري المقدر</div>
+              <div class="modal-info-value fw-semibold">
+                {{ viewRequest.aiPriceMin }} — {{ viewRequest.aiPriceMax }} ج
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="viewRequest.completedAt" class="modal-success-box text-end">
+          <div class="modal-success-label">تاريخ الإكمال</div>
+          <div class="modal-success-value fw-semibold">{{ formatDate(viewRequest.completedAt) }}</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- EDIT MODAL -->
+  <!-- ============================================= -->
+  <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-header-row">
+        <h4 class="modal-title">تعديل الطلب</h4>
+        <button class="modal-close-btn" (click)="closeEditModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div *ngIf="editLoading" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <div *ngIf="!editLoading">
+
+        <div class="mb-3">
+          <label class="form-label fw-bold w-100 text-end mb-2">عنوان الطلب *</label>
+          <input type="text"
+                 class="form-control text-end modal-input"
+                 [(ngModel)]="editTitle"
+                 name="editTitle">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold w-100 text-end mb-2">الوصف</label>
+          <textarea class="form-control text-end modal-input modal-textarea"
+                    rows="3"
+                    [(ngModel)]="editDescription"
+                    name="editDescription"></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold w-100 text-end mb-2">موعد التنفيذ</label>
+          <input type="datetime-local"
+                 class="form-control text-end modal-input"
+                 [(ngModel)]="editScheduledAt"
+                 name="editScheduledAt">
+        </div>
+
+        <div *ngIf="editErrorMsg" class="alert alert-danger text-end requests-alert mb-3">
+          {{ editErrorMsg }}
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn modal-primary-btn"
+                  [disabled]="editSaving"
+                  (click)="onSaveEdit()">
+            {{ editSaving ? 'جاري الحفظ...' : 'حفظ' }}
+          </button>
+
+          <button class="btn modal-secondary-btn"
+                  (click)="closeEditModal()">
+            إلغاء
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- DELETE MODAL -->
+  <!-- ============================================= -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+      <div class="delete-modal-icon-wrap">
+        <div class="delete-modal-icon-circle">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+      </div>
+
+      <h5 class="fw-bold mb-2 delete-modal-title">حذف الطلب؟</h5>
+      <p class="text-muted mb-4 delete-modal-text">
+        سيتم حذف طلب "{{ deleteRequest?.title }}" نهائياً. لا يمكن التراجع.
+      </p>
+
+      <div *ngIf="deleteErrorMsg" class="alert alert-danger text-center requests-alert mb-3">
+        {{ deleteErrorMsg }}
+      </div>
+
+      <div class="delete-modal-actions">
+        <button class="btn delete-confirm-btn"
+                [disabled]="deleting"
+                (click)="confirmDelete()">
+          {{ deleting ? 'جاري الحذف...' : 'حذف' }}
+        </button>
+
+        <button class="btn modal-secondary-btn"
+                (click)="closeDeleteModal()">
+          إلغاء
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
