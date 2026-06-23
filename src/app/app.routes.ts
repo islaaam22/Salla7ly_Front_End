@@ -44,7 +44,7 @@ import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Dashboard } from './admin/pages/dashboard/dashboard';
 import { AdminStatistics } from './admin/pages/statistics/statistics';
 import { AdminCustomers } from './admin/pages/customers/customers';
-
+import { AdminRequests } from './admin/pages/requests/requests';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -104,6 +104,7 @@ export const routes: Routes = [
     { path: 'dashboard', component: Dashboard },
     { path: 'statistics', component: AdminStatistics },
     { path: 'customers', component: AdminCustomers },
+    { path: 'requests', component: AdminRequests },
   ]
 },
 
