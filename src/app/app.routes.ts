@@ -40,6 +40,7 @@ import { Dashboard } from './admin/pages/dashboard/dashboard';
 import { AdminStatistics } from './admin/pages/statistics/statistics';
 import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet } from './pages/wallet/wallet';
+import { AdminRequests } from './admin/pages/requests/requests';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -98,6 +99,17 @@ export const routes: Routes = [
       { path: 'customers', component: AdminCustomers },
     ],
   },
+{
+  path: 'admin',
+  component: AdminLayout,
+  children: [
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: Dashboard },
+    { path: 'statistics', component: AdminStatistics },
+    { path: 'customers', component: AdminCustomers },
+    { path: 'requests', component: AdminRequests },
+  ]
+},
 
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },

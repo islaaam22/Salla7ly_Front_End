@@ -74,7 +74,7 @@
             <div class="images-grid">
               @for (img of request.imageUrls; track img) {
                 <div class="img-box">
-                  <img [src]="img" alt="صورة المشكلة" />
+                  <img [src]="'https://sala7ly.runasp.net' + img" alt="صورة المشكلة" />
                 </div>
               }
             </div>
