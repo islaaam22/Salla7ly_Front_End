@@ -38,8 +38,8 @@ import { AdminStatistics } from './admin/pages/statistics/statistics';
 import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet } from './pages/wallet/wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
-import { TechniciansComponent } from './admin/pages/technicians/technicians';
-import { TechnicianProfileComponent } from './admin/pages/technician-profile/technician-profile';
+import { AdminBids } from './admin/pages/Bids/bids';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -95,11 +95,21 @@ export const routes: Routes = [
       { path: 'dashboard', component: Dashboard },
       { path: 'statistics', component: AdminStatistics },
       { path: 'customers', component: AdminCustomers },
-      { path: 'requests', component: AdminRequests },
-      { path: 'technicians', component: TechniciansComponent },
-      { path: 'technicians/:id', component: TechnicianProfileComponent },
     ],
   },
+{
+  path: 'admin',
+  component: AdminLayout,
+  children: [
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: Dashboard },
+    { path: 'statistics', component: AdminStatistics },
+    { path: 'customers', component: AdminCustomers },
+    { path: 'requests', component: AdminRequests },
+    { path: 'Bids', component: AdminBids },
+  ]
+},
+
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];
