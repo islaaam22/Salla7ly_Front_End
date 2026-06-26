@@ -10,7 +10,17 @@
 .active-role{
   border: 2px solid var(--color-brand-dark) !important;
   background-color: #0a6ea013 !important;
-  
+
+}
+
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* .role-card{

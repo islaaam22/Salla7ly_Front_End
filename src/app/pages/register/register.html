@@ -3,8 +3,9 @@
     <!-- right side -->
     <div class="col-lg-6 d-none d-lg-flex left-panel">
       <div class="left-header features-items">
-        <i class="fa-solid fa-screwdriver-wrench ms-2"></i>
-        <a routerLink="/" class="logo-link">صلحلي</a>
+        <div class="logo">
+          <img src="images/Logo-removebg-preview.png" alt="" style="width: 200px; height: 140px" />
+        </div>
       </div>
 
       <div class="left-content">
@@ -388,58 +389,59 @@
             </div>
           </div>
 
-
           <div *ngIf="selectedRole === 'admin'" class="form-text text-end">
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
-                  >الاسم الكامل</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  name="name"
-                  [(ngModel)]="admin.name"
-                  id="exampleInputName1"
-                  placeholder="الاسم بالكامل"
-                  style="
-                    height: 60px;
-                    border-radius: 18px;
-                    border: 1px solid #d9e1e8;
-                    padding: 0 24px;
-                  "
-                />
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
+                    >الاسم الكامل</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="name"
+                    [(ngModel)]="admin.name"
+                    id="exampleInputName1"
+                    placeholder="الاسم بالكامل"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
 
-                <div *ngIf="nameError" class="text-danger small mt-1 text-end">{{ nameError }}</div>
+                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">
+                    {{ nameError }}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
-                  >البريد الالكتروني</label
-                >
-                <input
-                  type="email"
-                  class="form-control"
-                  name="email"
-                  [(ngModel)]="admin.email"
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                  placeholder="example@gmail.com"
-                  style="
-                    height: 60px;
-                    border-radius: 18px;
-                    border: 1px solid #d9e1e8;
-                    padding: 0 24px;
-                  "
-                />
-                <div *ngIf="emailError" class="text-danger small mt-1 text-end">
-                  {{ emailError }}
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
+                    >البريد الالكتروني</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    [(ngModel)]="admin.email"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="example@gmail.com"
+                    style="
+                      height: 60px;
+                      border-radius: 18px;
+                      border: 1px solid #d9e1e8;
+                      padding: 0 24px;
+                    "
+                  />
+                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">
+                    {{ emailError }}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
           <div *ngIf="selectedRole === 'admin'" class="form-text text-end">
             <div class="mb-3">

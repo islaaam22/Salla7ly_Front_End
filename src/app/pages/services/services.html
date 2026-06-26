@@ -1,93 +1,191 @@
 <app-navbar></app-navbar>
 
-<section class="py-5">
-  <div class="container ss">
-    <div class="row">
-      <div class="col-12 text-center mb-5">
-        <p class="text-primary fw-bold">خدماتنا</p>
-        <h1 class="fw-bold">اكتشف أفضل الخدمات المنزلية</h1>
-        <p class="text-muted">مجموعة شاملة من خدمات الصيانة المنزلية الاحترافية</p>
-      </div>
-    </div>
-    <div class="row g-4">
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-wrench fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">السباكة</h5>
-          <p class="text-muted mb-0">تسريبات، تركيب وصيانة</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-bolt fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">الكهرباء</h5>
-          <p class="text-muted mb-0">أعطال، تمديدات وإنارة</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-snowflake fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">التكييف</h5>
-          <p class="text-muted mb-0">صيانة، تركيب، تبريد</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-hammer fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">النجارة</h5>
-          <p class="text-muted mb-0">أبواب، نوافذ، مطابخ</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-home fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">الأجهزه المنزلية</h5>
-          <p class="text-muted mb-0">غسالات ,ثلاجات وأفران</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-paint-roller fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">دهانات</h5>
-          <p class="text-muted mb-0">دهان داخلي وخارجي، ورق حائط، لمسات نهائية.</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-bucket fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">تنظيف خزانات</h5>
-          <p class="text-muted mb-0">تنظيف وتعقيم خزانات المياه باحترافية.</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="service-item card p-4 text-center h-100">
-          <i class="fa-solid fa-lock fa-2x mb-3 text-primary"></i>
-          <h5 class="fw-bold mb-2">أقفال وأمن</h5>
-          <p class="text-muted mb-0">تركيب وفك الأقفال، أنظمة أمان للأبواب.</p>
-        </div>
-      </div>
-    </div>
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="hero-eyebrow"><i class="fa-solid fa-screwdriver-wrench"></i> خدمات موثوقة ومعتمدة</div>
+  <h1>كل ما يحتاجه<br/><span>بيتك</span> في مكان واحد</h1>
+  <p>فنيون متخصصون في كل مجال — خدمة سريعة وموثوقة بأسعار شفافة وبدون مفاجآت</p>
+  <div class="hero-stats">
+    <div><div class="hstat-num">8+</div><div class="hstat-label">خدمة متخصصة</div></div>
+    <div><div class="hstat-num">+500</div><div class="hstat-label">فني معتمد</div></div>
+    <div><div class="hstat-num">4.9</div><div class="hstat-label">متوسط التقييم</div></div>
+    <div><div class="hstat-num">60د</div><div class="hstat-label">متوسط وقت الاستجابة</div></div>
+  </div>
+</section>
 
-    <section class="py-5 ">
-  <div class="container ready pt-5">
-    <div class="row">
-      <div class="col-12 text-center mb-5">
-        <h1 class="text-dark mb-3 fw-bold">   لم تجد ما تبحث عنه؟</h1>
-        <h6 class="fw-bold text-muted">يمكنك إنشاء طلب مخصص وسنرشّح لك الفني الأنسب. </h6>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 text-center mb-3 ">
-        <button routerLink="/register" class="btn st rounded-pill btn-light  btn-lg">
-          إبدأ طلبك الأن
-          <i class="fa-solid fa-arrow-left m-0"></i>
-        </button>
+<!-- SERVICES -->
+<section class="services-section">
+  <div class="sec-inner">
+    <div class="svc-grid">
 
-
+      <!-- السباكة -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="images/sbaka.webp" alt="السباكة"/>
+          <div class="svc-photo-overlay"></div>
+          <div class="svc-photo-badge">الأكثر طلباً</div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-wrench"></i></div>
+            <div class="svc-name">السباكة</div>
+          </div>
+          <div class="svc-desc">إصلاح التسريبات، تركيب وصيانة الأنابيب والحنفيات، كشف تسربات المياه</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
       </div>
+
+      <!-- الكهرباء -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="images/photo-1621905251189-08b45d6a269e.jpg" alt="الكهرباء"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-bolt"></i></div>
+            <div class="svc-name">الكهرباء</div>
+          </div>
+          <div class="svc-desc">إصلاح الأعطال الكهربائية، تمديد الأسلاك، تركيب الإنارة ولوحات التوزيع</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- التكييف -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="images/تصليح-تكييف-مركزي.webp" alt="التكييف"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-snowflake"></i></div>
+            <div class="svc-name">التكييف</div>
+          </div>
+          <div class="svc-desc">صيانة وتركيب وإصلاح المكيفات، تنظيف الفلاتر وشحن الغاز</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- النجارة -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80" alt="النجارة"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-hammer"></i></div>
+            <div class="svc-name">النجارة</div>
+          </div>
+          <div class="svc-desc">إصلاح وتركيب الأبواب والنوافذ، تصنيع المطابخ والدواليب والأثاث المدمج</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- الأجهزة المنزلية -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="images/فني-تصليح-الكويت-ثلاجات-غسالات-طباخات-تكييفات.webp" alt="الأجهزة المنزلية"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-house"></i></div>
+            <div class="svc-name">الأجهزة المنزلية</div>
+          </div>
+          <div class="svc-desc">صيانة وإصلاح الغسالات والثلاجات والأفران والمايكروويف وجميع الأجهزة</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- دهانات -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&q=80" alt="دهانات"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-paint-roller"></i></div>
+            <div class="svc-name">دهانات</div>
+          </div>
+          <div class="svc-desc">دهان داخلي وخارجي، ورق حائط، ديكورات جدارية، لمسات نهائية احترافية</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- تنظيف خزانات -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80" alt="تنظيف خزانات"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-faucet-drip"></i></div>
+            <div class="svc-name">تنظيف خزانات</div>
+          </div>
+          <div class="svc-desc">تنظيف وتعقيم خزانات المياه بمواد آمنة ومعتمدة مع شهادة ضمان النظافة</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- أقفال وأمن -->
+      <div class="svc-card">
+        <div class="svc-photo">
+          <img src="images/فني-نجار-بالمدينة-المنورة.webp" alt="أقفال وأمن"/>
+          <div class="svc-photo-overlay"></div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-head">
+            <div class="svc-ico"><i class="fa-solid fa-lock"></i></div>
+            <div class="svc-name">أقفال وأمن</div>
+          </div>
+          <div class="svc-desc">تركيب وفك الأقفال، تغيير الأسطوانات، أنظمة أمان ذكية للأبواب والنوافذ</div>
+          <div class="svc-footer">
+            <button routerLink="/register" class="svc-cta">اطلب الآن <i class="fa-solid fa-arrow-left"></i></button>
+            <span class="svc-avail">متاح الآن</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> ذكاء اصطناعي</div>
+    <h2 class="cta-h">لم تجد ما تبحث عنه؟</h2>
+    <p class="cta-sub">أنشئ طلباً مخصصاً وسيرشّح لك الذكاء الاصطناعي الفني الأنسب لمشكلتك في ثوانٍ</p>
+    <div class="cta-btns">
+      <button routerLink="/register" class="btn-cta-main">ابدأ طلبك الآن <i class="fa-solid fa-arrow-left"></i></button>
+      <button routerLink="/contact" class="btn-cta-ghost">تحدث مع الدعم</button>
+    </div>
   </div>
 </section>
+
 <app-footer></app-footer>
