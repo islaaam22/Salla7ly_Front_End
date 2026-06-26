@@ -1,0 +1,322 @@
+<!-- src/app/admin/pages/technician-profile/technician-profile.html -->
+<div class="profile-wrapper" dir="rtl">
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+    </div>
+  }
+
+  <!-- Error / Not found -->
+  @if (!loading && error) {
+    <div class="not-found">
+      <i class="fa-solid fa-user-slash"></i>
+      <p>{{ error }}</p>
+      <button class="btn-back-plain" (click)="goBack()">العودة للقائمة</button>
+    </div>
+  }
+
+  <!-- Profile -->
+  @if (!loading && !error && technician) {
+
+    <!-- Page header -->
+    <div class="page-header">
+      <button class="btn-back" (click)="goBack()">
+        <i class="fa-solid fa-arrow-right"></i>
+        <span>العودة</span>
+      </button>
+      <div class="header-text">
+        <h2>ملف الفني العام</h2>
+        <p class="tech-id">المعرف: t{{ technicianId }}</p>
+      </div>
+    </div>
+
+    <div class="profile-body">
+
+      <!-- ── Right column ───────────────────────────────────────────────── -->
+      <div class="right-col">
+
+        <!-- About -->
+        <div class="info-card">
+          <h4 class="card-title">عن الفني</h4>
+          <p class="bio-text">{{ technician.bio || 'لا توجد نبذة متاحة.' }}</p>
+        </div>
+
+        <!-- Certificates -->
+        <div class="info-card">
+          <h4 class="card-title">
+            <i class="fa-regular fa-id-badge"></i>
+            الشهادات
+          </h4>
+          @if (getCertificates().length > 0) {
+            <ul class="cert-list">
+              @for (cert of getCertificates(); track cert) {
+                <li>{{ cert }}</li>
+              }
+            </ul>
+          } @else {
+            <p class="empty-info">لا توجد شهادات مسجلة</p>
+          }
+        </div>
+
+        <!-- Statistics -->
+        <div class="info-card">
+          <h4 class="card-title">
+            <i class="fa-solid fa-chart-bar"></i>
+            الإحصائيات
+          </h4>
+          <div class="stats-list">
+            <div class="stat-row">
+              <span class="stat-label">مهام مكتملة</span>
+              <span class="stat-value">{{ technician.completedJobs ?? 0 }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">معدل الإنجاز</span>
+              <span class="stat-value">{{ getCompletionRate() }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">سنوات الخبرة</span>
+              <span class="stat-value">{{ technician.experienceYears ?? 0 }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">التقييم العام</span>
+              <span class="stat-value">{{ technician.overallRating?.toFixed(1) ?? '0.0' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verification status card -->
+        @if (verification) {
+          <div class="info-card">
+            <h4 class="card-title">
+              <i class="fa-solid fa-shield-halved"></i>
+              التوثيق
+            </h4>
+            <div class="stats-list">
+              <div class="stat-row">
+                <span class="stat-label">الحالة</span>
+                <span [class]="'status-badge-sm ' + getStatusClass()">{{ getStatusLabel() }}</span>
+              </div>
+              @if (verification.idNumber) {
+                <div class="stat-row">
+                  <span class="stat-label">رقم الهوية</span>
+                  <span class="stat-value" style="font-size:12px; direction:ltr;">{{ verification.idNumber }}</span>
+                </div>
+              }
+              @if (verification.submittedAt) {
+                <div class="stat-row">
+                  <span class="stat-label">تاريخ التقديم</span>
+                  <span class="stat-value" style="font-size:11px;">{{ verification.submittedAt | date:'dd/MM/yyyy' }}</span>
+                </div>
+              }
+              @if (verification.rejectionReason) {
+                <div class="rejection-note">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  {{ verification.rejectionReason }}
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <!-- ── Main column ────────────────────────────────────────────────── -->
+      <div class="main-col">
+
+        <!-- Hero card -->
+        <div class="hero-card">
+          <div class="hero-right">
+            @if (isValidImg(technician.imageUrl)) {
+              <img
+                [src]="img(technician.imageUrl)"
+                class="hero-avatar"
+                [alt]="technician.name"
+                (error)="technician.imageUrl = null" />
+            } @else {
+              <div class="hero-avatar-placeholder">{{ getInitial(technician.name) }}</div>
+            }
+            <div class="hero-info">
+              <h3>م. {{ technician.name }}</h3>
+              <p class="hero-specialty">فني {{ technician.specialization ?? 'غير محدد' }}</p>
+              <div class="hero-meta">
+                <span [class]="'status-badge ' + getStatusClass()">
+                  <i class="fa-solid fa-circle-check"></i>
+                  {{ getStatusLabel() }}
+                </span>
+                <span class="hero-rating">
+                  <i class="fa-solid fa-star star-icon"></i>
+                  {{ technician.overallRating?.toFixed(1) ?? '0.0' }}
+                  ({{ technician.completedJobs ?? 0 }} تقييم)
+                </span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-contact" (click)="null">
+            <i class="fa-regular fa-comment-dots"></i>
+            تواصل
+          </button>
+        </div>
+
+        <!-- Portfolio -->
+        <div class="section-card">
+          <div class="section-header">
+            <h4>معرض الأعمال</h4>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </div>
+
+          @if (portfolio.length > 0) {
+            <div class="portfolio-grid">
+              @for (item of portfolio; track item.id; let i = $index) {
+                <div
+                  class="portfolio-thumb"
+                  (click)="hasAfterImage(item) && openLightbox(getPortfolioAfterUrl(item))">
+                  @if (hasAfterImage(item)) {
+                    <img
+                      [src]="getPortfolioAfterUrl(item)"
+                      [alt]="item.title ?? ('مشروع ' + (i + 1))"
+                      loading="lazy" />
+                    @if (item.title) {
+                      <div class="thumb-label">{{ item.title }}</div>
+                    }
+                  } @else {
+                    <div class="portfolio-placeholder">مشروع {{ i + 1 }}</div>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="portfolio-grid">
+              @for (n of [1,2,3,4,5,6]; track n) {
+                <div class="portfolio-thumb">
+                  <div class="portfolio-placeholder">مشروع {{ n }}</div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Before / After -->
+        @if (portfolio.length > 0) {
+          <div class="section-card">
+            <div class="section-header">
+              <h4>قبل / بعد</h4>
+            </div>
+            <div class="before-after-grid">
+              @for (item of portfolio.slice(0, 2); track item.id; let i = $index) {
+                <div class="ba-pair">
+                  <!-- Before -->
+                  <div
+                    class="ba-thumb before"
+                    (click)="hasBeforeImage(item) && openLightbox(getPortfolioBeforeUrl(item))">
+                    @if (hasBeforeImage(item)) {
+                      <img [src]="getPortfolioBeforeUrl(item)" alt="قبل" loading="lazy" />
+                      <span class="ba-label">قبل</span>
+                    } @else {
+                      <div class="ba-placeholder">قبل #{{ i + 1 }}</div>
+                    }
+                  </div>
+                  <!-- After -->
+                  <div
+                    class="ba-thumb after"
+                    (click)="hasAfterImage(item) && openLightbox(getPortfolioAfterUrl(item))">
+                    @if (hasAfterImage(item)) {
+                      <img [src]="getPortfolioAfterUrl(item)" alt="بعد" loading="lazy" />
+                      <span class="ba-label">بعد</span>
+                    } @else {
+                      <div class="ba-placeholder">بعد #{{ i + 1 }}</div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Verification documents -->
+        @if (getVerificationDocs().length > 0) {
+          <div class="section-card">
+            <div class="section-header">
+              <h4>مستندات التوثيق</h4>
+              @if (verification?.idNumber) {
+                <span class="id-number">رقم الهوية: {{ verification?.idNumber }}</span>
+              }
+            </div>
+            <div class="docs-grid">
+              @for (doc of getVerificationDocs(); track doc.label) {
+                <div class="doc-item">
+                  @if (doc.isPdf) {
+                    <a [href]="doc.url" target="_blank" class="doc-pdf-link">
+                      <i class="fa-solid fa-file-pdf"></i>
+                      <span>{{ doc.label }}</span>
+                    </a>
+                  } @else {
+                    <div
+                      class="doc-img-wrapper"
+                      (click)="openLightbox(doc.url)"
+                      title="انقر للتكبير">
+                      <img
+                        [src]="doc.url"
+                        [alt]="doc.label"
+                        class="doc-img"
+                        loading="lazy"
+                        (error)="$any($event.target).style.display='none'" />
+                      <div class="doc-zoom-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    </div>
+                  }
+                  <span class="doc-label">{{ doc.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Reviews -->
+        <div class="section-card">
+          <div class="section-header">
+            <h4>آخر التقييمات</h4>
+          </div>
+          @if (reviews.length > 0) {
+            <div class="reviews-list">
+              @for (review of reviews.slice(0, 5); track review.id) {
+                <div class="review-item">
+                  <div class="review-header">
+                    <span class="reviewer-name">{{ review.customerName ?? 'عميل' }}</span>
+                    <div class="review-stars">
+                      @for (star of getStarArray(); track star) {
+                        <i class="fa-solid fa-star"
+                           [class.star-filled]="isStarFilled(star, getOverallScore(review))"
+                           [class.star-empty]="!isStarFilled(star, getOverallScore(review))">
+                        </i>
+                      }
+                    </div>
+                  </div>
+                  @if (review.comment) {
+                    <p class="review-comment">"{{ review.comment }}"</p>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="empty-info">لا توجد تقييمات بعد</p>
+          }
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- ── Lightbox ──────────────────────────────────────────────────────── -->
+  @if (lightboxOpen) {
+    <div class="lightbox-overlay" (click)="closeLightbox()">
+      <button class="lightbox-close" (click)="closeLightbox()">✕</button>
+      <img
+        [src]="lightboxUrl"
+        class="lightbox-img"
+        (click)="$event.stopPropagation()"
+        alt="صورة مكبّرة" />
+    </div>
+  }
+
+</div>

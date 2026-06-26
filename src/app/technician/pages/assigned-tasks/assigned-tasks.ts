@@ -14,18 +14,23 @@ export class AssignedTasksComponent implements OnInit {
   loading = true;
 
   constructor(private requestService: RequestService, private router: Router) {}
+ngOnInit() {
+  this.requestService.getAssignedRequests().subscribe({
+    next: (res) => {
+      console.log('Assigned Requests:', res);
 
-  ngOnInit() {
-    this.requestService.getOpenRequests().subscribe({
-      next: (res) => {
-        this.requests = res;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
-  }
+      this.requests = res;
+      this.loading = false;
+    },
+    error: (err) => {
+  console.log('ERROR:', err);
+  console.log('ERROR BODY:', err.error);
+  console.log('VALIDATION ERRORS:', err.error.errors);
+  console.log('STATUS:', err.status);
+  this.loading = false;
+}
+  });
+}
 
   getStatusLabel(status: any): string {
     switch (status?.toLowerCase()) {

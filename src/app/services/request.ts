@@ -50,4 +50,10 @@ export class RequestService {
     headers: this.getHeaders()
   });
 }
+getAssignedRequests(): Observable<any> {
+  return this.http.get(`${this.apiUrl}/requests/assigned`, {
+    headers: this.getHeaders()
+  });
+}
+
 }

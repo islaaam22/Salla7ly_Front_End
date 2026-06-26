@@ -14,7 +14,6 @@ import { ResetPassword } from './pages/reset-password/reset-password';
 import { ChatComponent } from './pages/chat/chat';
 import { CustomerProfile } from './pages/customer-profile/customer-profile';
 import { CustomerLayout } from './pages/customer-layout/customer-layout';
-
 import { CustomerEdit } from './pages/customer-edit/customer-edit';
 
 import { NewRequest } from './pages/customer/new-request/new-request';
@@ -25,9 +24,7 @@ import { TechnicianLayout } from './technician/layout/technician-layout';
 import { TechnicianProfile } from './technician/pages/profile/profile';
 import { TechnicianEditProfile } from './technician/pages/edit-profile/edit-profile';
 import { AvailableRequests } from './technician/pages/available-requests/available-requests';
-
 import { TechnicianVerification } from './technician/pages/verification/verification';
-
 import { PreviousWorks } from './technician/pages/previous-works/previous-works';
 import { BidComparisonComponent } from './pages/submit-bids/submit-bids';
 import { ReceivedBidsComponent } from './pages/received-bids/received-bids';
@@ -42,6 +39,7 @@ import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet } from './pages/wallet/wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
 import { AdminBids } from './admin/pages/Bids/bids';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -83,7 +81,6 @@ export const routes: Routes = [
       { path: 'available-requests', component: AvailableRequests },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
-
       { path: 'verification', component: TechnicianVerification },
       { path: 'previous-works', component: PreviousWorks },
       { path: 'assigned-tasks', component: AssignedTasksComponent },
