@@ -41,6 +41,7 @@ import { AdminStatistics } from './admin/pages/statistics/statistics';
 import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet } from './pages/wallet/wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
+import { AdminBids } from './admin/pages/Bids/bids';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -108,6 +109,7 @@ export const routes: Routes = [
     { path: 'statistics', component: AdminStatistics },
     { path: 'customers', component: AdminCustomers },
     { path: 'requests', component: AdminRequests },
+    { path: 'Bids', component: AdminBids },
   ]
 },
 
