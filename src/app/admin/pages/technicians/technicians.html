@@ -1,0 +1,184 @@
+<!-- src/app/admin/pages/technicians/technicians.html -->
+<div class="page-wrapper" dir="rtl">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h2>إدارة الفنيين</h2>
+    <p>مراجعة طلبات التوثيق واعتماد الفنيين.</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-row">
+    @for (f of filters; track f.value) {
+      <button
+        [class.active]="activeFilter === f.value"
+        (click)="applyFilter(f.value)"
+        class="filter-btn">
+        {{ f.label }}
+        <span class="count">({{ getFilterCount(f.value) }})</span>
+      </button>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!loading && error) {
+    <div class="error-state">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>{{ error }}</p>
+      <button class="btn-retry" (click)="loadData()">إعادة المحاولة</button>
+    </div>
+  }
+
+  <!-- Grid -->
+  @if (!loading && !error) {
+    <div class="technicians-grid">
+
+      @for (tech of filteredTechnicians; track tech.id) {
+        <div class="tech-card" [class.processing]="isProcessing(tech)">
+
+          <!-- Card top -->
+          <div class="card-top">
+            <div class="tech-info">
+              @if (isValidImage(tech.imageUrl)) {
+                <img
+                  [src]="resolveImage(tech.imageUrl)"
+                  class="avatar-img"
+                  [alt]="tech.name"
+                  (error)="tech.imageUrl = null" />
+              } @else {
+                <div class="avatar">{{ getInitial(tech.name) }}</div>
+              }
+              <div class="tech-details">
+                <h5>م. {{ tech.name }}</h5>
+                <p class="specialty">
+                  {{ tech.specialization ?? 'غير محدد' }}
+                  @if (tech.experienceYears) {
+                    · خبرة {{ tech.experienceYears }} سنة
+                  }
+                </p>
+                <div class="stats">
+                  <span>⭐ {{ tech.overallRating?.toFixed(1) ?? '0.0' }}</span>
+                  <span>📋 {{ tech.completedJobs ?? 0 }} مهمة</span>
+                  @if (tech.subscriptionTier) {
+                    <span class="tier-badge">{{ tech.subscriptionTier }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <span [class]="'status-badge ' + getStatusClass(tech)">
+              @if (tech.uiStatus === 'approved') { <i class="fa-solid fa-circle-check"></i> }
+              @if (tech.uiStatus === 'pending')  { <i class="fa-regular fa-clock"></i> }
+              @if (tech.uiStatus === 'rejected') { <i class="fa-solid fa-ban"></i> }
+              @if (tech.uiStatus === 'new')      { <i class="fa-regular fa-user"></i> }
+              {{ getStatusLabel(tech) }}
+            </span>
+          </div>
+
+          <!-- Card actions -->
+          <div class="card-actions">
+            <button class="btn-docs" (click)="viewProfile(tech.id)">
+              عرض المستندات
+            </button>
+
+            <!-- Pending: approve + reject -->
+            @if (isPending(tech)) {
+              <button
+                class="btn-approve"
+                [disabled]="isProcessing(tech)"
+                (click)="approve(tech)">
+                @if (isProcessing(tech)) {
+                  <span class="btn-spinner"></span>
+                } @else {
+                  <i class="fa-solid fa-check"></i>
+                }
+                اعتماد
+              </button>
+              <button
+                class="btn-reject"
+                [disabled]="isProcessing(tech)"
+                (click)="openRejectModal(tech)">
+                <i class="fa-solid fa-xmark"></i> رفض
+              </button>
+            }
+
+            <!-- Approved: suspend -->
+            @if (isApproved(tech)) {
+              <button
+                class="btn-suspend"
+                [disabled]="isProcessing(tech)"
+                (click)="suspend(tech)">
+                @if (isProcessing(tech)) { <span class="btn-spinner"></span> }
+                تعليق
+              </button>
+            }
+
+            <!-- Suspended: reactivate -->
+            @if (isSuspended(tech)) {
+              <button
+                class="btn-reactivate"
+                [disabled]="isProcessing(tech)"
+                (click)="reactivate(tech)">
+                @if (isProcessing(tech)) { <span class="btn-spinner"></span> }
+                إعادة الاعتماد
+              </button>
+            }
+          </div>
+
+        </div>
+      }
+
+      <!-- Empty state -->
+      @if (filteredTechnicians.length === 0) {
+        <div class="empty-state">
+          <i class="fa-solid fa-users-slash"></i>
+          <p>لا يوجد فنيون في هذه الفئة</p>
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- ── Reject Modal ──────────────────────────────────────────────────────── -->
+  @if (showRejectModal) {
+    <div class="modal-overlay" (click)="closeRejectModal()">
+      <div class="modal-box" dir="rtl" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+          <h3>رفض توثيق الفنّي</h3>
+          <button class="btn-close-modal" (click)="closeRejectModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <p class="tech-name">م. {{ selectedTech?.name }}</p>
+          <label>سبب الرفض *</label>
+          <textarea
+            [(ngModel)]="rejectReason"
+            rows="4"
+            placeholder="مثال: صورة البطاقة غير واضحة، يرجى رفع صورة بدقة أعلى.">
+          </textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            class="btn-confirm-reject"
+            [disabled]="!rejectReason.trim() || rejecting"
+            (click)="confirmReject()">
+            @if (rejecting) { <span class="btn-spinner btn-spinner-white"></span> }
+            {{ rejecting ? 'جاري الرفض...' : 'تأكيد الرفض' }}
+          </button>
+          <button class="btn-cancel-modal" (click)="closeRejectModal()">إلغاء</button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>
