@@ -1,37 +1,123 @@
 <app-navbar></app-navbar>
-<div class="container py-5" dir="rtl">
 
-  <!-- Header -->
-  <div class="text-center mb-5">
-    <span class="badge rounded-pill text-bg-primary mb-3">كيف يعمل</span>
-    <h1 class="fw-bold" style="font-size: 48px;">رحلة بسيطة من الطلب للحل</h1>
-    <p class="text-muted fs-5">بدون أسواق مفتوحة ولا مزايدات — نظام ترشيح ذكي يربطك بالفني المثالي مباشرة.</p>
-  </div>
+<div class="page-section" id="page-how">
 
-  <!-- Steps Grid -->
-  <div class="row g-4">
-    @for (step of steps; track step.number) {
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="step-icon">
-              <i class="{{ step.icon }}"></i>
-            </div>
-            <span class="step-number">{{ step.number }}</span>
+  <section class="page-hero">
+    <div class="container">
+      <div class="eyebrow"><i class="fa-solid fa-circle-play"></i> بسيط وسريع</div>
+      <h1>كيف <span>يعمل</span> صلحلي؟</h1>
+      <p>من لحظة إنشاء الطلب لحين استلام الخدمة — كل خطوة مصممة لتوفير وقتك وراحتك</p>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section class="py-5 how-bg">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="sec-label" style="color:var(--orange)">الخطوات</span>
+        <h2 class="sec-title" style="color:#fff">٣ خطوات بسيطة</h2>
+        <p class="sec-sub" style="color:rgba(255,255,255,.45)">من إنشاء الطلب لاستلام الخدمة في دقائق</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-num">١</div>
+            <div class="step-ico"><i class="fa-solid fa-clipboard-list"></i></div>
+            <div class="step-title">أنشئ طلبك</div>
+            <p class="step-desc">حدد نوع الخدمة، اكتب وصفاً للمشكلة، وحدد موقعك — يستغرق أقل من دقيقتين</p>
+            <span class="step-badge">أقل من دقيقتين</span>
           </div>
-          <h5 class="fw-bold mt-3">{{ step.title }}</h5>
-          <p class="text-muted">{{ step.description }}</p>
+        </div>
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-num">٢</div>
+            <div class="step-ico"><i class="fa-solid fa-robot"></i></div>
+            <div class="step-title">الذكاء الاصطناعي يرشّح</div>
+            <p class="step-desc">نظامنا يحلل طلبك ويرشح لك أفضل 5 فنيين مؤهلين قريبين منك بناءً على تقييماتهم وتخصصهم</p>
+            <span class="step-badge">في ثوانٍ</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="step-card">
+            <div class="step-num">٣</div>
+            <div class="step-ico"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="step-title">اختر واستلم</div>
+            <p class="step-desc">اختر الفني المناسب، وافق على السعر، واستلم الخدمة في الوقت المحدد مع ضمان الجودة</p>
+            <span class="step-badge">مضمون ١٠٠٪</span>
+          </div>
         </div>
       </div>
-    }
-  </div>
 
-  <!-- CTA Button -->
-  <div class="text-center mt-5">
-    <button (click)="goToRegister()" class="btn btn-primary btn-lg rounded-pill px-5">
-      ابدأ الآن مجاناً ←
-    </button>
-  </div>
+      <!-- Detail flow -->
+      <div class="row g-3 mt-5">
+        <div class="col-12">
+          <p class="text-center mb-4" style="color:rgba(255,255,255,.4);font-size:13px;letter-spacing:.06em;text-transform:uppercase">تفاصيل الرحلة الكاملة</p>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card text-center py-4">
+            <i class="fa-solid fa-mobile-screen fa-2x mb-3" style="color:var(--orange)"></i>
+            <div class="step-title" style="font-size:15px">افتح التطبيق</div>
+            <p class="step-desc" style="font-size:13px">سجّل دخولك وابدأ على الفور</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card text-center py-4">
+            <i class="fa-solid fa-pen-to-square fa-2x mb-3" style="color:var(--orange)"></i>
+            <div class="step-title" style="font-size:15px">اكتب الطلب</div>
+            <p class="step-desc" style="font-size:13px">صف المشكلة بكلماتك العادية</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card text-center py-4">
+            <i class="fa-solid fa-user-check fa-2x mb-3" style="color:var(--orange)"></i>
+            <div class="step-title" style="font-size:15px">اختر الفني</div>
+            <p class="step-desc" style="font-size:13px">شوف التقييمات واختار</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="step-card text-center py-4">
+            <i class="fa-solid fa-star fa-2x mb-3" style="color:var(--orange)"></i>
+            <div class="step-title" style="font-size:15px">قيّم الخدمة</div>
+            <p class="step-desc" style="font-size:13px">تقييمك يساعد الجميع</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-5 how-bg" style="padding-top:0!important">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="sec-label" style="color:var(--orange)">أسئلة شائعة</span>
+        <h2 class="sec-title" style="color:#fff">عندك سؤال؟</h2>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="faq-item" (click)="toggleFaq($event.currentTarget)">
+            <div class="faq-q">كيف يتم اختيار الفني المناسب؟<i class="fa-solid fa-plus"></i></div>
+            <div class="faq-a">الذكاء الاصطناعي يحلل طلبك ويرشح فنيين بناءً على تخصصهم وقربهم منك وتقييماتهم السابقة. أنت تختار الأنسب من بينهم.</div>
+          </div>
+          <div class="faq-item" (click)="toggleFaq($event.currentTarget)">
+            <div class="faq-q">هل الأسعار ثابتة؟<i class="fa-solid fa-plus"></i></div>
+            <div class="faq-a">السعر يتحدد ويُوافق عليه قبل بدء العمل. لا يمكن للفني تغييره بعد الاتفاق إلا بموافقتك.</div>
+          </div>
+          <div class="faq-item" (click)="toggleFaq($event.currentTarget)">
+            <div class="faq-q">ماذا لو لم أكن راضياً عن الخدمة؟<i class="fa-solid fa-plus"></i></div>
+            <div class="faq-a">لدينا ضمان رضا العميل. تواصل مع الدعم خلال 48 ساعة وسنعمل على حل المشكلة أو إعادة جدولة زيارة مجانية.</div>
+          </div>
+          <div class="faq-item" (click)="toggleFaq($event.currentTarget)">
+            <div class="faq-q">كيف يتم التحقق من الفنيين؟<i class="fa-solid fa-plus"></i></div>
+            <div class="faq-a">كل فني يمر بتحقق من الهوية وشهادات الخبرة والسجل الجنائي قبل الانضمام. ونراقب تقييماته باستمرار.</div>
+          </div>
+          <div class="faq-item" (click)="toggleFaq($event.currentTarget)">
+            <div class="faq-q">هل تتوفر الخدمة في جميع المحافظات؟<i class="fa-solid fa-plus"></i></div>
+            <div class="faq-a">حالياً متاحون في القاهرة الكبرى والإسكندرية والجيزة. نتوسع لمحافظات جديدة كل شهر.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </div>
 <app-footer></app-footer>

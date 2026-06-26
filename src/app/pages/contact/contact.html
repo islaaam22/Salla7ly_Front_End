@@ -1,200 +1,119 @@
 <app-navbar></app-navbar>
 
-<section class="py-5" dir="rtl">
+<div class="page-section" id="page-contact">
 
+  <section class="page-hero">
+    <div class="container">
+      <div class="eyebrow"><i class="fa-solid fa-envelope"></i> نحن هنا لك</div>
+      <h1>تواصل <span>معنا</span></h1>
+      <p>فريقنا متاح على مدار الساعة للإجابة على استفساراتك ومساعدتك في أي وقت</p>
+    </div>
+  </section>
+
+  <section class="py-5" style="background:var(--sand)">
+    <div class="container">
+      <div class="row g-4 align-items-stretch">
+
+        <!-- Contact Info -->
+        <div class="col-lg-4">
+          <div class="contact-info-card">
+            <h4 class="fw-bold text-white mb-4">معلومات التواصل</h4>
+
+            <div class="contact-info-item">
+              <div class="contact-ico"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <div class="contact-info-label">الهاتف</div>
+                <div class="contact-info-val">19XXX</div>
+              </div>
+            </div>
+
+            <div class="contact-info-item">
+              <div class="contact-ico"><i class="fa-solid fa-envelope"></i></div>
+              <div>
+                <div class="contact-info-label">البريد الإلكتروني</div>
+                <div class="contact-info-val">hello@sal7ly.com</div>
+              </div>
+            </div>
+
+            <div class="contact-info-item">
+              <div class="contact-ico"><i class="fa-solid fa-location-dot"></i></div>
+              <div>
+                <div class="contact-info-label">العنوان</div>
+                <div class="contact-info-val">القاهرة، مصر</div>
+              </div>
+            </div>
+
+            <div class="contact-info-item mb-0">
+              <div class="contact-ico"><i class="fa-solid fa-clock"></i></div>
+              <div>
+                <div class="contact-info-label">ساعات الدعم</div>
+                <div class="contact-info-val">٢٤/٧ — طوال أيام الأسبوع</div>
+              </div>
+            </div>
+
+            <div class="social-links">
+              <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" class="social-btn"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="#" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="col-lg-8">
+          <div class="contact-form-card">
+            <h4 class="fw-bold mb-4" style="color:var(--ink)">أرسل رسالتك</h4>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">الاسم الكامل *</label>
+                <input type="text" class="form-control" placeholder="اسمك هنا"/>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">البريد الإلكتروني *</label>
+                <input type="email" class="form-control" placeholder="example@email.com" style="direction:ltr;text-align:right"/>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">رقم الهاتف</label>
+                <input type="tel" class="form-control" placeholder="01XXXXXXXXX" style="direction:ltr;text-align:right"/>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">موضوع الرسالة</label>
+                <select class="form-select">
+                  <option>اختر الموضوع</option>
+                  <option>استفسار عن خدمة</option>
+                  <option>شكوى</option>
+                  <option>الانضمام كفني</option>
+                  <option>شراكات</option>
+                  <option>أخرى</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">رسالتك *</label>
+                <textarea class="form-control" placeholder="اكتب رسالتك هنا..."></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn-submit">
+                  إرسال الرسالة <i class="fa-solid fa-paper-plane me-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+<section class="cta-band">
   <div class="container">
-
-    <div class="text-center mb-5">
-
-      <p class="text-primary fw-semibold mb-3">
-        تواصل معنا
-      </p>
-
-      <h1 class="fw-bold mb-3">
-        نحن في خدمتك
-      </h1>
-
-      <p class="text-muted fs-5">
-        فريق الدعم متاح طوال أيام الأسبوع للرد على استفساراتك.
-      </p>
-
-    </div>
-
-    <div class="row g-4 flex-lg-row-reverse">
-
-      <!-- الفورم -->
-
-      <div class="col-lg-8 ">
-
-        <div class="card p-4 h-100">
-
-          <form (ngSubmit)="onSubmit()">
-
-            <div class="row mb-4">
-
-              <div class="col-md-6">
-                <label class="form-label">الاسم</label>
-
-                <input
-                  type="text"
-                  class="form-control"
-                  name="name"
-                  [(ngModel)]="form.name"
-                  placeholder="اكتب اسمك">
-                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">{{ nameError }}</div>
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">البريد الإلكتروني</label>
-
-                <input
-                  type="email"
-                  class="form-control"
-                  name="email"
-                  [(ngModel)]="form.email"
-                  placeholder="email@example.com">
-                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">{{ emailError }}</div>
-              </div>
-
-            </div>
-
-            <div class="mb-4">
-
-              <label class="form-label">
-                الموضوع
-              </label>
-
-              <input
-                type="text"
-                class="form-control"
-                name="subject"
-                [(ngModel)]="form.subject"
-                placeholder="موضوع الرسالة">
-                <div *ngIf="subjectError" class="text-danger small mt-1 text-end">{{ subjectError }}</div>
-            </div>
-
-            <div class="mb-4">
-
-              <label class="form-label">
-                الرسالة
-              </label>
-
-              <textarea
-                rows="6"
-                class="form-control"
-                name="message"
-                [(ngModel)]="form.message"
-                placeholder="اكتب رسالتك هنا...">
-              </textarea>
-              <div *ngIf="messageError" class="text-danger small mt-1 text-end">{{ messageError }}</div>
-            </div>
-
-            <div *ngIf="successMsg"
-                 class="alert alert-success">
-              {{ successMsg }}
-            </div>
-
-            <div class="text-end">
-
-              <button
-                type="submit"
-                class="btn btn-primary rounded-pill px-5 py-3"
-                [disabled]="loading">
-
-                <i class="fa-solid fa-paper-plane me-2"></i>
-
-                {{ loading ? 'جاري الإرسال...' : 'إرسال الرسالة' }}
-
-              </button>
-
-            </div>
-
-          </form>
-
-        </div>
-
-      </div>
-
-      <!-- بيانات التواصل -->
-
-      <div class="col-lg-4 order-1 order-lg-2">
-
-        <div class="d-flex flex-column gap-4">
-
-          <div class="card p-4">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-              <div class="contact-icon bg-primary bg-opacity-10">
-                <i class="fa-regular fa-envelope text-primary"></i>
-              </div>
-
-              <div class="text-end w-100">
-                <small class="text-muted d-block">
-                  البريد الإلكتروني
-                </small>
-
-                <h5 class="mb-0 fw-bold">
-                  support@sallahly.eg
-                </h5>
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="card p-4">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-              <div class="contact-icon bg-primary bg-opacity-10">
-                <i class="fa-solid fa-phone text-primary"></i>
-              </div>
-
-              <div class="text-end w-100">
-                <small class="text-muted d-block">
-                  الهاتف
-                </small>
-
-                <h5 class="mb-0 fw-bold">
-                  +20 100 000 0000
-                </h5>
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="card p-4">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-              <div class="contact-icon bg-primary bg-opacity-10">
-                <i class="fa-solid fa-location-dot text-primary"></i>
-              </div>
-
-              <div class="text-end w-100">
-                <small class="text-muted d-block">
-                  العنوان
-                </small>
-
-                <h5 class="mb-0 fw-bold">
-                  القاهرة، جمهورية مصر العربية
-                </h5>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
+    <h2>جاهز تجرب صلحلي؟</h2>
+    <p>انضم لآلاف العملاء والفنيين على أسرع منصة صيانة منزلية في مصر</p>
+    <button routerLink="/register" class="btn-cta-white">
+      إنشاء حسابك الآن <i class="fa-solid fa-arrow-left"></i>
+    </button>
   </div>
-
 </section>
 
 <app-footer></app-footer>

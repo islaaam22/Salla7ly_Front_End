@@ -3,10 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../shared/navbar/navbar';
 import { Footer } from '../../shared/footer/footer';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-contact',
-  imports: [FormsModule, CommonModule, Navbar, Footer],
+  imports: [FormsModule, CommonModule, Navbar, Footer, RouterLink],
   templateUrl: './contact.html',
   styleUrl: './contact.css',
 })
