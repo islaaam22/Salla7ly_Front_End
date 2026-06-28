@@ -115,7 +115,8 @@ export const routes: Routes = [
     { path: 'requests', component: AdminRequests },
     { path: 'Bids', component: AdminBids },
     { path: 'technicians', component: TechniciansComponent },
-      { path: 'technicians/:id', component: TechnicianProfileComponent },
+    { path: 'technicians/:id', component: TechnicianProfileComponent },
+
   ]
 },
 
