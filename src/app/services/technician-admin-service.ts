@@ -1,5 +1,3 @@
-// src/app/services/technician-admin-service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
@@ -29,7 +27,6 @@ export class TechnicianAdminService {
     return this.http.get<TechnicianAdmin>(`${this.apiUrl}/Technician/${id}`);
   }
 
-  /** Load all technicians enriched with their latest verification record. */
   getAllTechniciansEnriched(): Observable<TechnicianWithVerification[]> {
     return this.getAllTechnicians().pipe(
       switchMap((techs) => {
@@ -107,9 +104,6 @@ export class TechnicianAdminService {
   }
 
   // ── Suspend / Reactivate ────────────────────────────────────────────────────
-  // NOTE: These endpoints require the ASP.NET Identity userId (GUID string),
-  // NOT the Technician table id. The list API does not return userId.
-  // We must call GET /api/Technician/{id} to obtain userId first.
 
   suspend(userId: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/Auth/deactivate`, { userId });
@@ -120,7 +114,7 @@ export class TechnicianAdminService {
   }
 
   // ── Reviews ──────────────────────────────────────────────────────────────────
-  // GET /api/Review/technician/{technicianUserId} — accepts userId string
+  // Accepts the ASP.NET Identity userId (GUID string) — NOT the numeric technicianId
 
   getReviewsByTechnicianUserId(userId: string): Observable<TechnicianReview[]> {
     return this.http.get<TechnicianReview[]>(
@@ -128,11 +122,10 @@ export class TechnicianAdminService {
     );
   }
 
-  // ── Image URL helper ─────────────────────────────────────────────────────────
+  // ── Image URL helpers ─────────────────────────────────────────────────────────
 
   resolveImageUrl(url: string | null | undefined): string {
     if (!url) return '';
-    // Fix localhost URLs that slipped into the DB
     return url
       .replace('http://localhost:5296', this.baseUrl)
       .replace('http://localhost:5000', this.baseUrl);

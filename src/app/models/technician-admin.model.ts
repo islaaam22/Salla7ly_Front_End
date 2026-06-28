@@ -1,39 +1,34 @@
-// src/app/models/technician-admin.model.ts
-
 export interface TechnicianAdmin {
   id: number;
-  userId?: string;
+  userId: string;
   name: string;
-  imageUrl?: string | null;
-  specialization?: string | null;
-  experienceYears?: number | null;
-  overallRating?: number | null;
-  completedJobs?: number | null;
+  imageUrl?: string;
+  specialization?: string;
+  experienceYears?: number;
+  overallRating?: number;
+  completedJobs?: number;
   isApproved: boolean;
-  isActive?: boolean;
-  isFeatured?: boolean;
-  subscriptionTier?: string;
-  phoneNumber?: string | null;
-  bio?: string | null;
-  certificates?: string[] | null;
-  completionRate?: number | null;
+  isActive: boolean;
+  phoneNumber?: string;
+  bio?: string;
+  certificates?: string[];
+  completionRate?: number;
 }
 
 export interface TechnicianVerification {
   id: number;
   technicianId: number;
-  technicianName?: string;
-  idNumber?: string;
-  /** Array of PDF/image URLs for degree certificates */
-  degreeCertificateUrls?: string[];
-  /** Front side of national ID */
-  documentUrlFront?: string;
-  /** Back side of national ID */
-  documentUrlBack?: string;
   status?: 'Pending' | 'Approved' | 'Rejected' | string;
-  rejectionReason?: string | null;
-  submittedAt?: string;
-  reviewedAt?: string | null;
+  rejectionReason?: string;
+  createdAt?: string;
+  // Identity document images
+  documentUrlFront?: string;
+  documentUrlBack?: string;
+  // Degree / certificate images (array)
+  degreeCertificateUrls?: string[];
+  // Legacy single-image fields (kept for compatibility)
+  nationalIdImageUrl?: string;
+  certificateImageUrl?: string;
 }
 
 export interface PortfolioItem {
@@ -41,28 +36,30 @@ export interface PortfolioItem {
   technicianId: number;
   title?: string;
   description?: string;
-  /** API returns imageUrlBefore */
+  // The service document uses these field names
   imageUrlBefore?: string;
-  /** API returns imageUrlAfter */
   imageUrlAfter?: string;
-  uploadedAt?: string;
+  // Legacy field names kept for compatibility
+  beforeImageUrl?: string;
+  afterImageUrl?: string;
+  createdAt?: string;
 }
 
 export interface TechnicianReview {
   id: number;
-  customerName?: string;
+  // The API may return any of these field names for the rating
+  overallScore?: number;
+  rating?: number;
   qualityScore?: number;
   punctualityScore?: number;
   communicationScore?: number;
   valueScore?: number;
-  overallScore?: number;
-  rating?: number;
   comment?: string;
+  customerName?: string;
   createdAt?: string;
 }
 
 export interface TechnicianWithVerification extends TechnicianAdmin {
-  verification?: TechnicianVerification | null;
-  /** Derived UI status */
-  uiStatus?: 'approved' | 'pending' | 'rejected' | 'new';
+  verification: TechnicianVerification | null;
+  uiStatus: 'approved' | 'pending' | 'rejected' | 'new';
 }
