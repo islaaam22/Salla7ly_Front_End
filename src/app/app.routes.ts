@@ -40,6 +40,8 @@ import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet } from './pages/wallet/wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
 import { AdminBids } from './admin/pages/Bids/bids';
+import { TechniciansComponent } from './admin/pages/technicians/technicians';
+import { TechnicianProfileComponent } from './admin/pages/technician-profile/technician-profile';
 
 
 export const routes: Routes = [
@@ -112,6 +114,8 @@ export const routes: Routes = [
     { path: 'customers', component: AdminCustomers },
     { path: 'requests', component: AdminRequests },
     { path: 'Bids', component: AdminBids },
+    { path: 'technicians', component: TechniciansComponent },
+      { path: 'technicians/:id', component: TechnicianProfileComponent },
   ]
 },
 
