@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RequestService } from '../../../services/request';
+import { AiService } from '../../../services/ai.service';
 
 @Component({
   selector: 'app-new-request',
@@ -20,9 +21,11 @@ export class NewRequest implements OnInit {
   submitted   = false;
 
   selectedCategory: number | null = null;
-  selectedUrgency:  number        = 0;
-  categories:       any[]         = [];
-  selectedFiles:    File[]        = [];
+  selectedUrgency: number = 0;
+
+  categories: any[] = [];
+
+  selectedFiles: File[] = [];
 
   urgencyLevels = [
     { value: 0, label: 'عادي', desc: 'خلال ٢٤-٤٨ ساعة',              icon: 'fa-solid fa-clock',                color: '#1AACDC' },
@@ -31,23 +34,32 @@ export class NewRequest implements OnInit {
   ];
 
   form = {
-    title:          '',
-    description:    '',
-    urgency:        0,
-    bookingMode:    0,
-    isEmergency:    false,
-    scheduledAt:    '',
-    categoryId:     0,
-    // FIX: removed hardcoded addressId: 1
-    // The customer types their address here; the backend creates the Address
-    // row and links it with the real generated ID.
-    serviceAddress: '',
-    city:           '',
-    district:       '',
+    title: '',
+    description: '',
+    urgency: 0,
+    bookingMode: 0,
+    isEmergency: false,
+    scheduledAt: '',
+    addressId: 1,
+    categoryId: 0,
+    serviceAddress: ''
   };
+
+  // ── AI State ─────────────────────────────────────────────────────
+  aiActive = false;           // AI section visible
+  aiLoading = false;          // waiting for API
+  aiError = '';               // error message
+  aiQuestionIndex = 0;        // 0,1,2 → 3 questions total
+  aiCurrentQuestion = '';     // current question text
+  aiCurrentAnswer = '';       // current answer input
+  aiAnswers: string[] = [];   // all collected answers
+  aiRefinedDescription = '';  // final AI result
+  aiDone = false;             // all 3 questions answered, result shown
+  readonly AI_TOTAL_QUESTIONS = 3;
 
   constructor(
     private requestService: RequestService,
+    private aiService: AiService,
     private router: Router
   ) {}
 
@@ -95,13 +107,12 @@ export class NewRequest implements OnInit {
     }
 
     if (this.currentStep === 2) {
-      if (!this.form.title.trim())          { this.errorMsg = 'يرجى إدخال عنوان الطلب';           return; }
-      if (!this.isDescriptionValid())        { this.errorMsg = 'يرجى إدخال وصف لا يقل عن ٥ كلمات'; return; }
-      if (!this.form.serviceAddress.trim()) { this.errorMsg = 'يرجى إدخال عنوان الخدمة';           return; }
-      if (!this.form.scheduledAt)           { this.errorMsg = 'يرجى تحديد التاريخ';                  return; }
+      if (!this.form.title.trim()) { this.errorMsg = 'يرجى إدخال عنوان الطلب'; return; }
+      if (!this.isDescriptionValid()) { this.errorMsg = 'يرجى إدخال وصف لا يقل عن ٥ كلمات'; return; }
+      if (!this.form.serviceAddress.trim()) { this.errorMsg = 'يرجى إدخال عنوان الخدمة'; return; }
+      if (!this.form.scheduledAt) { this.errorMsg = 'يرجى تحديد التاريخ'; return; }
     }
 
-    this.submitted = false;
     this.currentStep++;
   }
 
@@ -110,17 +121,124 @@ export class NewRequest implements OnInit {
   onFileSelected(event: any) {
     const files = event.target.files;
     if (!files) return;
+    const max = 5;
     for (let i = 0; i < files.length; i++) {
       if (this.selectedFiles.length >= 5) break;
       this.selectedFiles.push(files[i]);
     }
   }
 
-  // ── SUBMIT ────────────────────────────────────────────────────────────────
-  // FIX: no longer appends addressId at all.
-  // The backend (ServiceRequestService.CreateAsync) detects that AddressId is
-  // absent/null, creates a new Address row from serviceAddress/city/district,
-  // and links the ServiceRequest to the real generated ID.
+  // ── AI Methods ───────────────────────────────────────────────────
+
+  get selectedCategoryName(): string {
+    const cat = this.categories.find(c => c.id === this.selectedCategory);
+    return cat?.nameAr || cat?.name || '';
+  }
+
+  onImproveWithAI() {
+    this.aiError = '';
+
+    if (!this.form.description.trim()) {
+      this.aiError = 'يرجى إدخال وصف تفصيلي أولاً قبل استخدام الذكاء الاصطناعي';
+      return;
+    }
+
+    // Reset AI state
+    this.aiActive = true;
+    this.aiAnswers = [];
+    this.aiQuestionIndex = 0;
+    this.aiCurrentQuestion = '';
+    this.aiCurrentAnswer = '';
+    this.aiRefinedDescription = '';
+    this.aiDone = false;
+
+    this.fetchNextQuestion();
+  }
+
+  fetchNextQuestion() {
+    this.aiLoading = true;
+    this.aiError = '';
+
+    this.aiService.askFollowup(
+      this.form.description,
+      this.aiAnswers,
+      []
+    ).subscribe({
+      next: (res) => {
+        this.aiLoading = false;
+        this.aiCurrentQuestion = res.question;
+        this.aiCurrentAnswer = '';
+      },
+      error: (err: any) => {
+        this.aiLoading = false;
+        this.aiError = err.error?.message || 'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي';
+      }
+    });
+  }
+
+  onNextQuestion() {
+    if (!this.aiCurrentAnswer.trim()) {
+      this.aiError = 'يرجى إدخال إجابة قبل المتابعة';
+      return;
+    }
+
+    this.aiError = '';
+    // Store the answer
+    this.aiAnswers = [...this.aiAnswers, this.aiCurrentAnswer.trim()];
+    this.aiQuestionIndex++;
+
+    if (this.aiQuestionIndex >= this.AI_TOTAL_QUESTIONS) {
+      // All 3 answered — call refine
+      this.callRefine();
+    } else {
+      // Fetch next question
+      this.fetchNextQuestion();
+    }
+  }
+
+  callRefine() {
+    this.aiLoading = true;
+    this.aiError = '';
+
+    this.aiService.refineRequest(
+      this.form.description,
+      this.selectedCategoryName,
+      [],
+      this.aiAnswers
+    ).subscribe({
+      next: (res) => {
+        this.aiLoading = false;
+        this.aiDone = true;
+        // Try common field names the backend might return
+        this.aiRefinedDescription =
+          (res as any).refinedDescription ||
+          (res as any).result ||
+          (res as any).description ||
+          (res as any).improvedDescription ||
+          JSON.stringify(res);
+      },
+      error: (err: any) => {
+        this.aiLoading = false;
+        this.aiError = err.error?.message || 'حدث خطأ أثناء تحسين الوصف';
+      }
+    });
+  }
+
+  useAiDescription() {
+    this.form.description = this.aiRefinedDescription;
+  }
+
+  cancelAI() {
+    this.aiActive = false;
+    this.aiDone = false;
+    this.aiAnswers = [];
+    this.aiCurrentQuestion = '';
+    this.aiCurrentAnswer = '';
+    this.aiRefinedDescription = '';
+    this.aiError = '';
+  }
+
+  // ── Submit ───────────────────────────────────────────────────────
   submitRequest() {
     const token = localStorage.getItem('token');
     if (!token) { this.router.navigate(['/login']); return; }
@@ -129,20 +247,13 @@ export class NewRequest implements OnInit {
     this.errorMsg = '';
 
     const formData = new FormData();
-    formData.append('title',          this.form.title);
-    formData.append('description',    this.form.description);
-    formData.append('urgency',        this.selectedUrgency.toString());
-    formData.append('bookingMode',    this.form.bookingMode.toString());
-    formData.append('isEmergency',    this.form.isEmergency.toString());
-    formData.append('categoryId',     this.form.categoryId.toString());
-    formData.append('scheduledAt',    new Date(this.form.scheduledAt).toISOString());
+    formData.append('title', this.form.title);
+    formData.append('description', this.form.description);
+    formData.append('urgency', this.selectedUrgency.toString());
+    formData.append('categoryId', this.form.categoryId.toString());
+    formData.append('addressId', this.form.addressId.toString());
+    formData.append('scheduledAt', new Date(this.form.scheduledAt).toISOString());
     formData.append('serviceAddress', this.form.serviceAddress);
-
-    if (this.form.city)     formData.append('city',     this.form.city);
-    if (this.form.district) formData.append('district', this.form.district);
-
-    // NOTE: addressId intentionally NOT sent — backend will create and link it.
-
     this.selectedFiles.forEach(file => formData.append('images', file));
 
     this.requestService.createRequest(formData).subscribe({

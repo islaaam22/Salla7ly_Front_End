@@ -98,16 +98,16 @@
                 <span class="stat-label">الحالة</span>
                 <span [class]="'status-badge-sm ' + getStatusClass()">{{ getStatusLabel() }}</span>
               </div>
-              @if (verification.idNumber) {
+              @if ($any(verification)['idNumber']) {
                 <div class="stat-row">
                   <span class="stat-label">رقم الهوية</span>
-                  <span class="stat-value" style="font-size:12px; direction:ltr;">{{ verification.idNumber }}</span>
+                  <span class="stat-value" style="font-size:12px; direction:ltr;">{{ $any(verification)['idNumber'] }}</span>
                 </div>
               }
-              @if (verification.submittedAt) {
+              @if ($any(verification).submittedAt) {
                 <div class="stat-row">
                   <span class="stat-label">تاريخ التقديم</span>
-                  <span class="stat-value" style="font-size:11px;">{{ verification.submittedAt | date:'dd/MM/yyyy' }}</span>
+                  <span class="stat-value" style="font-size:11px;">{{ $any(verification).submittedAt | date:'dd/MM/yyyy' }}</span>
                 </div>
               }
               @if (verification.rejectionReason) {
@@ -133,7 +133,7 @@
                 [src]="img(technician.imageUrl)"
                 class="hero-avatar"
                 [alt]="technician.name"
-                (error)="technician.imageUrl = null" />
+                (error)="technician.imageUrl = undefined" />
             } @else {
               <div class="hero-avatar-placeholder">{{ getInitial(technician.name) }}</div>
             }
@@ -239,8 +239,8 @@
           <div class="section-card">
             <div class="section-header">
               <h4>مستندات التوثيق</h4>
-              @if (verification?.idNumber) {
-                <span class="id-number">رقم الهوية: {{ verification?.idNumber }}</span>
+              @if (verification && $any(verification)['idNumber']) {
+                <span class="id-number">رقم الهوية: {{ $any(verification)['idNumber'] }}</span>
               }
             </div>
             <div class="docs-grid">
