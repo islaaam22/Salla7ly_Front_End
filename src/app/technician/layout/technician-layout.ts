@@ -23,7 +23,6 @@ export class TechnicianLayout implements OnInit {
     { label: 'الإشعارات', icon: 'fa-regular fa-bell', route: '/technician/notifications' },
     { label: 'المحادثات', icon: 'fa-regular fa-message', route: '/technician/chat' },
     { label: 'الملف الشخصي', icon: 'fa-regular fa-user', route: '/technician/profile' },
-    { label: 'الإعدادات', icon: 'fa-solid fa-gear', route: '/technician/settings' },
   ];
 
   constructor(
