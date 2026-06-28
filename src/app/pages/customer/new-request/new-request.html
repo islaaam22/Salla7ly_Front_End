@@ -79,6 +79,83 @@
   </span>
 </div>
 
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- AI IMPROVE SECTION                          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="ai-section" *ngIf="!aiActive">
+  <button type="button" class="btn-ai" (click)="onImproveWithAI()">
+    <i class="fa-solid fa-wand-magic-sparkles"></i>
+    تحسين بالذكاء الاصطناعي
+  </button>
+  <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+</div>
+
+<div class="ai-section ai-active-section" *ngIf="aiActive">
+
+  <!-- Loading spinner -->
+  <div *ngIf="aiLoading" class="ai-loading">
+    <div class="spinner-border text-primary" role="status" style="width:24px;height:24px;"></div>
+    <span>الذكاء الاصطناعي يفكر...</span>
+  </div>
+
+  <!-- Question -->
+  <div *ngIf="!aiLoading && !aiDone && aiCurrentQuestion" class="ai-question-block">
+    <div class="ai-progress">
+      سؤال {{ aiQuestionIndex + 1 }} من {{ AI_TOTAL_QUESTIONS }}
+      <div class="ai-progress-bar">
+        <div class="ai-progress-fill"
+             [style.width]="((aiQuestionIndex) / AI_TOTAL_QUESTIONS * 100) + '%'"></div>
+      </div>
+    </div>
+    <p class="ai-question">{{ aiCurrentQuestion }}</p>
+    <textarea class="ai-answer-input"
+              [(ngModel)]="aiCurrentAnswer"
+              name="aiAnswer"
+              rows="3"
+              placeholder="اكتب إجابتك هنا..."></textarea>
+    <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+    <div class="ai-actions">
+      <button type="button" class="btn-ai-next" (click)="onNextQuestion()">
+        {{ aiQuestionIndex + 1 < AI_TOTAL_QUESTIONS ? 'التالي' : 'تحسين الوصف' }}
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div *ngIf="aiDone && aiRefinedDescription" class="ai-result-block">
+    <div class="ai-result-header">
+      <i class="fa-solid fa-sparkles" style="color:#f59e0b;"></i>
+      الوصف المحسّن بالذكاء الاصطناعي
+    </div>
+    <textarea class="ai-result-textarea"
+              [(ngModel)]="aiRefinedDescription"
+              name="aiResult"
+              rows="5"></textarea>
+    <div class="ai-actions">
+      <button type="button" class="btn-ai-use" (click)="useAiDescription()">
+        <i class="fa-solid fa-copy"></i>
+        استخدام هذا الوصف
+      </button>
+      <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- Error without question -->
+  <div *ngIf="!aiLoading && !aiCurrentQuestion && !aiDone">
+    <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+    <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
+  </div>
+
+</div>
+<!-- ═══════════════════════════════════════════ -->
+
+
+
+
 <div class="form-group">
   <label>صور المشكلة (اختياري — حتى 5)</label>
 
