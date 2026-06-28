@@ -9,55 +9,72 @@
   <!-- Stepper -->
   <div class="stepper">
     <div class="step-item" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
-      <div class="step-circle">1</div>
+      <div class="step-circle">
+        <i *ngIf="currentStep > 1" class="fa-solid fa-check"></i>
+        <span *ngIf="currentStep <= 1">1</span>
+      </div>
+      <span class="step-label">الخدمة</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 1"></div>
     <div class="step-item" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
-      <div class="step-circle">2</div>
+      <div class="step-circle">
+        <i *ngIf="currentStep > 2" class="fa-solid fa-check"></i>
+        <span *ngIf="currentStep <= 2">2</span>
+      </div>
+      <span class="step-label">التفاصيل</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 2"></div>
     <div class="step-item" [class.active]="currentStep >= 3">
       <div class="step-circle">3</div>
+      <span class="step-label">الاستعجال</span>
     </div>
   </div>
 
   <!-- Card -->
   <div class="step-card">
 
-    <!-- ======= STEP 1: نوع الخدمة ======= -->
+    <!-- ======= STEP 1 ======= -->
     @if (currentStep === 1) {
       <div class="step-content">
-        <h2>اختر نوع الخدمة</h2>
-        <p class="subtitle">اختر التصنيف الأقرب لمشكلتك.</p>
+        <div class="step-head">
+          <h2>اختر نوع الخدمة</h2>
+          <p class="subtitle">اختر التصنيف الأقرب لمشكلتك.</p>
+        </div>
 
         <div class="categories-grid">
           @for (cat of categories; track cat.id) {
             <div class="category-card" [class.selected]="selectedCategory === cat.id"
                  (click)="selectCategory(cat.id)">
-              <i class="{{ cat.icon }}"></i>
+              <div class="cat-icon-wrap">
+                <i class="{{ cat.icon }}"></i>
+              </div>
               <span>{{ cat.nameAr }}</span>
             </div>
           }
         </div>
 
         @if (errorMsg) {
-          <div class="alert-error">{{ errorMsg }}</div>
+          <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
         }
 
         <div class="step-actions">
-          <button class="btn-next" (click)="nextStep()">التالي</button>
+          <button class="btn-next" (click)="nextStep()">
+            التالي <i class="fa-solid fa-arrow-left"></i>
+          </button>
         </div>
       </div>
     }
 
-    <!-- ======= STEP 2: تفاصيل الطلب ======= -->
+    <!-- ======= STEP 2 ======= -->
     @if (currentStep === 2) {
       <div class="step-content">
-        <h2>تفاصيل الطلب</h2>
-        <p class="subtitle">قدّم تفاصيل واضحة للحصول على أفضل العروض.</p>
+        <div class="step-head">
+          <h2>تفاصيل الطلب</h2>
+          <p class="subtitle">قدّم تفاصيل واضحة للحصول على أفضل العروض.</p>
+        </div>
 
         <div class="form-group">
-          <label>عنوان الطلب</label>
+          <label><i class="fa-solid fa-heading"></i> عنوان الطلب</label>
           <input type="text" [(ngModel)]="form.title"
                  placeholder="مثال: تصليح مكيف سبليت"
                  [class.input-error]="submitted && !form.title.trim()" />
@@ -66,64 +83,48 @@
           }
         </div>
 
-       <div class="form-group">
-  <label>وصف تفصيلي</label>
-  <textarea [(ngModel)]="form.description" rows="5"
-            placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٢٠ كلمة)"
-            [class.input-error]="submitted && !isDescriptionValid()"></textarea>
-  @if (submitted && !isDescriptionValid()) {
-    <span class="error-text">يرجى إدخال وصف لا يقل عن ٢٠ كلمة ({{ getWordCount() }} كلمة حالياً)</span>
-  }
-  <span class="word-count" [class.valid]="isDescriptionValid()">
-    {{ getWordCount() }} كلمة
-  </span>
-</div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-align-right"></i> وصف تفصيلي</label>
+          <textarea [(ngModel)]="form.description" rows="5"
+                    placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٢٠ كلمة)"
+                    [class.input-error]="submitted && !isDescriptionValid()"></textarea>
+          @if (submitted && !isDescriptionValid()) {
+            <span class="error-text">يرجى إدخال وصف لا يقل عن ٢٠ كلمة ({{ getWordCount() }} كلمة حالياً)</span>
+          }
+          <span class="word-count" [class.valid]="isDescriptionValid()">
+            <i class="fa-solid fa-file-word"></i> {{ getWordCount() }} كلمة
+          </span>
+        </div>
 
-<div class="form-group">
-  <label>صور المشكلة (اختياري — حتى 5)</label>
-
-  <input
-    type="file"
-    #fileInput
-    multiple
-    accept="image/*"
-    (change)="onFileSelected($event)"
-    hidden
-  />
-
-  <div class="upload-box" (click)="fileInput.click()">
-    <i class="fa-solid fa-upload"></i>
-  </div>
-
-  <!-- preview -->
-  <div class="preview-list" *ngIf="selectedFiles.length > 0">
-    <span *ngFor="let f of selectedFiles">
-      {{ f.name }}
-    </span>
-  </div>
-</div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-image"></i> صور المشكلة (اختياري — حتى 5)</label>
+          <input type="file" #fileInput multiple accept="image/*"
+                 (change)="onFileSelected($event)" hidden />
+          <div class="upload-box" (click)="fileInput.click()">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>اضغط لرفع الصور</span>
+          </div>
+          <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <span *ngFor="let f of selectedFiles" class="preview-chip">
+              <i class="fa-solid fa-image"></i> {{ f.name }}
+            </span>
+          </div>
+        </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>عنوان الخدمة</label>
-            <div class="input-icon">
-              <input type="text" [(ngModel)]="form.serviceAddress"
-                     placeholder="العنوان"
-                     [class.input-error]="submitted && !form.serviceAddress.trim()" />
-              <i class="fa-solid fa-location-dot"></i>
-            </div>
+            <label><i class="fa-solid fa-location-dot"></i> عنوان الخدمة</label>
+            <input type="text" [(ngModel)]="form.serviceAddress"
+                   placeholder="الحي، المدينة"
+                   [class.input-error]="submitted && !form.serviceAddress.trim()" />
             @if (submitted && !form.serviceAddress.trim()) {
               <span class="error-text">يرجى إدخال عنوان الخدمة</span>
             }
           </div>
-
           <div class="form-group">
-            <label>التاريخ المفضل</label>
-            <div class="input-icon">
-              <input type="date" [(ngModel)]="form.scheduledAt"
-                     [class.input-error]="submitted && !form.scheduledAt" />
-              <i class="fa-regular fa-calendar"></i>
-            </div>
+            <label><i class="fa-regular fa-calendar"></i> التاريخ المفضل</label>
+            <input type="date" [(ngModel)]="form.scheduledAt"
+                   [class.input-error]="submitted && !form.scheduledAt" />
             @if (submitted && !form.scheduledAt) {
               <span class="error-text">يرجى تحديد التاريخ</span>
             }
@@ -131,21 +132,27 @@
         </div>
 
         @if (errorMsg) {
-          <div class="alert-error">{{ errorMsg }}</div>
+          <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
         }
 
         <div class="step-actions">
-          <button class="btn-back" (click)="prevStep()">رجوع</button>
-          <button class="btn-next" (click)="nextStep()">التالي</button>
+          <button class="btn-back" (click)="prevStep()">
+            <i class="fa-solid fa-arrow-right"></i> رجوع
+          </button>
+          <button class="btn-next" (click)="nextStep()">
+            التالي <i class="fa-solid fa-arrow-left"></i>
+          </button>
         </div>
       </div>
     }
 
-    <!-- ======= STEP 3: مستوى الاستعجال ======= -->
+    <!-- ======= STEP 3 ======= -->
     @if (currentStep === 3) {
       <div class="step-content">
-        <h2>مستوى الاستعجال</h2>
-        <p class="subtitle">اختر السرعة المطلوبة. الطلبات الطارئة تُرسل فوراً للفنيين.</p>
+        <div class="step-head">
+          <h2>مستوى الاستعجال</h2>
+          <p class="subtitle">الطلبات الطارئة تُرسل فوراً للفنيين.</p>
+        </div>
 
         <div class="urgency-list">
           @for (u of urgencyLevels; track u.value) {
@@ -155,6 +162,8 @@
                 <span class="urgency-check">
                   @if (selectedUrgency === u.value) {
                     <i class="fa-solid fa-circle-check"></i>
+                  } @else {
+                    <i class="fa-regular fa-circle"></i>
                   }
                 </span>
                 <div>
@@ -168,31 +177,33 @@
             </div>
           }
 
-          <!-- جاهز للإرسال -->
           <div class="urgency-card ready-card">
             <div class="urgency-info">
-              <span></span>
+              <span class="urgency-check"><i class="fa-solid fa-paper-plane" style="color:#E8620A"></i></span>
               <div>
                 <h4>جاهز للإرسال</h4>
                 <p>سترسل طلبك للفنيين وتستقبل العروض في صفحة "العروض المستلمة".</p>
               </div>
             </div>
-            <div class="urgency-icon" style="background:#6B7280;">
+            <div class="urgency-icon" style="background:#E8620A">
               <i class="fa-solid fa-paper-plane"></i>
             </div>
           </div>
         </div>
 
         @if (errorMsg) {
-          <div class="alert-error">{{ errorMsg }}</div>
+          <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
         }
         @if (successMsg) {
-          <div class="alert-success">{{ successMsg }}</div>
+          <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ successMsg }}</div>
         }
 
         <div class="step-actions">
-          <button class="btn-back" (click)="prevStep()">رجوع</button>
+          <button class="btn-back" (click)="prevStep()">
+            <i class="fa-solid fa-arrow-right"></i> رجوع
+          </button>
           <button class="btn-submit" [disabled]="loading" (click)="submitRequest()">
+            <i class="fa-solid fa-paper-plane"></i>
             {{ loading ? 'جاري الإرسال...' : 'إرسال الطلب' }}
           </button>
         </div>
