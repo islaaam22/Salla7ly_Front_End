@@ -1,53 +1,40 @@
-<aside
-  class="d-flex flex-column bg-white p-3 border-end position-sticky top-0"
-  style="width: 280px; height: 100vh; border-inline-end: 2px solid #e9ecef !important; position: sticky; top: 0;"
->
-  <!-- Brand -->
-  <div class="d-flex align-items-center justify-content-start gap-2 mb-4 pb-3 border-bottom">
-    <span
-      class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white"
-      style="width: 38px; height: 38px"
-    >
-      <i class="fa-solid fa-wrench"></i>
-    </span>
-    <h4 class="fw-bold mb-0">صلّحلي</h4>
+<aside class="sidebar-wrap">
+
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <img src="images/Logo-removebg-preview.png" style="width: 70px;" alt="">
+    </div>
+    <span>صلّح<em>لي</em></span>
   </div>
 
   <!-- Nav -->
   <nav class="nav-section">
-      <a
-        *ngFor="let item of navItems"
-        [routerLink]="item.link"
-        routerLinkActive="active"
-        class="nav-item"
-      >
-        <span>{{ item.label }}</span>
-        <i [class]="item.icon"></i>
-      </a>
-    </nav>
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.link"
+      routerLinkActive="active"
+      class="nav-item"
+    >
+      <span>{{ item.label }}</span>
+      <i [class]="item.icon"></i>
+    </a>
+  </nav>
 
   <!-- Footer -->
-  <div class="mt-auto  border-top">
-    <div class="d-flex align-items-center justify-content-start gap-2 mb-3 mt-3">
-      <span
-        class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold"
-        style="width: 40px; height: 40px"
-      >
-        {{ userInitial }}
-      </span>
-
-      <div class="text-end">
-        <div class="fw-semibold">{{ userName }}</div>
-        <div class="text-muted small">مشرف</div>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-details">
+        <div class="name">{{ userName }}</div>
+        <div class="role">عميل</div>
       </div>
+      <div class="user-avatar">{{ userInitial }}</div>
     </div>
 
-    <button
-      (click)="logout()"
-      class="btn btn-danger border w-100 d-flex align-items-center justify-content-center gap-2"
-    >
-      <span>→</span>
+    <button (click)="logout()" class="logout-btn">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
       <span>تسجيل الخروج</span>
     </button>
   </div>
+
 </aside>

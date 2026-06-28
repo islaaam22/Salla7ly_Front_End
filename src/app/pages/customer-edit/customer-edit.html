@@ -1,100 +1,143 @@
-<div class="container py-5" style="background-color: #f8f9fa;" dir="rtl">
+<div class="edit-page" dir="rtl">
+
   <!-- loading -->
-  <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
+  <div *ngIf="loading" class="d-flex flex-column align-items-center justify-content-center py-5 gap-3">
+    <div class="spinner-border" role="status" style="color:#E8620A">
       <span class="visually-hidden">جارٍ التحميل...</span>
     </div>
+    <p class="text-muted">جاري التحميل...</p>
   </div>
 
   <!-- content -->
   <div *ngIf="!loading">
-    <!-- header -->
-    <div class="text-center mb-4">
-      <small class="text-primary fw-semibold">حسابي</small>
-      <h1 class="fw-bold">تعديل الملف الشخصي</h1>
-      <p class="text-muted">عدّل بياناتك الشخصية.</p>
+
+    <!-- Header -->
+    <div class="text-end mb-4">
+      <span class="edit-eyebrow">حسابي</span>
+      <h1 class="edit-title">تعديل الملف الشخصي</h1>
+      <p class="edit-sub">عدّل بياناتك الشخصية واحفظ التغييرات</p>
     </div>
 
-    <div class="d-flex justify-content-start mb-3">
-      <button class="btn btn-light border rounded-4" (click)="goBack()">رجوع للملف الشخصي <i class="fa-solid fa-left-long"></i></button>
+    <!-- Back -->
+    <div class="mb-4">
+      <button class="edit-back-btn" (click)="goBack()">
+        <i class="fa-solid fa-arrow-right"></i>
+        رجوع للملف الشخصي
+      </button>
     </div>
 
-    <!-- success message -->
-    <div *ngIf="successMsg" class="alert alert-success text-center">{{ successMsg }}</div>
+    <!-- Alerts -->
+    <div *ngIf="successMsg" class="edit-alert edit-alert-success mb-4">
+      <i class="fa-solid fa-circle-check"></i>
+      {{ successMsg }}
+    </div>
 
-    <!-- validation errors -->
-    <div *ngIf="validationErrors.length > 0" class="alert alert-danger">
-      <ul class="mb-0 text-end" style="list-style: none; padding: 0">
-        <li *ngFor="let msg of validationErrors"><i class="fa-solid fa-triangle-exclamation"></i> {{ msg }}</li>
+    <div *ngIf="validationErrors.length > 0" class="edit-alert edit-alert-danger mb-4">
+      <ul class="mb-0 p-0" style="list-style:none">
+        <li *ngFor="let msg of validationErrors" class="d-flex align-items-center gap-2 justify-content-end">
+          <span>{{ msg }}</span>
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </li>
       </ul>
     </div>
 
-    <div class="row g-4">
-      <!-- form -->
+    <div class="row g-4 align-items-start">
+
+      <!-- FORM -->
       <div class="col-lg-8">
-        <div class="card shadow-sm border-1 rounded-4">
-          <div class="card-body p-4">
-            <h5 class="fw-bold text-end mb-4"><i class="fa-solid fa-user text-primary ms-2"></i>البيانات الشخصية </h5>
+        <div class="edit-card">
 
-            <div class="mb-3">
-              <label class="form-label text-end w-100"><i class="fa-solid fa-address-card ms-2 text-body"></i>الاسم الكامل</label>
-              <input
-                type="text"
-                class="form-control text-end"
-                [(ngModel)]="name"
-                name="name"
-                placeholder="الاسم الكامل"
-              />
-            </div>
+          <div class="edit-card-header">
+            <i class="fa-solid fa-user-pen"></i>
+            البيانات الشخصية
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label text-end w-100"> <i class="fa-solid fa-phone ms-2"></i> رقم الهاتف</label>
-              <input
-                type="text"
-                class="form-control text-end"
-                [(ngModel)]="phoneNumber"
-                name="phoneNumber"
-                placeholder="+20 100 000 0000"
-              />
-            </div>
+          <!-- Name -->
+          <div class="edit-field">
+            <label class="edit-label">
+              <i class="fa-solid fa-address-card"></i>
+              الاسم الكامل
+            </label>
+            <input
+              type="text"
+              class="edit-input"
+              [(ngModel)]="name"
+              name="name"
+              placeholder="أدخل اسمك الكامل"
+            />
+          </div>
 
-            <div class="mb-4">
-              <label class="form-label text-end w-100"> <i class="fa-solid fa-location-dot ms-2"></i> العنوان</label>
-              <input
-                type="text"
-                class="form-control text-end"
-                [(ngModel)]="mainAddress"
-                name="addressDetails"
-                placeholder="مثال: المعادي، القاهرة"
-              />
-            </div>
+          <!-- Phone -->
+          <div class="edit-field">
+            <label class="edit-label">
+              <i class="fa-solid fa-phone"></i>
+              رقم الهاتف
+            </label>
+            <input
+              type="text"
+              class="edit-input"
+              [(ngModel)]="phoneNumber"
+              name="phoneNumber"
+              placeholder="+20 100 000 0000"
+              style="direction:ltr; text-align:right"
+            />
+          </div>
 
-            <button class="btn btn-primary" (click)="save()" [disabled]="saving">
-              {{ saving ? 'جارٍ الحفظ...' : 'حفظ التغييرات ' }}<i class="fa-solid fa-floppy-disk me-2"></i>
+          <!-- Address -->
+          <div class="edit-field">
+            <label class="edit-label">
+              <i class="fa-solid fa-location-dot"></i>
+              العنوان
+            </label>
+            <input
+              type="text"
+              class="edit-input"
+              [(ngModel)]="mainAddress"
+              name="addressDetails"
+              placeholder="مثال: المعادي، القاهرة"
+            />
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex gap-3 mt-2">
+            <button class="edit-save-btn" (click)="save()" [disabled]="saving">
+              <i class="fa-solid fa-floppy-disk"></i>
+              {{ saving ? 'جارٍ الحفظ...' : 'حفظ التغييرات' }}
+            </button>
+            <button class="edit-cancel-btn" (click)="goBack()">
+              إلغاء
             </button>
           </div>
+
         </div>
       </div>
 
-      <!-- sidebar preview -->
+      <!-- PREVIEW CARD -->
       <div class="col-lg-4">
-        <div class="card shadow-sm border-1 rounded-4" >
-          <div class="card-body text-center p-4">
-            <div
-              class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="
-                width: 110px;
-                height: 110px;
-                background: linear-gradient(135deg, #6a8cff, #d9a06b);
-              "
-            >
-              <span class="fs-1 fw-bold text-white">{{ initial }}</span>
-            </div>
-            <h4 class="fw-bold mb-1">{{ name }}</h4>
-            <p class="text-muted">{{ email }} <i class="fa-solid fa-envelope"></i></p>
+        <div class="preview-card">
+
+          <div class="preview-avatar">
+            {{ initial }}
           </div>
+
+          <h4 class="preview-name">{{ name || 'اسمك هنا' }}</h4>
+          <span class="preview-role">عميل</span>
+
+          <div class="preview-divider"></div>
+
+          <div class="preview-email">
+            <i class="fa-regular fa-envelope"></i>
+            <span style="direction:ltr">{{ email }}</span>
+          </div>
+
+          <div class="preview-note">
+            <i class="fa-solid fa-circle-info"></i>
+            معاينة مباشرة لملفك الشخصي
+          </div>
+
         </div>
       </div>
+
     </div>
   </div>
 </div>

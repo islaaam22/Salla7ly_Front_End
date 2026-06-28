@@ -9,7 +9,8 @@ import { CustomerProfileDetails } from '../../models/customer-model';
   selector: 'app-customer-edit',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './customer-edit.html'
+  templateUrl: './customer-edit.html',
+  styleUrl: './customer-edit.css'
 })
 export class CustomerEdit implements OnInit {
   // form fields
