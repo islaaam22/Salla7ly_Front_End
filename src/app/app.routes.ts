@@ -7,6 +7,7 @@ import { Home } from './pages/home/home';
 import { WhoAreWe } from './pages/who-are-we/who-are-we';
 import { Services } from './pages/services/services';
 import { Notfound } from './pages/notfound/notfound';
+import { Notifications } from './pages/notifications/notifications';
 
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
@@ -53,12 +54,14 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
+  { path: 'notifications', component: Notifications },
   { path: 'wallet', component: Wallet },
   {
     path: 'customer',
     component: CustomerLayout,
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'notifications', component: Notifications },
       { path: 'profile', component: CustomerProfile },
       { path: 'edit', component: CustomerEdit },
       { path: 'new-request', component: NewRequest },
@@ -81,6 +84,7 @@ export const routes: Routes = [
       { path: 'available-requests', component: AvailableRequests },
       { path: 'chat', component: ChatComponent },
       { path: 'chat/:id', component: ChatComponent },
+      { path: 'notifications', component: Notifications },
       { path: 'verification', component: TechnicianVerification },
       { path: 'previous-works', component: PreviousWorks },
       { path: 'assigned-tasks', component: AssignedTasksComponent },
@@ -93,6 +97,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: Dashboard },
+      { path: 'notifications', component: Notifications },
       { path: 'statistics', component: AdminStatistics },
       { path: 'customers', component: AdminCustomers },
     ],
