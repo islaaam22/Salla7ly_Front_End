@@ -35,7 +35,6 @@ import { TaskDetailsComponent } from './technician/pages/task-details/task-detai
 
 import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
 import { Dashboard } from './admin/pages/dashboard/dashboard';
-import { AdminStatistics } from './admin/pages/statistics/statistics';
 import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet } from './pages/wallet/wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
@@ -43,6 +42,8 @@ import { AdminBids } from './admin/pages/Bids/bids';
 import { AdminReviews } from './admin/pages/reviews/reviews';
 import { TechniciansComponent } from './admin/pages/technicians/technicians';
 import { TechnicianProfileComponent } from './admin/pages/technician-profile/technician-profile';
+
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -100,7 +101,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: Dashboard },
       { path: 'notifications', component: Notifications },
-      { path: 'statistics', component: AdminStatistics },
       { path: 'customers', component: AdminCustomers },
       { path: 'requests', component: AdminRequests },
       { path: 'Bids', component: AdminBids },
@@ -114,7 +114,6 @@ export const routes: Routes = [
   children: [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: Dashboard },
-    { path: 'statistics', component: AdminStatistics },
     { path: 'customers', component: AdminCustomers },
     { path: 'requests', component: AdminRequests },
     { path: 'Bids', component: AdminBids },

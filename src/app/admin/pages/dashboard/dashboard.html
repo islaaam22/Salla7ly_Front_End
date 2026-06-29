@@ -1,11 +1,69 @@
 <div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    
+    <!-- Center: Title -->
+    <div class="header-center">
+      <h1 class="page-title">لوحة المشرف</h1>
+      <p class="page-subtitle">نظرة شاملة على المنصة وأدائها.</p>
+    </div>
+        
+  </header>
 
-  <h1 class="dashboard-title">
-    لوحة المشرف
-  </h1>
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>جاري تحميل البيانات...</p>
+    </div>
+  </div>
 
-  <p class="welcome-text">
-    مرحباً {{ userName }}
-  </p>
+  <!-- Error State -->
+  <div *ngIf="errorMsg && !loading" class="error-container">
+    <div class="error-message">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{ errorMsg }}</p>
+      <button class="retry-btn" (click)="refreshData()">
+        <i class="fas fa-redo"></i>
+        إعادة المحاولة
+      </button>
+    </div>
+  </div>
 
+  <!-- Main Content -->
+  <div *ngIf="!loading && !errorMsg" class="main-content">
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div *ngFor="let stat of stats" class="stat-card" [ngStyle]="{'border-top-color': stat.color}">
+        <div class="stat-icon" [ngStyle]="{'background-color': stat.color + '20', 'color': stat.color}">
+          <i class="fas" [ngClass]="stat.icon"></i>
+        </div>
+        <div class="stat-info">
+          <h3 class="stat-title">{{ stat.title }}</h3>
+          <p class="stat-value">
+            <span *ngIf="stat.prefix">{{ stat.prefix }}</span>
+            {{ stat.value | number:'1.0-0' }}
+            <span *ngIf="stat.suffix">{{ stat.suffix }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Management Sections -->
+    <div class="management-grid">
+      <div *ngFor="let section of managementSections" class="management-card">
+        <div class="management-header">
+          <div class="management-icon" [ngStyle]="{'background-color': section.color + '15', 'color': section.color}">
+            <i class="fas" [ngClass]="section.icon"></i>
+          </div>
+          <h3 class="management-title">{{ section.title }}</h3>
+        </div>
+        <p class="management-description">{{ section.description }}</p>
+        <button class="view-all-btn" (click)="navigateTo(section.link)">
+          عرض الكل
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
