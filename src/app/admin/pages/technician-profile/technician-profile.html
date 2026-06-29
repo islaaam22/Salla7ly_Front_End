@@ -133,7 +133,7 @@
                 [src]="img(technician.imageUrl)"
                 class="hero-avatar"
                 [alt]="technician.name"
-                (error)="technician.imageUrl = null" />
+                (error)="technician.imageUrl = ''" />
             } @else {
               <div class="hero-avatar-placeholder">{{ getInitial(technician.name) }}</div>
             }

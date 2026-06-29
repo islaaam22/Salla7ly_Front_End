@@ -43,7 +43,6 @@ import { AdminBids } from './admin/pages/Bids/bids';
 import { TechniciansComponent } from './admin/pages/technicians/technicians';
 import { TechnicianProfileComponent } from './admin/pages/technician-profile/technician-profile';
 
-
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register },
@@ -102,24 +101,12 @@ export const routes: Routes = [
       { path: 'notifications', component: Notifications },
       { path: 'statistics', component: AdminStatistics },
       { path: 'customers', component: AdminCustomers },
+      { path: 'requests', component: AdminRequests },
+      { path: 'Bids', component: AdminBids },
+      { path: 'technicians', component: TechniciansComponent },
+      { path: 'technicians/:id', component: TechnicianProfileComponent },
     ],
   },
-{
-  path: 'admin',
-  component: AdminLayout,
-  children: [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: Dashboard },
-    { path: 'statistics', component: AdminStatistics },
-    { path: 'customers', component: AdminCustomers },
-    { path: 'requests', component: AdminRequests },
-    { path: 'Bids', component: AdminBids },
-    { path: 'technicians', component: TechniciansComponent },
-    { path: 'technicians/:id', component: TechnicianProfileComponent },
-
-  ]
-},
-
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },
 ];

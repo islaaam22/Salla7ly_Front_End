@@ -51,7 +51,7 @@
                   [src]="resolveImage(tech.imageUrl)"
                   class="avatar-img"
                   [alt]="tech.name"
-                  (error)="tech.imageUrl = null" />
+                  (error)="tech.imageUrl = ''" />
               } @else {
                 <div class="avatar">{{ getInitial(tech.name) }}</div>
               }

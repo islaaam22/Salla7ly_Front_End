@@ -4,8 +4,8 @@
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a routerLink="/customer/my-bids" class="text-decoration-none text-primary">
-          العروض المستلمة
+        <a routerLink="/customer/my-requests" class="text-decoration-none text-primary">
+          طلباتي
         </a>
       </li>
       <li class="breadcrumb-item active">مقارنة العروض</li>
@@ -20,17 +20,19 @@
     </div>
 
     <div class="d-flex align-items-center gap-3">
-      <!-- Live Badge -->
       <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
         <span class="live-dot me-1"></span>
         متصل — تحديث فوري
       </span>
-
-      <!-- Count -->
       <span class="badge bg-primary px-3 py-2 rounded-pill fs-6">
         {{ bids.length }} عرض حالي
       </span>
     </div>
+  </div>
+
+  <!-- Global accept error -->
+  <div *ngIf="acceptError" class="alert alert-danger text-end mb-4">
+    <i class="fa-solid fa-circle-exclamation me-2"></i>{{ acceptError }}
   </div>
 
   <!-- Loading -->
@@ -38,12 +40,15 @@
     <div class="spinner-border text-primary" role="status"></div>
   </div>
 
+  <!-- Empty -->
+  <div *ngIf="!isLoading && bids.length === 0" class="text-center py-5 text-muted">
+    <i class="fa-solid fa-inbox fs-1 d-block mb-3 opacity-25"></i>
+    لا توجد عروض على هذا الطلب حتى الآن
+  </div>
+
   <!-- Bids Grid -->
-  <div *ngIf="!isLoading" class="row g-4">
-    <div
-      *ngFor="let bid of bids"
-      class="col-12 col-md-6 col-xl-4"
-    >
+  <div *ngIf="!isLoading && bids.length > 0" class="row g-4">
+    <div *ngFor="let bid of bids" class="col-12 col-md-6 col-xl-4">
       <div
         class="card border-0 shadow-sm rounded-4 h-100 bid-card"
         [ngClass]="{
@@ -66,7 +71,6 @@
             >
               {{ getStatusLabel(bid.status) }}
             </span>
-
             <span class="badge bg-success bg-opacity-10 text-success">
               <i class="fa-solid fa-clipboard-check me-1"></i>موثق
             </span>
@@ -104,26 +108,26 @@
             "{{ bid.proposalMessage }}"
           </p>
 
-          <!-- Actions -->
+          <!-- Actions: pending bids only -->
           <div
             *ngIf="bid.status === 'pending'"
             class="d-flex align-items-center gap-2 mt-auto"
           >
-            <button class="btn btn-outline-danger btn-sm rounded-circle px-2">
-              <i class="fa-solid fa-x"></i>
-            </button>
-            <button class="btn btn-outline-secondary btn-sm rounded-circle px-2">
-              <i class="bi bi-chat-dots"></i>
-            </button>
             <button
               class="btn btn-primary rounded-pill flex-grow-1"
               (click)="acceptBid(bid.id)"
+              [disabled]="acceptingBidId !== null"
             >
-              <i class="fa-regular fa-comment-dots me-1"></i> قبول
+              @if (acceptingBidId === bid.id) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                جاري القبول...
+              } @else {
+                <i class="fa-solid fa-check me-1"></i> قبول العرض
+              }
             </button>
           </div>
 
-          <!-- Accepted Banner -->
+          <!-- Accepted banner -->
           <div
             *ngIf="bid.status === 'accepted'"
             class="alert alert-success text-center mb-0 py-2 rounded-3"

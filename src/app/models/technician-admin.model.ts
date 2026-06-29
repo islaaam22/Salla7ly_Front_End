@@ -13,6 +13,7 @@ export interface TechnicianAdmin {
   bio?: string;
   certificates?: string[];
   completionRate?: number;
+  subscriptionTier?: string;
 }
 
 export interface TechnicianVerification {
@@ -21,6 +22,8 @@ export interface TechnicianVerification {
   status?: 'Pending' | 'Approved' | 'Rejected' | string;
   rejectionReason?: string;
   createdAt?: string;
+  submittedAt?: string;
+  idNumber?: string;
   // Identity document images
   documentUrlFront?: string;
   documentUrlBack?: string;
@@ -36,7 +39,6 @@ export interface PortfolioItem {
   technicianId: number;
   title?: string;
   description?: string;
-  // The service document uses these field names
   imageUrlBefore?: string;
   imageUrlAfter?: string;
   // Legacy field names kept for compatibility
@@ -47,7 +49,6 @@ export interface PortfolioItem {
 
 export interface TechnicianReview {
   id: number;
-  // The API may return any of these field names for the rating
   overallScore?: number;
   rating?: number;
   qualityScore?: number;
