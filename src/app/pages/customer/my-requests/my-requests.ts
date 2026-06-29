@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { RequestService } from '../../../services/request';
 
 @Component({
@@ -13,50 +12,101 @@ import { RequestService } from '../../../services/request';
 export class MyRequests implements OnInit {
   requests: any[] = [];
   loading = true;
+  completingId: number | null = null;
+  errorMsg: string | null = null;
 
   constructor(private requestService: RequestService, private router: Router) {}
 
   ngOnInit() {
+    this.loadRequests();
+  }
+
+  private loadRequests() {
+    this.loading = true;
     this.requestService.getMyRequests().subscribe({
       next: (res) => {
         this.requests = res;
         this.loading = false;
       },
+      error: () => { this.loading = false; }
+    });
+  }
+
+  /** Normalize backend status string: strip underscores, lowercase */
+  private normalizeStatus(status: any): string {
+    return (status ?? '').toLowerCase().replace(/_/g, '');
+  }
+
+  getStatusLabel(status: any): string {
+    switch (this.normalizeStatus(status)) {
+      case 'open':        return 'مفتوح';
+      case 'assigned':    return 'تم اختيار الفني';
+      case 'inprogress':  return 'قيد التنفيذ';
+      case 'completed':   return 'مكتمل';
+      case 'cancelled':   return 'ملغي';
+      default:            return status ?? 'غير معروف';
+    }
+  }
+
+  getStatusClass(status: any): string {
+    switch (this.normalizeStatus(status)) {
+      case 'open':        return 'badge-open';
+      case 'assigned':    return 'badge-assigned';
+      case 'inprogress':  return 'badge-progress';
+      case 'completed':   return 'badge-done';
+      case 'cancelled':   return 'badge-cancelled';
+      default:            return '';
+    }
+  }
+
+  /** open requests → show "View Details" (go to bids for THIS request) */
+  isOpen(status: any): boolean {
+    return this.normalizeStatus(status) === 'open';
+  }
+
+  /** assigned / inprogress → show "Complete Service" (calls API then review) */
+  needsCompletion(status: any): boolean {
+    const s = this.normalizeStatus(status);
+    return s === 'assigned' || s === 'inprogress';
+  }
+
+  /** completed → show "Rate Service" (go straight to review, no API) */
+  isCompleted(status: any): boolean {
+    return this.normalizeStatus(status) === 'completed';
+  }
+
+  /** "View Details" on open requests → submit-bid page for this specific request */
+  goToBids(requestId: number) {
+    this.router.navigate(['/customer/submit-bid', requestId]);
+  }
+
+  /** "Complete Service" on assigned/inprogress → call API then navigate to review */
+  completeService(requestId: number) {
+    this.completingId = requestId;
+    this.errorMsg = null;
+
+    this.requestService.completeRequest(requestId).subscribe({
+      next: () => {
+        this.completingId = null;
+        // Optimistically update status in the list
+        const req = this.requests.find(r => r.id === requestId);
+        if (req) req.status = 'completed';
+        this.router.navigate(['/customer/review', requestId]);
+      },
       error: () => {
-        this.loading = false;
+        this.completingId = null;
+        this.errorMsg = 'حدث خطأ أثناء إتمام الخدمة. يرجى المحاولة مرة أخرى.';
       }
     });
   }
-getStatusLabel(status: any): string {
-  switch (status?.toLowerCase()) {
-    case 'open': return 'مفتوح';
-    case 'inprogress': return 'قيد التنفيذ';
-    case 'completed': return 'مكتمل';
-    case 'cancelled': return 'ملغي';
-    default: return status ?? 'غير معروف';
-  }
-}
 
-getStatusClass(status: any): string {
-  switch (status?.toLowerCase()) {
-    case 'open': return 'badge-open';
-    case 'inprogress': return 'badge-progress';
-    case 'completed': return 'badge-done';
-    case 'cancelled': return 'badge-cancelled';
-    default: return '';
+  /** "Rate Service" on completed → go straight to review page */
+  goToReview(requestId: number) {
+    this.router.navigate(['/customer/review', requestId]);
   }
-}
 
   goToNewRequest() {
     this.router.navigate(['/customer/new-request']);
-  }
-
-  goToOffers(requestId: number) {
-    this.router.navigate(['/customer/offers', requestId]);
-  }
-
-  goToReview(requestId: number) {
-    this.router.navigate(['/customer/review', requestId]);
   }
 
   goToChat(requestId: number) {

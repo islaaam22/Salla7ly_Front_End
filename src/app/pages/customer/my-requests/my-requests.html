@@ -12,6 +12,13 @@
     </button>
   </div>
 
+  <!-- Global error -->
+  @if (errorMsg) {
+    <div class="error-banner">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ errorMsg }}
+    </div>
+  }
+
   <!-- Loading -->
   @if (loading) {
     <div class="loading-wrap">
@@ -77,19 +84,44 @@
                 </span>
               }
             </div>
+
             <div class="card-actions">
+              <!-- Chat is always available -->
               <button class="btn-chat" (click)="goToChat(req.id)">
                 <i class="fa-regular fa-message"></i>
                 محادثة
               </button>
-              @if (req.status?.toLowerCase() === 'completed') {
+
+              <!-- open: bid not accepted yet → View Details (bids for this request) -->
+              @if (isOpen(req.status)) {
+                <button class="btn-details" (click)="goToBids(req.id)">
+                  <i class="fa-solid fa-list"></i>
+                  عرض التفاصيل
+                </button>
+              }
+
+              <!-- assigned / inprogress: technician selected → Complete Service (calls API) -->
+              @if (needsCompletion(req.status)) {
+                <button
+                  class="btn-complete"
+                  (click)="completeService(req.id)"
+                  [disabled]="completingId === req.id"
+                >
+                  @if (completingId === req.id) {
+                    <span class="spinner-border spinner-border-sm"></span>
+                    جاري الإتمام...
+                  } @else {
+                    <i class="fa-solid fa-circle-check"></i>
+                    إتمام الخدمة
+                  }
+                </button>
+              }
+
+              <!-- completed: done → Rate Service (navigate to review, no API) -->
+              @if (isCompleted(req.status)) {
                 <button class="btn-review" (click)="goToReview(req.id)">
                   <i class="fa-regular fa-star"></i>
                   تقييم الخدمة
-                </button>
-              } @else {
-                <button class="btn-details" (click)="goToOffers(req.id)">
-                  عرض التفاصيل
                 </button>
               }
             </div>

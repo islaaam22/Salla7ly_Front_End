@@ -13,10 +13,18 @@
     </div>
   }
 
-  @if (!loading && requests.length === 0) {
+  @if (errorMsg) {
+    <div class="error-banner">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ errorMsg }}
+      <button class="btn-retry" (click)="loadTasks()">إعادة المحاولة</button>
+    </div>
+  }
+
+  @if (!loading && !errorMsg && requests.length === 0) {
     <div class="empty-state">
       <i class="fa-solid fa-clipboard-list"></i>
       <p>لا توجد مهام موكلة حالياً</p>
+      <small>ستظهر هنا المهام بعد قبول العملاء لعروضك</small>
     </div>
   }
 

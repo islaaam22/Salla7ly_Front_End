@@ -45,15 +45,22 @@ export class RequestService {
     });
   }
 
-  getCategories(): Observable<any> {
-  return this.http.get(`${this.apiUrl}/ServiceCategory`, {
-    headers: this.getHeaders()
-  });
-}
-getAssignedRequests(): Observable<any> {
-  return this.http.get(`${this.apiUrl}/requests/assigned`, {
-    headers: this.getHeaders()
-  });
-}
+  // PUT /api/requests/{id}/start
+  startRequest(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/requests/${id}/start`, {}, {
+      headers: this.getHeaders()
+    });
+  }
 
+  getCategories(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/ServiceCategory`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  getAssignedRequests(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/requests/assigned`, {
+      headers: this.getHeaders()
+    });
+  }
 }

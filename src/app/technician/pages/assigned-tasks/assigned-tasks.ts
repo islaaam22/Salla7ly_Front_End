@@ -12,43 +12,51 @@ import { RequestService } from '../../../services/request';
 export class AssignedTasksComponent implements OnInit {
   requests: any[] = [];
   loading = true;
+  errorMsg: string | null = null;
 
   constructor(private requestService: RequestService, private router: Router) {}
-ngOnInit() {
-  this.requestService.getAssignedRequests().subscribe({
-    next: (res) => {
-      console.log('Assigned Requests:', res);
 
-      this.requests = res;
-      this.loading = false;
-    },
-    error: (err) => {
-  console.log('ERROR:', err);
-  console.log('ERROR BODY:', err.error);
-  console.log('VALIDATION ERRORS:', err.error.errors);
-  console.log('STATUS:', err.status);
-  this.loading = false;
-}
-  });
-}
+  ngOnInit() {
+    this.loadTasks();
+  }
+
+  loadTasks() {
+    this.loading = true;
+    this.errorMsg = null;
+    this.requestService.getAssignedRequests().subscribe({
+      next: (res) => {
+        this.requests = res;
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMsg = 'حدث خطأ أثناء تحميل المهام. يرجى المحاولة مرة أخرى.';
+        this.loading = false;
+      }
+    });
+  }
+
+  /** Normalize backend status string: strip underscores, lowercase */
+  private normalizeStatus(status: any): string {
+    return (status ?? '').toLowerCase().replace(/_/g, '');
+  }
 
   getStatusLabel(status: any): string {
-    switch (status?.toLowerCase()) {
-      case 'open': return 'قادم';
-      case 'inprogress': return 'قيد التنفيذ';
-      case 'completed': return 'مكتمل';
-      case 'confirmed': return 'مؤكد';
-      default: return status ?? 'غير معروف';
+    switch (this.normalizeStatus(status)) {
+      case 'assigned':    return 'تم الإسناد';
+      case 'inprogress':  return 'قيد التنفيذ';
+      case 'completed':   return 'مكتمل';
+      case 'open':        return 'مفتوح';
+      default:            return status ?? 'غير معروف';
     }
   }
 
   getStatusClass(status: any): string {
-    switch (status?.toLowerCase()) {
-      case 'open': return 'badge-open';
-      case 'inprogress': return 'badge-progress';
-      case 'completed': return 'badge-done';
-      case 'confirmed': return 'badge-confirmed';
-      default: return '';
+    switch (this.normalizeStatus(status)) {
+      case 'assigned':    return 'badge-assigned';
+      case 'inprogress':  return 'badge-progress';
+      case 'completed':   return 'badge-done';
+      case 'open':        return 'badge-open';
+      default:            return '';
     }
   }
 

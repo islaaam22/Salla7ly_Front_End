@@ -73,6 +73,7 @@
           <p class="subtitle">قدّم تفاصيل واضحة للحصول على أفضل العروض.</p>
         </div>
 
+        <!-- Title -->
         <div class="form-group">
           <label><i class="fa-solid fa-heading"></i> عنوان الطلب</label>
           <input type="text" [(ngModel)]="form.title"
@@ -83,141 +84,152 @@
           }
         </div>
 
-       <div class="form-group">
-  <label>وصف تفصيلي</label>
-  <textarea [(ngModel)]="form.description" rows="5"
-            placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٢٠ كلمة)"
-            [class.input-error]="submitted && !isDescriptionValid()"></textarea>
-  @if (submitted && !isDescriptionValid()) {
-    <span class="error-text">يرجى إدخال وصف لا يقل عن ٢٠ كلمة ({{ getWordCount() }} كلمة حالياً)</span>
-  }
-  <span class="word-count" [class.valid]="isDescriptionValid()">
-    {{ getWordCount() }} كلمة
-  </span>
-</div>
-
-
-
-<!-- ═══════════════════════════════════════════ -->
-<!-- AI IMPROVE SECTION                          -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="ai-section" *ngIf="!aiActive">
-  <button type="button" class="btn-ai" (click)="onImproveWithAI()">
-    <i class="fa-solid fa-wand-magic-sparkles"></i>
-    تحسين بالذكاء الاصطناعي
-  </button>
-  <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
-</div>
-
-<div class="ai-section ai-active-section" *ngIf="aiActive">
-
-  <!-- Loading spinner -->
-  <div *ngIf="aiLoading" class="ai-loading">
-    <div class="spinner-border text-primary" role="status" style="width:24px;height:24px;"></div>
-    <span>الذكاء الاصطناعي يفكر...</span>
-  </div>
-
-  <!-- Question -->
-  <div *ngIf="!aiLoading && !aiDone && aiCurrentQuestion" class="ai-question-block">
-    <div class="ai-progress">
-      سؤال {{ aiQuestionIndex + 1 }} من {{ AI_TOTAL_QUESTIONS }}
-      <div class="ai-progress-bar">
-        <div class="ai-progress-fill"
-             [style.width]="((aiQuestionIndex) / AI_TOTAL_QUESTIONS * 100) + '%'"></div>
-      </div>
-    </div>
-    <p class="ai-question">{{ aiCurrentQuestion }}</p>
-    <textarea class="ai-answer-input"
-              [(ngModel)]="aiCurrentAnswer"
-              name="aiAnswer"
-              rows="3"
-              placeholder="اكتب إجابتك هنا..."></textarea>
-    <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
-    <div class="ai-actions">
-      <button type="button" class="btn-ai-next" (click)="onNextQuestion()">
-        {{ aiQuestionIndex + 1 < AI_TOTAL_QUESTIONS ? 'التالي' : 'تحسين الوصف' }}
-        <i class="fa-solid fa-arrow-left"></i>
-      </button>
-      <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
-    </div>
-  </div>
-
-  <!-- Result -->
-  <div *ngIf="aiDone && aiRefinedDescription" class="ai-result-block">
-    <div class="ai-result-header">
-      <i class="fa-solid fa-sparkles" style="color:#f59e0b;"></i>
-      الوصف المحسّن بالذكاء الاصطناعي
-    </div>
-    <textarea class="ai-result-textarea"
-              [(ngModel)]="aiRefinedDescription"
-              name="aiResult"
-              rows="5"></textarea>
-    <div class="ai-actions">
-      <button type="button" class="btn-ai-use" (click)="useAiDescription()">
-        <i class="fa-solid fa-copy"></i>
-        استخدام هذا الوصف
-      </button>
-      <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إغلاق</button>
-    </div>
-  </div>
-
-  <!-- Error without question -->
-  <div *ngIf="!aiLoading && !aiCurrentQuestion && !aiDone">
-    <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
-    <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
-  </div>
-
-</div>
-<!-- ═══════════════════════════════════════════ -->
-
-
-
+        <!-- Description -->
         <div class="form-group">
           <label><i class="fa-solid fa-align-right"></i> وصف تفصيلي</label>
           <textarea [(ngModel)]="form.description" rows="5"
-                    placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٢٠ كلمة)"
+                    placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٥ كلمات)"
                     [class.input-error]="submitted && !isDescriptionValid()"></textarea>
           @if (submitted && !isDescriptionValid()) {
-            <span class="error-text">يرجى إدخال وصف لا يقل عن ٢٠ كلمة ({{ getWordCount() }} كلمة حالياً)</span>
+            <span class="error-text">يرجى إدخال وصف لا يقل عن ٥ كلمات ({{ getWordCount() }} كلمة حالياً)</span>
           }
           <span class="word-count" [class.valid]="isDescriptionValid()">
             <i class="fa-solid fa-file-word"></i> {{ getWordCount() }} كلمة
           </span>
         </div>
 
+        <!-- AI Improve -->
+        <div class="ai-section" *ngIf="!aiActive">
+          <button type="button" class="btn-ai" (click)="onImproveWithAI()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            تحسين بالذكاء الاصطناعي
+          </button>
+          <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+        </div>
+
+        <div class="ai-section ai-active-section" *ngIf="aiActive">
+          <div *ngIf="aiLoading" class="ai-loading">
+            <div class="spinner-border text-primary" role="status" style="width:24px;height:24px;"></div>
+            <span>الذكاء الاصطناعي يفكر...</span>
+          </div>
+          <div *ngIf="!aiLoading && !aiDone && aiCurrentQuestion" class="ai-question-block">
+            <div class="ai-progress">
+              سؤال {{ aiQuestionIndex + 1 }} من {{ AI_TOTAL_QUESTIONS }}
+              <div class="ai-progress-bar">
+                <div class="ai-progress-fill" [style.width]="((aiQuestionIndex) / AI_TOTAL_QUESTIONS * 100) + '%'"></div>
+              </div>
+            </div>
+            <p class="ai-question">{{ aiCurrentQuestion }}</p>
+            <textarea class="ai-answer-input" [(ngModel)]="aiCurrentAnswer" name="aiAnswer" rows="3"
+                      placeholder="اكتب إجابتك هنا..."></textarea>
+            <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+            <div class="ai-actions">
+              <button type="button" class="btn-ai-next" (click)="onNextQuestion()">
+                {{ aiQuestionIndex + 1 < AI_TOTAL_QUESTIONS ? 'التالي' : 'تحسين الوصف' }}
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
+            </div>
+          </div>
+          <div *ngIf="aiDone && aiRefinedDescription" class="ai-result-block">
+            <div class="ai-result-header">
+              <i class="fa-solid fa-sparkles" style="color:#f59e0b;"></i>
+              الوصف المحسّن بالذكاء الاصطناعي
+            </div>
+            <textarea class="ai-result-textarea" [(ngModel)]="aiRefinedDescription" name="aiResult" rows="5"></textarea>
+            <div class="ai-actions">
+              <button type="button" class="btn-ai-use" (click)="useAiDescription()">
+                <i class="fa-solid fa-copy"></i> استخدام هذا الوصف
+              </button>
+              <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إغلاق</button>
+            </div>
+          </div>
+          <div *ngIf="!aiLoading && !aiCurrentQuestion && !aiDone">
+            <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+            <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
+          </div>
+        </div>
+
+        <!-- Images -->
         <div class="form-group">
           <label><i class="fa-solid fa-image"></i> صور المشكلة (اختياري — حتى 5)</label>
-          <input type="file" #fileInput multiple accept="image/*"
-                 (change)="onFileSelected($event)" hidden />
+          <input type="file" #fileInput multiple accept="image/*" (change)="onFileSelected($event)" hidden />
           <div class="upload-box" (click)="fileInput.click()">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>اضغط لرفع الصور</span>
           </div>
           <div class="preview-list" *ngIf="selectedFiles.length > 0">
-            <span *ngFor="let f of selectedFiles" class="preview-chip">
+            <span *ngFor="let f of selectedFiles; let i = index" class="preview-chip">
               <i class="fa-solid fa-image"></i> {{ f.name }}
+              <i class="fa-solid fa-xmark" style="cursor:pointer;margin-right:4px" (click)="removeFile(i)"></i>
             </span>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label><i class="fa-solid fa-location-dot"></i> عنوان الخدمة</label>
-            <input type="text" [(ngModel)]="form.serviceAddress"
-                   placeholder="الحي، المدينة"
-                   [class.input-error]="submitted && !form.serviceAddress.trim()" />
-            @if (submitted && !form.serviceAddress.trim()) {
-              <span class="error-text">يرجى إدخال عنوان الخدمة</span>
-            }
+        <!-- Address Selection -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-location-dot"></i> عنوان الخدمة</label>
+
+          <!-- Loading addresses -->
+          <div *ngIf="addressesLoading" class="address-loading">
+            <div class="spinner-border spinner-border-sm" style="color:#E8620A"></div>
+            <span>جاري تحميل عناوينك...</span>
           </div>
-          <div class="form-group">
-            <label><i class="fa-regular fa-calendar"></i> التاريخ المفضل</label>
-            <input type="date" [(ngModel)]="form.scheduledAt"
-                   [class.input-error]="submitted && !form.scheduledAt" />
-            @if (submitted && !form.scheduledAt) {
-              <span class="error-text">يرجى تحديد التاريخ</span>
-            }
+
+          <!-- Address error -->
+          <div *ngIf="addressesError && !addressesLoading" class="alert-error" style="margin-bottom:10px">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            تعذّر تحميل العناوين.
+            <button type="button" class="btn-retry" (click)="loadAddresses()">إعادة المحاولة</button>
           </div>
+
+          <!-- Dropdown -->
+          <div *ngIf="!addressesLoading && !addressesError && uniqueAddresses.length > 0" class="address-select-wrap">
+  <i class="fa-solid fa-location-dot address-select-icon"></i>
+
+  <select [(ngModel)]="selectedAddressId"
+          name="addressId"
+          (ngModelChange)="onAddressChange($event)"
+          [class.input-error]="submitted && !selectedAddressId">
+
+    <option [ngValue]="null" disabled>
+      اختر عنواناً من عناوينك المحفوظة
+    </option>
+
+    @for (addr of uniqueAddresses; track addr.id) {
+      <option [ngValue]="addr.id">
+        {{ addressLabel(addr) }}{{ addr.isDefault ? ' ★' : '' }}
+      </option>
+    }
+    <option value="new">
+  + إضافة عنوان جديد
+</option>
+
+  </select>
+
+  <i class="fa-solid fa-chevron-down address-select-arrow"></i>
+</div>
+
+          <!-- No addresses found -->
+          <div *ngIf="!addressesLoading && !addressesError && addresses.length === 0" class="address-empty">
+            <i class="fa-solid fa-map-pin"></i>
+            لا توجد عناوين محفوظة. يمكنك إضافة عنوانك في
+            <a routerLink="/customer/edit" style="color:#E8620A;font-weight:700">ملفك الشخصي</a>.
+          </div>
+
+          @if (submitted && !selectedAddressId) {
+            <span class="error-text">يرجى اختيار عنوان الخدمة</span>
+          }
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label><i class="fa-regular fa-calendar"></i> التاريخ المفضل</label>
+          <input type="date" [(ngModel)]="form.scheduledAt"
+                 [class.input-error]="submitted && !form.scheduledAt" />
+          @if (submitted && !form.scheduledAt) {
+            <span class="error-text">يرجى تحديد التاريخ</span>
+          }
         </div>
 
         @if (errorMsg) {

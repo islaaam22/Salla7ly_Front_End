@@ -233,6 +233,7 @@
   gap: 10px;
 }
 
+/* Chat (dark) */
 .btn-chat {
   display: inline-flex;
   align-items: center;
@@ -254,6 +255,7 @@
   transform: translateY(-1px);
 }
 
+/* View Details (outlined) — only shown for open requests */
 .btn-details {
   display: inline-flex;
   align-items: center;
@@ -274,6 +276,26 @@
   color: #0A0F1E;
 }
 
+/* Complete Service (green filled) — assigned / inprogress */
+.btn-complete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: background 0.18s, opacity 0.18s;
+}
+.btn-complete:hover:not(:disabled) { background: #15803d; }
+.btn-complete:disabled { opacity: 0.65; cursor: not-allowed; }
+
+/* Rate Service (yellow outlined) — completed only */
 .btn-review {
   display: inline-flex;
   align-items: center;

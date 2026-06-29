@@ -129,3 +129,39 @@
   color: #ddd;
   display: block;
 }
+
+/* assigned status badge (new — shown when bid is accepted) */
+.badge-assigned { background: #fef3c7; color: #92400e; }
+
+/* error banner */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff0f0;
+  border: 1px solid #f5c6cb;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.btn-retry {
+  margin-right: auto;
+  padding: 4px 14px;
+  background: transparent;
+  border: 1.5px solid #c0392b;
+  color: #c0392b;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.empty-state small {
+  display: block;
+  font-size: 13px;
+  margin-top: 4px;
+  color: #bbb;
+}

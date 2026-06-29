@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RequestService } from '../../../services/request';
 import { AiService } from '../../../services/ai.service';
+import { AddressService } from '../../../services/address-service';
+import { CustomerAddress } from '../../../models/Address-model';
 
 @Component({
   selector: 'app-new-request',
@@ -24,8 +26,14 @@ export class NewRequest implements OnInit {
   selectedUrgency: number = 0;
 
   categories: any[] = [];
-
   selectedFiles: File[] = [];
+
+  // ── Address ──────────────────────────────────────────────────────
+  addresses: CustomerAddress[] = [];
+  uniqueAddresses: CustomerAddress[] = [];
+  addressesLoading = false;
+  addressesError   = false;
+  selectedAddressId: number | null = null;
 
   urgencyLevels = [
     { value: 0, label: 'عادي', desc: 'خلال ٢٤-٤٨ ساعة',              icon: 'fa-solid fa-clock',                color: '#1AACDC' },
@@ -40,27 +48,29 @@ export class NewRequest implements OnInit {
     bookingMode: 0,
     isEmergency: false,
     scheduledAt: '',
-    addressId: 1,
     categoryId: 0,
-    serviceAddress: ''
+    serviceAddress: '',
+    city: '',
+    district: ''
   };
 
   // ── AI State ─────────────────────────────────────────────────────
-  aiActive = false;           // AI section visible
-  aiLoading = false;          // waiting for API
-  aiError = '';               // error message
-  aiQuestionIndex = 0;        // 0,1,2 → 3 questions total
-  aiCurrentQuestion = '';     // current question text
-  aiCurrentAnswer = '';       // current answer input
-  aiAnswers: string[] = [];   // all collected answers
-  aiRefinedDescription = '';  // final AI result
-  aiDone = false;             // all 3 questions answered, result shown
+  aiActive          = false;
+  aiLoading         = false;
+  aiError           = '';
+  aiQuestionIndex   = 0;
+  aiCurrentQuestion = '';
+  aiCurrentAnswer   = '';
+  aiAnswers: string[] = [];
+  aiRefinedDescription = '';
+  aiDone            = false;
   readonly AI_TOTAL_QUESTIONS = 3;
 
   constructor(
     private requestService: RequestService,
-    private aiService: AiService,
-    private router: Router
+    private aiService:      AiService,
+    private addressService: AddressService,
+    private router:         Router
   ) {}
 
   ngOnInit() {
@@ -71,8 +81,78 @@ export class NewRequest implements OnInit {
           .map((c: any) => ({ ...c, icon: this.getIconByName(c.nameAr) }));
       }
     });
+
+    this.loadAddresses();
   }
 
+  // ── Address Loading ───────────────────────────────────────────────
+ loadAddresses() {
+  this.addressesLoading = true;
+  this.addressesError = false;
+
+  this.addressService.getMyAddresses().subscribe({
+    next: (list) => {
+
+      this.addresses = list;
+
+      // إزالة العناوين المكررة
+      const seen = new Set<string>();
+
+      this.uniqueAddresses = list.filter(addr => {
+        const key = `${addr.addressDetails}-${addr.city}-${addr.district}`.trim();
+
+        if (seen.has(key)) {
+          return false;
+        }
+
+        seen.add(key);
+        return true;
+      });
+
+      this.addressesLoading = false;
+
+      const def =
+        this.uniqueAddresses.find(a => a.isDefault) ??
+        this.uniqueAddresses[0];
+
+      if (def) {
+        this.selectAddress(def);
+      }
+    },
+    error: () => {
+      this.addressesLoading = false;
+      this.addressesError = true;
+    }
+  });
+}
+
+  selectAddress(addr: CustomerAddress) {
+    this.selectedAddressId    = addr.id;
+    this.form.serviceAddress  = addr.addressDetails;
+    this.form.city            = addr.city    ?? '';
+    this.form.district        = addr.district ?? '';
+  }
+
+onAddressChange(value: any) {
+
+  if (value === 'new') {
+    this.router.navigate(['/customer/edit']);
+    return;
+  }
+
+  const addr = this.addresses.find(a => a.id == value);
+
+  if (addr) {
+    this.selectAddress(addr);
+  }
+}
+
+  addressLabel(addr: CustomerAddress): string {
+    const parts = [addr.addressDetails, addr.district, addr.city].filter(Boolean);
+    return parts.join('، ');
+  }
+
+  // ── Icons ────────────────────────────────────────────────────────
   getIconByName(name: string): string {
     if (name.includes('سباكة'))  return 'fa-solid fa-wrench';
     if (name.includes('كهرباء')) return 'fa-solid fa-bolt';
@@ -94,7 +174,7 @@ export class NewRequest implements OnInit {
     this.form.isEmergency = value === 2;
   }
 
-  getWordCount(): number       { return this.form.description.trim().split(/\s+/).filter(w => w).length; }
+  getWordCount(): number        { return this.form.description.trim().split(/\s+/).filter(w => w).length; }
   isDescriptionValid(): boolean { return this.getWordCount() >= 5; }
 
   nextStep() {
@@ -107,10 +187,10 @@ export class NewRequest implements OnInit {
     }
 
     if (this.currentStep === 2) {
-      if (!this.form.title.trim()) { this.errorMsg = 'يرجى إدخال عنوان الطلب'; return; }
-      if (!this.isDescriptionValid()) { this.errorMsg = 'يرجى إدخال وصف لا يقل عن ٥ كلمات'; return; }
-      if (!this.form.serviceAddress.trim()) { this.errorMsg = 'يرجى إدخال عنوان الخدمة'; return; }
-      if (!this.form.scheduledAt) { this.errorMsg = 'يرجى تحديد التاريخ'; return; }
+      if (!this.form.title.trim())         { this.errorMsg = 'يرجى إدخال عنوان الطلب'; return; }
+      if (!this.isDescriptionValid())       { this.errorMsg = 'يرجى إدخال وصف لا يقل عن ٥ كلمات'; return; }
+      if (!this.selectedAddressId)          { this.errorMsg = 'يرجى اختيار عنوان الخدمة'; return; }
+      if (!this.form.scheduledAt)           { this.errorMsg = 'يرجى تحديد التاريخ'; return; }
     }
 
     this.currentStep++;
@@ -121,15 +201,17 @@ export class NewRequest implements OnInit {
   onFileSelected(event: any) {
     const files = event.target.files;
     if (!files) return;
-    const max = 5;
     for (let i = 0; i < files.length; i++) {
       if (this.selectedFiles.length >= 5) break;
       this.selectedFiles.push(files[i]);
     }
   }
 
-  // ── AI Methods ───────────────────────────────────────────────────
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
+  }
 
+  // ── AI Methods ───────────────────────────────────────────────────
   get selectedCategoryName(): string {
     const cat = this.categories.find(c => c.id === this.selectedCategory);
     return cat?.nameAr || cat?.name || '';
@@ -137,13 +219,10 @@ export class NewRequest implements OnInit {
 
   onImproveWithAI() {
     this.aiError = '';
-
     if (!this.form.description.trim()) {
       this.aiError = 'يرجى إدخال وصف تفصيلي أولاً قبل استخدام الذكاء الاصطناعي';
       return;
     }
-
-    // Reset AI state
     this.aiActive = true;
     this.aiAnswers = [];
     this.aiQuestionIndex = 0;
@@ -151,91 +230,48 @@ export class NewRequest implements OnInit {
     this.aiCurrentAnswer = '';
     this.aiRefinedDescription = '';
     this.aiDone = false;
-
     this.fetchNextQuestion();
   }
 
   fetchNextQuestion() {
     this.aiLoading = true;
-    this.aiError = '';
-
-    this.aiService.askFollowup(
-      this.form.description,
-      this.aiAnswers,
-      []
-    ).subscribe({
-      next: (res) => {
-        this.aiLoading = false;
-        this.aiCurrentQuestion = res.question;
-        this.aiCurrentAnswer = '';
-      },
-      error: (err: any) => {
-        this.aiLoading = false;
-        this.aiError = err.error?.message || 'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي';
-      }
+    this.aiError   = '';
+    this.aiService.askFollowup(this.form.description, this.aiAnswers, []).subscribe({
+      next: (res) => { this.aiLoading = false; this.aiCurrentQuestion = res.question; this.aiCurrentAnswer = ''; },
+      error: (err: any) => { this.aiLoading = false; this.aiError = err.error?.message || 'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي'; }
     });
   }
 
   onNextQuestion() {
-    if (!this.aiCurrentAnswer.trim()) {
-      this.aiError = 'يرجى إدخال إجابة قبل المتابعة';
-      return;
-    }
-
-    this.aiError = '';
-    // Store the answer
+    if (!this.aiCurrentAnswer.trim()) { this.aiError = 'يرجى إدخال إجابة قبل المتابعة'; return; }
+    this.aiError   = '';
     this.aiAnswers = [...this.aiAnswers, this.aiCurrentAnswer.trim()];
     this.aiQuestionIndex++;
-
-    if (this.aiQuestionIndex >= this.AI_TOTAL_QUESTIONS) {
-      // All 3 answered — call refine
-      this.callRefine();
-    } else {
-      // Fetch next question
-      this.fetchNextQuestion();
-    }
+    if (this.aiQuestionIndex >= this.AI_TOTAL_QUESTIONS) { this.callRefine(); } else { this.fetchNextQuestion(); }
   }
 
   callRefine() {
     this.aiLoading = true;
-    this.aiError = '';
-
-    this.aiService.refineRequest(
-      this.form.description,
-      this.selectedCategoryName,
-      [],
-      this.aiAnswers
-    ).subscribe({
+    this.aiError   = '';
+    this.aiService.refineRequest(this.form.description, this.selectedCategoryName, [], this.aiAnswers).subscribe({
       next: (res) => {
         this.aiLoading = false;
-        this.aiDone = true;
-        // Try common field names the backend might return
+        this.aiDone    = true;
         this.aiRefinedDescription =
-          (res as any).refinedDescription ||
-          (res as any).result ||
-          (res as any).description ||
-          (res as any).improvedDescription ||
+          (res as any).refinedDescription || (res as any).result ||
+          (res as any).description        || (res as any).improvedDescription ||
           JSON.stringify(res);
       },
-      error: (err: any) => {
-        this.aiLoading = false;
-        this.aiError = err.error?.message || 'حدث خطأ أثناء تحسين الوصف';
-      }
+      error: (err: any) => { this.aiLoading = false; this.aiError = err.error?.message || 'حدث خطأ أثناء تحسين الوصف'; }
     });
   }
 
-  useAiDescription() {
-    this.form.description = this.aiRefinedDescription;
-  }
+  useAiDescription() { this.form.description = this.aiRefinedDescription; }
 
   cancelAI() {
-    this.aiActive = false;
-    this.aiDone = false;
-    this.aiAnswers = [];
-    this.aiCurrentQuestion = '';
-    this.aiCurrentAnswer = '';
-    this.aiRefinedDescription = '';
-    this.aiError = '';
+    this.aiActive = false; this.aiDone = false; this.aiAnswers = [];
+    this.aiCurrentQuestion = ''; this.aiCurrentAnswer = '';
+    this.aiRefinedDescription = ''; this.aiError = '';
   }
 
   // ── Submit ───────────────────────────────────────────────────────
@@ -243,18 +279,27 @@ export class NewRequest implements OnInit {
     const token = localStorage.getItem('token');
     if (!token) { this.router.navigate(['/login']); return; }
 
+    if (!this.selectedAddressId) {
+      this.errorMsg = 'يرجى اختيار عنوان الخدمة';
+      return;
+    }
+
     this.loading  = true;
     this.errorMsg = '';
 
     const formData = new FormData();
-    formData.append('title', this.form.title);
-    formData.append('description', this.form.description);
-    formData.append('urgency', this.selectedUrgency.toString());
-    formData.append('categoryId', this.form.categoryId.toString());
-    formData.append('addressId', this.form.addressId.toString());
-    formData.append('scheduledAt', new Date(this.form.scheduledAt).toISOString());
-    formData.append('serviceAddress', this.form.serviceAddress);
-    this.selectedFiles.forEach(file => formData.append('images', file));
+    formData.append('Title',          this.form.title);
+    formData.append('Description',    this.form.description);
+    formData.append('Urgency',        this.selectedUrgency.toString());
+    formData.append('BookingMode',    this.form.bookingMode.toString());
+    formData.append('IsEmergency',    this.form.isEmergency.toString());
+    formData.append('CategoryId',     this.form.categoryId.toString());
+    formData.append('AddressId',      this.selectedAddressId.toString());
+    formData.append('ScheduledAt',    new Date(this.form.scheduledAt).toISOString());
+    formData.append('ServiceAddress', this.form.serviceAddress);
+    formData.append('City',           this.form.city);
+    formData.append('District',       this.form.district);
+    this.selectedFiles.forEach(file => formData.append('Images', file));
 
     this.requestService.createRequest(formData).subscribe({
       next: () => {
@@ -262,9 +307,9 @@ export class NewRequest implements OnInit {
         this.successMsg = 'تم إرسال الطلب بنجاح!';
         setTimeout(() => this.router.navigate(['/customer/my-requests']), 2000);
       },
-      error: () => {
+      error: (err) => {
         this.loading  = false;
-        this.errorMsg = 'حدث خطأ أثناء الإرسال';
+        this.errorMsg = err.error?.message || err.error?.title || 'حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى';
       }
     });
   }

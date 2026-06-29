@@ -44,7 +44,6 @@ import { AdminReviews } from './admin/pages/reviews/reviews';
 import { TechniciansComponent } from './admin/pages/technicians/technicians';
 import { TechnicianProfileComponent } from './admin/pages/technician-profile/technician-profile';
 
-
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: Register },
@@ -103,6 +102,10 @@ export const routes: Routes = [
       { path: 'notifications', component: Notifications },
       { path: 'statistics', component: AdminStatistics },
       { path: 'customers', component: AdminCustomers },
+      { path: 'requests', component: AdminRequests },
+      { path: 'Bids', component: AdminBids },
+      { path: 'technicians', component: TechniciansComponent },
+      { path: 'technicians/:id', component: TechnicianProfileComponent },
     ],
   },
 {
