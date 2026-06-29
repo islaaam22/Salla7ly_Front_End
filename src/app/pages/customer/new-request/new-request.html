@@ -9,55 +9,73 @@
   <!-- Stepper -->
   <div class="stepper">
     <div class="step-item" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
-      <div class="step-circle">1</div>
+      <div class="step-circle">
+        <i *ngIf="currentStep > 1" class="fa-solid fa-check"></i>
+        <span *ngIf="currentStep <= 1">1</span>
+      </div>
+      <span class="step-label">الخدمة</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 1"></div>
     <div class="step-item" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
-      <div class="step-circle">2</div>
+      <div class="step-circle">
+        <i *ngIf="currentStep > 2" class="fa-solid fa-check"></i>
+        <span *ngIf="currentStep <= 2">2</span>
+      </div>
+      <span class="step-label">التفاصيل</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 2"></div>
     <div class="step-item" [class.active]="currentStep >= 3">
       <div class="step-circle">3</div>
+      <span class="step-label">الاستعجال</span>
     </div>
   </div>
 
   <!-- Card -->
   <div class="step-card">
 
-    <!-- ======= STEP 1: نوع الخدمة ======= -->
+    <!-- ======= STEP 1 ======= -->
     @if (currentStep === 1) {
       <div class="step-content">
-        <h2>اختر نوع الخدمة</h2>
-        <p class="subtitle">اختر التصنيف الأقرب لمشكلتك.</p>
+        <div class="step-head">
+          <h2>اختر نوع الخدمة</h2>
+          <p class="subtitle">اختر التصنيف الأقرب لمشكلتك.</p>
+        </div>
 
         <div class="categories-grid">
           @for (cat of categories; track cat.id) {
             <div class="category-card" [class.selected]="selectedCategory === cat.id"
                  (click)="selectCategory(cat.id)">
-              <i class="{{ cat.icon }}"></i>
+              <div class="cat-icon-wrap">
+                <i class="{{ cat.icon }}"></i>
+              </div>
               <span>{{ cat.nameAr }}</span>
             </div>
           }
         </div>
 
         @if (errorMsg) {
-          <div class="alert-error">{{ errorMsg }}</div>
+          <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
         }
 
         <div class="step-actions">
-          <button class="btn-next" (click)="nextStep()">التالي</button>
+          <button class="btn-next" (click)="nextStep()">
+            التالي <i class="fa-solid fa-arrow-left"></i>
+          </button>
         </div>
       </div>
     }
 
-    <!-- ======= STEP 2: تفاصيل الطلب ======= -->
+    <!-- ======= STEP 2 ======= -->
     @if (currentStep === 2) {
       <div class="step-content">
-        <h2>تفاصيل الطلب</h2>
-        <p class="subtitle">قدّم تفاصيل واضحة للحصول على أفضل العروض.</p>
+        <div class="step-head">
+          <h2>تفاصيل الطلب</h2>
+          <p class="subtitle">قدّم تفاصيل واضحة للحصول على أفضل العروض.</p>
+        </div>
 
+        <!-- Title -->
         <div class="form-group">
-          <label>عنوان الطلب</label>
+          <label><i class="fa-solid fa-heading"></i> عنوان الطلب</label>
           <input type="text" [(ngModel)]="form.title"
                  placeholder="مثال: تصليح مكيف سبليت"
                  [class.input-error]="submitted && !form.title.trim()" />
@@ -66,86 +84,176 @@
           }
         </div>
 
-       <div class="form-group">
-  <label>وصف تفصيلي</label>
-  <textarea [(ngModel)]="form.description" rows="5"
-            placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٢٠ كلمة)"
-            [class.input-error]="submitted && !isDescriptionValid()"></textarea>
-  @if (submitted && !isDescriptionValid()) {
-    <span class="error-text">يرجى إدخال وصف لا يقل عن ٢٠ كلمة ({{ getWordCount() }} كلمة حالياً)</span>
-  }
-  <span class="word-count" [class.valid]="isDescriptionValid()">
-    {{ getWordCount() }} كلمة
-  </span>
-</div>
+        <!-- Description -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-align-right"></i> وصف تفصيلي</label>
+          <textarea [(ngModel)]="form.description" rows="5"
+                    placeholder="اشرح المشكلة بالتفصيل... (الحد الأدنى ٥ كلمات)"
+                    [class.input-error]="submitted && !isDescriptionValid()"></textarea>
+          @if (submitted && !isDescriptionValid()) {
+            <span class="error-text">يرجى إدخال وصف لا يقل عن ٥ كلمات ({{ getWordCount() }} كلمة حالياً)</span>
+          }
+          <span class="word-count" [class.valid]="isDescriptionValid()">
+            <i class="fa-solid fa-file-word"></i> {{ getWordCount() }} كلمة
+          </span>
+        </div>
 
-<div class="form-group">
-  <label>صور المشكلة (اختياري — حتى 5)</label>
+        <!-- AI Improve -->
+        <div class="ai-section" *ngIf="!aiActive">
+          <button type="button" class="btn-ai" (click)="onImproveWithAI()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            تحسين بالذكاء الاصطناعي
+          </button>
+          <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+        </div>
 
-  <input
-    type="file"
-    #fileInput
-    multiple
-    accept="image/*"
-    (change)="onFileSelected($event)"
-    hidden
-  />
-
-  <div class="upload-box" (click)="fileInput.click()">
-    <i class="fa-solid fa-upload"></i>
-  </div>
-
-  <!-- preview -->
-  <div class="preview-list" *ngIf="selectedFiles.length > 0">
-    <span *ngFor="let f of selectedFiles">
-      {{ f.name }}
-    </span>
-  </div>
-</div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>عنوان الخدمة</label>
-            <div class="input-icon">
-              <input type="text" [(ngModel)]="form.serviceAddress"
-                     placeholder="العنوان"
-                     [class.input-error]="submitted && !form.serviceAddress.trim()" />
-              <i class="fa-solid fa-location-dot"></i>
-            </div>
-            @if (submitted && !form.serviceAddress.trim()) {
-              <span class="error-text">يرجى إدخال عنوان الخدمة</span>
-            }
+        <div class="ai-section ai-active-section" *ngIf="aiActive">
+          <div *ngIf="aiLoading" class="ai-loading">
+            <div class="spinner-border text-primary" role="status" style="width:24px;height:24px;"></div>
+            <span>الذكاء الاصطناعي يفكر...</span>
           </div>
-
-          <div class="form-group">
-            <label>التاريخ المفضل</label>
-            <div class="input-icon">
-              <input type="date" [(ngModel)]="form.scheduledAt"
-                     [class.input-error]="submitted && !form.scheduledAt" />
-              <i class="fa-regular fa-calendar"></i>
+          <div *ngIf="!aiLoading && !aiDone && aiCurrentQuestion" class="ai-question-block">
+            <div class="ai-progress">
+              سؤال {{ aiQuestionIndex + 1 }} من {{ AI_TOTAL_QUESTIONS }}
+              <div class="ai-progress-bar">
+                <div class="ai-progress-fill" [style.width]="((aiQuestionIndex) / AI_TOTAL_QUESTIONS * 100) + '%'"></div>
+              </div>
             </div>
-            @if (submitted && !form.scheduledAt) {
-              <span class="error-text">يرجى تحديد التاريخ</span>
-            }
+            <p class="ai-question">{{ aiCurrentQuestion }}</p>
+            <textarea class="ai-answer-input" [(ngModel)]="aiCurrentAnswer" name="aiAnswer" rows="3"
+                      placeholder="اكتب إجابتك هنا..."></textarea>
+            <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+            <div class="ai-actions">
+              <button type="button" class="btn-ai-next" (click)="onNextQuestion()">
+                {{ aiQuestionIndex + 1 < AI_TOTAL_QUESTIONS ? 'التالي' : 'تحسين الوصف' }}
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
+            </div>
+          </div>
+          <div *ngIf="aiDone && aiRefinedDescription" class="ai-result-block">
+            <div class="ai-result-header">
+              <i class="fa-solid fa-sparkles" style="color:#f59e0b;"></i>
+              الوصف المحسّن بالذكاء الاصطناعي
+            </div>
+            <textarea class="ai-result-textarea" [(ngModel)]="aiRefinedDescription" name="aiResult" rows="5"></textarea>
+            <div class="ai-actions">
+              <button type="button" class="btn-ai-use" (click)="useAiDescription()">
+                <i class="fa-solid fa-copy"></i> استخدام هذا الوصف
+              </button>
+              <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إغلاق</button>
+            </div>
+          </div>
+          <div *ngIf="!aiLoading && !aiCurrentQuestion && !aiDone">
+            <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+            <button type="button" class="btn-ai-cancel" (click)="cancelAI()">إلغاء</button>
           </div>
         </div>
 
+        <!-- Images -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-image"></i> صور المشكلة (اختياري — حتى 5)</label>
+          <input type="file" #fileInput multiple accept="image/*" (change)="onFileSelected($event)" hidden />
+          <div class="upload-box" (click)="fileInput.click()">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>اضغط لرفع الصور</span>
+          </div>
+          <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <span *ngFor="let f of selectedFiles; let i = index" class="preview-chip">
+              <i class="fa-solid fa-image"></i> {{ f.name }}
+              <i class="fa-solid fa-xmark" style="cursor:pointer;margin-right:4px" (click)="removeFile(i)"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Address Selection -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-location-dot"></i> عنوان الخدمة</label>
+
+          <!-- Loading addresses -->
+          <div *ngIf="addressesLoading" class="address-loading">
+            <div class="spinner-border spinner-border-sm" style="color:#E8620A"></div>
+            <span>جاري تحميل عناوينك...</span>
+          </div>
+
+          <!-- Address error -->
+          <div *ngIf="addressesError && !addressesLoading" class="alert-error" style="margin-bottom:10px">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            تعذّر تحميل العناوين.
+            <button type="button" class="btn-retry" (click)="loadAddresses()">إعادة المحاولة</button>
+          </div>
+
+          <!-- Dropdown -->
+          <div *ngIf="!addressesLoading && !addressesError && uniqueAddresses.length > 0" class="address-select-wrap">
+  <i class="fa-solid fa-location-dot address-select-icon"></i>
+
+  <select [(ngModel)]="selectedAddressId"
+          name="addressId"
+          (ngModelChange)="onAddressChange($event)"
+          [class.input-error]="submitted && !selectedAddressId">
+
+    <option [ngValue]="null" disabled>
+      اختر عنواناً من عناوينك المحفوظة
+    </option>
+
+    @for (addr of uniqueAddresses; track addr.id) {
+      <option [ngValue]="addr.id">
+        {{ addressLabel(addr) }}{{ addr.isDefault ? ' ★' : '' }}
+      </option>
+    }
+    <option value="new">
+  + إضافة عنوان جديد
+</option>
+
+  </select>
+
+  <i class="fa-solid fa-chevron-down address-select-arrow"></i>
+</div>
+
+          <!-- No addresses found -->
+          <div *ngIf="!addressesLoading && !addressesError && addresses.length === 0" class="address-empty">
+            <i class="fa-solid fa-map-pin"></i>
+            لا توجد عناوين محفوظة. يمكنك إضافة عنوانك في
+            <a routerLink="/customer/edit" style="color:#E8620A;font-weight:700">ملفك الشخصي</a>.
+          </div>
+
+          @if (submitted && !selectedAddressId) {
+            <span class="error-text">يرجى اختيار عنوان الخدمة</span>
+          }
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label><i class="fa-regular fa-calendar"></i> التاريخ المفضل</label>
+          <input type="date" [(ngModel)]="form.scheduledAt"
+                 [class.input-error]="submitted && !form.scheduledAt" />
+          @if (submitted && !form.scheduledAt) {
+            <span class="error-text">يرجى تحديد التاريخ</span>
+          }
+        </div>
+
         @if (errorMsg) {
-          <div class="alert-error">{{ errorMsg }}</div>
+          <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
         }
 
         <div class="step-actions">
-          <button class="btn-back" (click)="prevStep()">رجوع</button>
-          <button class="btn-next" (click)="nextStep()">التالي</button>
+          <button class="btn-back" (click)="prevStep()">
+            <i class="fa-solid fa-arrow-right"></i> رجوع
+          </button>
+          <button class="btn-next" (click)="nextStep()">
+            التالي <i class="fa-solid fa-arrow-left"></i>
+          </button>
         </div>
       </div>
     }
 
-    <!-- ======= STEP 3: مستوى الاستعجال ======= -->
+    <!-- ======= STEP 3 ======= -->
     @if (currentStep === 3) {
       <div class="step-content">
-        <h2>مستوى الاستعجال</h2>
-        <p class="subtitle">اختر السرعة المطلوبة. الطلبات الطارئة تُرسل فوراً للفنيين.</p>
+        <div class="step-head">
+          <h2>مستوى الاستعجال</h2>
+          <p class="subtitle">الطلبات الطارئة تُرسل فوراً للفنيين.</p>
+        </div>
 
         <div class="urgency-list">
           @for (u of urgencyLevels; track u.value) {
@@ -155,6 +263,8 @@
                 <span class="urgency-check">
                   @if (selectedUrgency === u.value) {
                     <i class="fa-solid fa-circle-check"></i>
+                  } @else {
+                    <i class="fa-regular fa-circle"></i>
                   }
                 </span>
                 <div>
@@ -168,31 +278,33 @@
             </div>
           }
 
-          <!-- جاهز للإرسال -->
           <div class="urgency-card ready-card">
             <div class="urgency-info">
-              <span></span>
+              <span class="urgency-check"><i class="fa-solid fa-paper-plane" style="color:#E8620A"></i></span>
               <div>
                 <h4>جاهز للإرسال</h4>
                 <p>سترسل طلبك للفنيين وتستقبل العروض في صفحة "العروض المستلمة".</p>
               </div>
             </div>
-            <div class="urgency-icon" style="background:#6B7280;">
+            <div class="urgency-icon" style="background:#E8620A">
               <i class="fa-solid fa-paper-plane"></i>
             </div>
           </div>
         </div>
 
         @if (errorMsg) {
-          <div class="alert-error">{{ errorMsg }}</div>
+          <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
         }
         @if (successMsg) {
-          <div class="alert-success">{{ successMsg }}</div>
+          <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ successMsg }}</div>
         }
 
         <div class="step-actions">
-          <button class="btn-back" (click)="prevStep()">رجوع</button>
+          <button class="btn-back" (click)="prevStep()">
+            <i class="fa-solid fa-arrow-right"></i> رجوع
+          </button>
           <button class="btn-submit" [disabled]="loading" (click)="submitRequest()">
+            <i class="fa-solid fa-paper-plane"></i>
             {{ loading ? 'جاري الإرسال...' : 'إرسال الطلب' }}
           </button>
         </div>

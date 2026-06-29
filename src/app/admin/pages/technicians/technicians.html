@@ -51,7 +51,7 @@
                   [src]="resolveImage(tech.imageUrl)"
                   class="avatar-img"
                   [alt]="tech.name"
-                  (error)="tech.imageUrl = ''" />
+                  (error)="tech.imageUrl = undefined" />
               } @else {
                 <div class="avatar">{{ getInitial(tech.name) }}</div>
               }
@@ -66,9 +66,6 @@
                 <div class="stats">
                   <span>⭐ {{ tech.overallRating?.toFixed(1) ?? '0.0' }}</span>
                   <span>📋 {{ tech.completedJobs ?? 0 }} مهمة</span>
-                  @if (tech.subscriptionTier) {
-                    <span class="tier-badge">{{ tech.subscriptionTier }}</span>
-                  }
                 </div>
               </div>
             </div>

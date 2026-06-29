@@ -1,9 +1,10 @@
-<div class="page-wrapper">
+<div class="page-wrapper" dir="rtl">
+
   <!-- Header -->
   <div class="page-header">
-    <div class="page-header-text">
-      <h2>طلباتي</h2>
-      <p>كل طلباتك الحالية والسابقة في مكان واحد.</p>
+    <div>
+      <h1 class="page-title">طلباتي</h1>
+      <p class="page-sub">كل طلباتك الحالية والسابقة في مكان واحد.</p>
     </div>
     <button class="btn-new-request" (click)="goToNewRequest()">
       <i class="fa-solid fa-plus"></i>
@@ -20,44 +21,81 @@
 
   <!-- Loading -->
   @if (loading) {
-    <div style="text-align: center; padding: 80px 0">
-      <div class="spinner-border text-primary"></div>
+    <div class="loading-wrap">
+      <div class="spinner-border" role="status" style="color:#E8620A"></div>
+      <p>جاري التحميل...</p>
     </div>
   }
 
   <!-- Empty -->
   @if (!loading && requests.length === 0) {
     <div class="empty-state">
-      <i class="fa-solid fa-inbox"></i>
-      <p>مفيش طلبات لحد دلوقتي</p>
-      <button class="btn-new-request" (click)="goToNewRequest()">ابدأ طلبك الأول</button>
+      <div class="empty-icon">
+        <i class="fa-solid fa-inbox"></i>
+      </div>
+      <h3>مفيش طلبات لحد دلوقتي</h3>
+      <p>ابدأ طلبك الأول وسنرشح لك أفضل الفنيين</p>
+      <button class="btn-new-request" (click)="goToNewRequest()">
+        <i class="fa-solid fa-plus"></i>
+        ابدأ طلبك الأول
+      </button>
     </div>
   }
 
-  <!-- Requests -->
+  <!-- Requests List -->
   @if (!loading && requests.length > 0) {
     <div class="requests-list">
       @for (req of requests; track req.id) {
         <div class="request-card">
+
+          <!-- Top -->
           <div class="card-top">
-            <div>
-              <h5 class="card-title">{{ req.title }}</h5>
-              <p class="card-technician">م. {{ req.technicianName ?? 'لم يُحدد بعد' }}</p>
+            <div class="card-top-right">
+              <div class="card-service-ico">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+              </div>
+              <div>
+                <h5 class="card-title">{{ req.title }}</h5>
+                <p class="card-technician">
+                  <i class="fa-solid fa-user-tie"></i>
+                  م. {{ req.technicianName ?? 'لم يُحدد بعد' }}
+                </p>
+              </div>
             </div>
             <span [class]="'status-badge ' + getStatusClass(req.status)">
               {{ getStatusLabel(req.status) }}
             </span>
           </div>
 
+          <!-- Divider -->
+          <div class="card-divider"></div>
+
+          <!-- Bottom -->
           <div class="card-bottom">
+            <div class="card-meta">
+              <span class="meta-item">
+                <i class="fa-regular fa-calendar"></i>
+                {{ req.scheduledAt | date: 'dd/MM/yyyy' }}
+              </span>
+              @if (req.price) {
+                <span class="meta-item meta-price">
+                  <i class="fa-solid fa-tag"></i>
+                  {{ req.price }} ج
+                </span>
+              }
+            </div>
+
             <div class="card-actions">
+              <!-- Chat is always available -->
               <button class="btn-chat" (click)="goToChat(req.id)">
-                <i class="fa-regular fa-message"></i> محادثة الفني
+                <i class="fa-regular fa-message"></i>
+                محادثة
               </button>
 
               <!-- open: bid not accepted yet → View Details (bids for this request) -->
               @if (isOpen(req.status)) {
                 <button class="btn-details" (click)="goToBids(req.id)">
+                  <i class="fa-solid fa-list"></i>
                   عرض التفاصيل
                 </button>
               }
@@ -73,7 +111,8 @@
                     <span class="spinner-border spinner-border-sm"></span>
                     جاري الإتمام...
                   } @else {
-                    <i class="fa-solid fa-circle-check"></i> إتمام الخدمة
+                    <i class="fa-solid fa-circle-check"></i>
+                    إتمام الخدمة
                   }
                 </button>
               }
@@ -81,23 +120,16 @@
               <!-- completed: done → Rate Service (navigate to review, no API) -->
               @if (isCompleted(req.status)) {
                 <button class="btn-review" (click)="goToReview(req.id)">
-                  <i class="fa-regular fa-star"></i> تقييم الخدمة
+                  <i class="fa-regular fa-star"></i>
+                  تقييم الخدمة
                 </button>
               }
             </div>
-
-            <div class="card-meta">
-              <span>
-                <i class="fa-regular fa-calendar"></i>
-                {{ req.scheduledAt | date: 'dd/MM/yyyy' }}
-              </span>
-              @if (req.price) {
-                <span><i class="fa-solid fa-tag"></i> {{ req.price }} ج</span>
-              }
-            </div>
           </div>
+
         </div>
       }
     </div>
   }
+
 </div>
