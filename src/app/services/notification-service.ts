@@ -13,6 +13,7 @@ export class NotificationService {
   // signals so the UI updates reactively
   notifications = signal<AppNotification[]>([]);
   unreadCount = signal<number>(0);
+  latestNotification = signal<AppNotification | null>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -51,13 +52,16 @@ export class NotificationService {
       .withAutomaticReconnect()
       .build();
 
-    // server pushes a new notification → prepend it + bump the count
+    // server pushes a new notification → prepend it + bump the count + fire toast
     this.connection.on('ReceiveNotification', (notification: AppNotification) => {
       this.notifications.update(list => [notification, ...list]);
       this.unreadCount.update(c => c + 1);
+      this.latestNotification.set(notification);
     });
 
-    this.connection.start().catch(() => {});
+    this.connection.start()
+      .then(() => console.log('SignalR connected ✓'))
+      .catch(err => console.error('SignalR failed:', err));
   }
 
   stopConnection(): void {

@@ -32,7 +32,27 @@ export class Notifications implements OnInit {
       default: return '🔔';
     }
   }
+bubbleBg(type: string): string {
+  switch (type) {
+    case 'bid_accepted': return '#e8f5e9';   // green tint
+    case 'payment':      return '#e7f1ff';   // blue tint
+    case 'new_bid':      return '#e7f1ff';
+    case 'emergency':    return '#fdeaea';   // red tint
+    case 'verification': return '#fff4e0';   // amber tint
+    default:             return '#f1f3f5';   // gray
+  }
+}
 
+iconColor(type: string): string {
+  switch (type) {
+    case 'bid_accepted': return '#2e7d32';
+    case 'payment':      return '#0d6efd';
+    case 'new_bid':      return '#0d6efd';
+    case 'emergency':    return '#dc3545';
+    case 'verification': return '#b8860b';
+    default:             return '#6c757d';
+  }
+}
   onClick(n: any): void {
     if (!n.isRead) this.notificationService.markAsRead(n.id);
 

@@ -1,45 +1,45 @@
 <div class="container py-4" dir="rtl">
 
-  <!-- header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold mb-0">الإشعارات</h3>
-    <span *ngIf="unreadCount() > 0" class="badge bg-primary rounded-pill">
-      {{ unreadCount() }} جديد
+    <h5 class="fw-bold mb-0">الإشعارات</h5>
+    <span *ngIf="unreadCount() > 0"
+          class="badge rounded-pill"
+          style="background:#e7f1ff; color:#0d6efd;">
+      {{ unreadCount() }} غير مقروءة
     </span>
   </div>
 
-  <!-- empty state -->
   <div *ngIf="notifications().length === 0" class="text-center text-muted py-5">
-    <div class="fs-1 mb-2">🔔</div>
+    <i class="fa-regular fa-bell fs-1 d-block mb-2 opacity-50"></i>
     <p>لا توجد إشعارات حالياً.</p>
   </div>
 
-  <!-- list -->
   <div class="d-flex flex-column gap-2">
     <div *ngFor="let n of notifications()"
          (click)="onClick(n)"
-         class="card border-0 shadow-sm"
-         style="cursor: pointer;"
-         [class.bg-light]="!n.isRead">
-      <div class="card-body d-flex align-items-start gap-3 p-3">
+         class="d-flex align-items-center gap-3 p-3 position-relative"
+         style="cursor:pointer; border:1px solid #eef0f2; border-radius:12px; transition:background .15s;"
+         [style.background]="n.isRead ? 'transparent' : '#ffffff'">
 
-        <!-- icon bubble -->
-        <span class="badge bg-primary-subtle text-primary fs-5 p-2 rounded-circle">
-          {{ iconFor(n.type) }}
-        </span>
+      <span *ngIf="!n.isRead"
+            class="position-absolute"
+            style="right:0; top:14px; bottom:14px; width:3px; background:#0d6efd; border-radius:0;"></span>
 
-        <!-- text -->
-        <div class="flex-grow-1 text-end">
-          <div class="fw-bold" [class.text-primary]="!n.isRead">{{ n.title }}</div>
-          <div class="text-muted small">{{ n.body }}</div>
-          <div class="text-muted" style="font-size: 12px;">{{ n.sentAt | date:'short' }}</div>
-        </div>
+      <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+            style="width:44px; height:44px;"
+            [style.background]="bubbleBg(n.type)">
+        <i [class]="iconFor(n.type)" [style.color]="iconColor(n.type)" style="font-size:20px;"></i>
+      </span>
 
-        <!-- unread dot -->
-        <span *ngIf="!n.isRead"
-              class="rounded-circle bg-primary mt-1"
-              style="width: 10px; height: 10px;"></span>
+      <div class="flex-grow-1" style="min-width:0;">
+        <div [class.fw-bold]="!n.isRead"
+             [class.text-secondary]="n.isRead"
+             style="margin-bottom:2px;">{{ n.title }}</div>
+        <div class="text-muted small text-truncate">{{ n.body }}</div>
+      </div>
 
+      <div class="text-muted flex-shrink-0 align-self-start" style="font-size:12px;">
+        {{ n.sentAt | date:'short' }}
       </div>
     </div>
   </div>
