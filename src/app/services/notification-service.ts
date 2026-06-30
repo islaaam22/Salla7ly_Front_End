@@ -28,6 +28,7 @@ export class NotificationService {
       error: () => {}
     });
   }
+ 
 
   markAsRead(id: number): void {
     this.http.put(`${this.apiUrl}/${id}/read`, {}).subscribe({
@@ -39,7 +40,16 @@ export class NotificationService {
       error: () => {}
     });
   }
+ markAllAsRead(): void {
+  const unread = this.notifications().filter(n => !n.isRead);
+  unread.forEach(n => {
+    this.http.put(`${this.apiUrl}/${n.id}/read`, {}).subscribe({ error: () => {} });
+  });
 
+  // update locally
+  this.notifications.update(list => list.map(n => ({ ...n, isRead: true })));
+  this.unreadCount.set(0);
+}
   // ── SignalR (live) ────────────────────────
 
   startConnection(): void {

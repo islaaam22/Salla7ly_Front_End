@@ -1,47 +1,69 @@
 <div class="container py-4" dir="rtl">
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="fw-bold mb-0">الإشعارات</h5>
-    <span *ngIf="unreadCount() > 0"
-          class="badge rounded-pill"
-          style="background:#e7f1ff; color:#0d6efd;">
-      {{ unreadCount() }} غير مقروءة
-    </span>
+    <h5 class="fw-bold mb-0" style="color:#1a1f2e;">الإشعارات</h5>
+
+    <div class="d-flex align-items-center gap-2">
+      <button *ngIf="unreadCount() > 0"
+              (click)="markAllRead()"
+              class="btn btn-sm"
+              style="border:1px solid #f26419; color:#f26419; border-radius:20px; font-weight:500;">
+        تحديد الكل كمقروء
+      </button>
+      <span *ngIf="unreadCount() > 0"
+            class="badge rounded-pill"
+            style="background:#f26419; color:#ffffff;">
+        {{ unreadCount() }} غير مقروءة
+      </span>
+    </div>
   </div>
 
   <div *ngIf="notifications().length === 0" class="text-center text-muted py-5">
-    <i class="fa-regular fa-bell fs-1 d-block mb-2 opacity-50"></i>
+    <i class="fa-regular fa-bell fs-1 d-block mb-2" style="color:#f26419; opacity:0.5;"></i>
     <p>لا توجد إشعارات حالياً.</p>
   </div>
 
-  <div class="d-flex flex-column gap-2">
+  <div class="d-flex flex-column gap-3">
     <div *ngFor="let n of notifications()"
          (click)="onClick(n)"
-         class="d-flex align-items-center gap-3 p-3 position-relative"
-         style="cursor:pointer; border:1px solid #eef0f2; border-radius:12px; transition:background .15s;"
-         [style.background]="n.isRead ? 'transparent' : '#ffffff'">
+         class="d-flex align-items-center gap-3 p-4 position-relative notif-card"
+         style="cursor:pointer; border-radius:16px; transition:transform .12s, box-shadow .12s, background .2s;"
+         [style.background]="n.isRead ? '#f4f1ea' : '#fff1e3'"
+         [style.border]="n.isRead ? '1px solid #e0dccf' : '1px solid #f7c9a6'"
+         [style.box-shadow]="n.isRead ? 'none' : '0 3px 10px rgba(242,100,25,0.12)'">
 
       <span *ngIf="!n.isRead"
             class="position-absolute"
-            style="right:0; top:14px; bottom:14px; width:3px; background:#0d6efd; border-radius:0;"></span>
+            style="right:0; top:18px; bottom:18px; width:4px; background:#f26419; border-radius:0;"></span>
 
       <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
-            style="width:44px; height:44px;"
-            [style.background]="bubbleBg(n.type)">
-        <i [class]="iconFor(n.type)" [style.color]="iconColor(n.type)" style="font-size:20px;"></i>
+            style="width:54px; height:54px;"
+            [style.background]="n.isRead ? '#eceae3' : bubbleBg(n.type)">
+        <i [class]="iconFor(n.type)"
+           [style.color]="n.isRead ? '#9a9a90' : iconColor(n.type)"
+           style="font-size:24px;"></i>
       </span>
 
       <div class="flex-grow-1" style="min-width:0;">
         <div [class.fw-bold]="!n.isRead"
-             [class.text-secondary]="n.isRead"
-             style="margin-bottom:2px;">{{ n.title }}</div>
-        <div class="text-muted small text-truncate">{{ n.body }}</div>
+             style="margin-bottom:4px; font-size:16px;"
+             [style.color]="n.isRead ? '#7a7a72' : '#1a1f2e'">{{ n.title }}</div>
+        <div class="text-truncate" style="font-size:14px;"
+             [style.color]="n.isRead ? '#a0a096' : '#8a8f9a'">{{ n.body }}</div>
       </div>
 
-      <div class="text-muted flex-shrink-0 align-self-start" style="font-size:12px;">
+      <div class="flex-shrink-0 align-self-start" style="font-size:12px;"
+           [style.color]="n.isRead ? '#b0b0a6' : '#a0a4ad'">
         {{ n.sentAt | date:'short' }}
       </div>
     </div>
   </div>
 
 </div>
+
+<style>
+.notif-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(242,100,25,0.15) !important;
+}
+</style>

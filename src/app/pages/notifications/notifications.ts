@@ -23,36 +23,43 @@ export class Notifications implements OnInit {
 
   iconFor(type: string): string {
     switch (type) {
-      case 'new_bid': return '💰';
-      case 'bid_accepted': return '✅';
-      case 'chat': return '💬';
-      case 'verification': return '📋';
-      case 'payment': return '💳';
-      case 'emergency': return '🚨';
-      default: return '🔔';
+      case 'new_bid':       return 'fa-solid fa-coins';
+      case 'bid_accepted':  return 'fa-solid fa-circle-check';
+      case 'payment':       return 'fa-solid fa-credit-card';
+      case 'chat':          return 'fa-regular fa-message';
+      case 'escrow':        return 'fa-solid fa-shield-halved';
+      case 'emergency':     return 'fa-solid fa-triangle-exclamation';
+      case 'promo':         return 'fa-solid fa-gift';
+      case 'system':        return 'fa-solid fa-gear';
+      case 'verification':  return 'fa-solid fa-id-card';
+      default:              return 'fa-regular fa-bell';
     }
   }
-bubbleBg(type: string): string {
-  switch (type) {
-    case 'bid_accepted': return '#e8f5e9';   // green tint
-    case 'payment':      return '#e7f1ff';   // blue tint
-    case 'new_bid':      return '#e7f1ff';
-    case 'emergency':    return '#fdeaea';   // red tint
-    case 'verification': return '#fff4e0';   // amber tint
-    default:             return '#f1f3f5';   // gray
-  }
+markAllRead(): void {
+  this.notificationService.markAllAsRead();
 }
+  bubbleBg(type: string): string {
+    switch (type) {
+      case 'bid_accepted': return '#e8f5e9';
+      case 'payment':      return '#e7f1ff';
+      case 'new_bid':      return '#e7f1ff';
+      case 'emergency':    return '#fdeaea';
+      case 'verification': return '#fff4e0';
+      default:             return '#f1f3f5';
+    }
+  }
 
-iconColor(type: string): string {
-  switch (type) {
-    case 'bid_accepted': return '#2e7d32';
-    case 'payment':      return '#0d6efd';
-    case 'new_bid':      return '#0d6efd';
-    case 'emergency':    return '#dc3545';
-    case 'verification': return '#b8860b';
-    default:             return '#6c757d';
+  iconColor(type: string): string {
+    switch (type) {
+      case 'bid_accepted': return '#2e7d32';
+      case 'payment':      return '#0d6efd';
+      case 'new_bid':      return '#0d6efd';
+      case 'emergency':    return '#dc3545';
+      case 'verification': return '#b8860b';
+      default:             return '#6c757d';
+    }
   }
-}
+
   onClick(n: any): void {
     if (!n.isRead) this.notificationService.markAsRead(n.id);
 
@@ -61,12 +68,16 @@ iconColor(type: string): string {
   }
 
   private routeFor(type: string): string | null {
+    const role = localStorage.getItem('role');
+
     switch (type) {
-      case 'verification':  return '/technician/verification';
+      case 'verification':
+        return role === 'Admin' ? '/admin/technicians' : '/technician/verification';
       case 'new_bid':       return '/customer/received-bids';
       case 'bid_accepted':  return '/technician/assigned-tasks';
       case 'chat':          return '/customer/chat';
-      default:              return null;   // system, etc. → just mark read, no navigation
+      case 'payment':       return '/wallet';
+      default:              return null;
     }
   }
 }

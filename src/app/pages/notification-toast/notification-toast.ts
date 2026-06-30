@@ -34,7 +34,7 @@ export class NotificationToast {
       case 'emergency':     return 'fa-solid fa-triangle-exclamation';
       case 'promo':         return 'fa-solid fa-gift';
       case 'system':        return 'fa-solid fa-gear';
-      case 'verification':  return 'fa-solid fa-clipboard-check';
+      case 'verification':  return 'fa-solid fa-id-card';
       default:              return 'fa-regular fa-bell';
     }
   }
@@ -61,7 +61,6 @@ export class NotificationToast {
     }
   }
 
-  // green border if money received, red if deducted, otherwise the type's icon color
   borderColor(n: any): string {
     if (n.type === 'payment') {
       const incoming = n.title?.includes('إضافة') || n.title?.includes('شحن');
