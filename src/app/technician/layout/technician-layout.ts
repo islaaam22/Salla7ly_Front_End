@@ -17,9 +17,9 @@ export class TechnicianLayout implements OnInit {
     { label: 'لوحة التحكم', icon: 'fa-solid fa-table-cells-large', route: '/technician/dashboard' },
     { label: 'طلبات متاحة', icon: 'fa-regular fa-clipboard', route: '/technician/available-requests' },
     { label: 'المهام الموكلة', icon: 'fa-solid fa-briefcase', route: '/technician/assigned-tasks' },
-    { label: 'الأرباح', icon: 'fa-solid fa-dollar-sign', route: '/technician/earnings' },
+    { label: 'الأرباح', icon: 'fa-solid fa-dollar-sign', route: '/technician/wallet' },
     { label: 'أعمالي السابقة', icon: 'fa-regular fa-image', route: '/technician/previous-works' },
-    { label: 'التوثيق', icon: 'fa-regular fa-shield', route: '/technician/verification' },
+    { label: 'التوثيق', icon: 'fa-solid fa-award' , route: '/technician/verification' },
     { label: 'الإشعارات', icon: 'fa-regular fa-bell', route: '/technician/notifications' },
     { label: 'المحادثات', icon: 'fa-regular fa-message', route: '/technician/chat' },
     { label: 'الملف الشخصي', icon: 'fa-regular fa-user', route: '/technician/profile' },
@@ -36,7 +36,7 @@ export class TechnicianLayout implements OnInit {
     this.avatarLetter = this.technicianName.charAt(0).toUpperCase();
   }
 
- logout() {
+  logout() {
     this.authService.logout();
     localStorage.removeItem('user');
     // NOTE: verification_status is kept intentionally so the pending screen

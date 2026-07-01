@@ -34,14 +34,17 @@ import { AssignedTasksComponent } from './technician/pages/assigned-tasks/assign
 import { TaskDetailsComponent } from './technician/pages/task-details/task-details';
 
 import { AdminLayout } from './admin/layout/admin-layout/admin-layout';
-import { Dashboard } from './admin/pages/dashboard/dashboard';
+import { Dashboard as AdminDashboard } from './admin/pages/dashboard/dashboard';
+import { Dashboard as TechnicianDashboard } from './technician/pages/tech-dashboard/dashboard';
 import { AdminCustomers } from './admin/pages/customers/customers';
-import { Wallet } from './pages/wallet/wallet';
+import { Wallet as CustomerWallet } from './pages/wallet/wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
 import { AdminBids } from './admin/pages/Bids/bids';
 import { AdminReviews } from './admin/pages/reviews/reviews';
 import { TechniciansComponent } from './admin/pages/technicians/technicians';
 import { TechnicianProfileComponent } from './admin/pages/technician-profile/technician-profile';
+import { Wallet as TechnicianWallet } from './technician/pages/wallett/wallett';
+import { CustomerDashboard } from './pages/customer-dashboard/customer-dashboard';
 
 
 
@@ -58,13 +61,17 @@ export const routes: Routes = [
   { path: 'verify-otp', component: VerifyOtp },
   { path: 'reset-password', component: ResetPassword },
   { path: 'notifications', component: Notifications },
-  { path: 'wallet', component: Wallet },
+  { path: 'wallet', redirectTo: 'customer/wallet', pathMatch: 'full' },
   {
     path: 'customer',
     component: CustomerLayout,
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'notifications', component: Notifications },
+      { path: 'dashboard', component: CustomerDashboard },
+      { path: 'cusdash', component: CustomerDashboard },
+      { path: 'customer-dashboard', component: CustomerDashboard },
+      { path: 'wallet', component: CustomerWallet },
       { path: 'profile', component: CustomerProfile },
       { path: 'edit', component: CustomerEdit },
       { path: 'new-request', component: NewRequest },
@@ -81,7 +88,8 @@ export const routes: Routes = [
     path: 'technician',
     component: TechnicianLayout,
     children: [
-      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: TechnicianDashboard },
       { path: 'profile', component: TechnicianProfile },
       { path: 'edit-profile', component: TechnicianEditProfile },
       { path: 'available-requests', component: AvailableRequests },
@@ -92,6 +100,7 @@ export const routes: Routes = [
       { path: 'previous-works', component: PreviousWorks },
       { path: 'assigned-tasks', component: AssignedTasksComponent },
       { path: 'task-details/:id', component: TaskDetailsComponent },
+      { path: 'wallet', component: TechnicianWallet },
     ],
   },
   {
@@ -99,29 +108,16 @@ export const routes: Routes = [
     component: AdminLayout,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: Dashboard },
+      { path: 'dashboard', component: AdminDashboard },
       { path: 'notifications', component: Notifications },
       { path: 'customers', component: AdminCustomers },
       { path: 'requests', component: AdminRequests },
       { path: 'Bids', component: AdminBids },
+      { path: 'reviews', component: AdminReviews },
       { path: 'technicians', component: TechniciansComponent },
       { path: 'technicians/:id', component: TechnicianProfileComponent },
     ],
   },
-{
-  path: 'admin',
-  component: AdminLayout,
-  children: [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: Dashboard },
-    { path: 'customers', component: AdminCustomers },
-    { path: 'requests', component: AdminRequests },
-    { path: 'Bids', component: AdminBids },
-    { path: 'reviews', component: AdminReviews },
-    { path: 'technicians', component: TechniciansComponent },
-    { path: 'technicians/:id', component: TechnicianProfileComponent }
-  ]
-},
 
   { path: '404', component: Notfound },
   { path: '**', redirectTo: '404' },

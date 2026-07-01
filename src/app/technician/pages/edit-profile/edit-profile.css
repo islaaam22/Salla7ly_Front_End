@@ -1,0 +1,238 @@
+.edit-page-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.edit-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid rgba(10, 15, 30, 0.1);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0a0f1e;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  margin-bottom: 24px;
+}
+.edit-back-btn:hover {
+  border-color: #e8620a;
+  color: #e8620a;
+}
+
+.edit-card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 32px;
+  border: 1px solid rgba(10, 15, 30, 0.07);
+  box-shadow: 0 2px 12px rgba(10, 15, 30, 0.04);
+}
+.edit-card-header {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0a0f1e;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-direction: row-reverse;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(10, 15, 30, 0.06);
+}
+.edit-card-header i {
+  color: #e8620a;
+  font-size: 18px;
+}
+
+.edit-field {
+  margin-bottom: 20px;
+}
+.edit-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-direction: row-reverse;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0a0f1e;
+  margin-bottom: 8px;
+}
+.edit-label i {
+  color: #e8620a;
+  font-size: 14px;
+}
+.edit-input,
+.edit-textarea {
+  width: 100%;
+  border: 1.5px solid rgba(10, 15, 30, 0.1);
+  border-radius: 14px;
+  padding: 0 16px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  color: #0a0f1e;
+  background: #fafaf8;
+  text-align: right;
+  outline: none;
+  transition: all 0.2s;
+}
+.edit-input {
+  height: 50px;
+}
+.edit-textarea {
+  padding: 14px 16px;
+  resize: none;
+}
+.edit-input:focus,
+.edit-textarea:focus {
+  border-color: #e8620a;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(232, 98, 10, 0.1);
+}
+.edit-alert-success {
+  background: #e1f5ee;
+  border: 1px solid #9fe1cb;
+  color: #0f6e56;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  text-align: right;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row-reverse;
+}
+.edit-alert-danger {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  text-align: right;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row-reverse;
+}
+.btn-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: #e8620a;
+  border: none;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+.btn-save:hover:not(:disabled) {
+  background: #ff7a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(232, 98, 10, 0.3);
+}
+.btn-save:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.btn-save-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: #0a0f1e;
+  border: none;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+.btn-save-dark:hover:not(:disabled) {
+  background: #1a2235;
+  transform: translateY(-2px);
+}
+.btn-save-dark:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* password preview card */
+.preview-card-dark {
+  background: #0a0f1e;
+  border-radius: 22px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.preview-card-dark::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 98, 10, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.preview-card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  text-align: right;
+}
+.preview-card-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: right;
+  margin-bottom: 20px;
+}
+.lock-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(232, 98, 10, 0.15);
+  border: 1px solid rgba(232, 98, 10, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #e8620a;
+  margin: 0 auto 20px;
+}
+.pw-tip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: right;
+  line-height: 1.8;
+}
+.pw-tip i {
+  color: #e8620a;
+  margin-left: 4px;
+}

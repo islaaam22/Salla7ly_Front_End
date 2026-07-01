@@ -1,60 +1,48 @@
-<div class="d-flex flex-column h-100">
+<div class="chat-window-standalone">
+
   <!-- Header -->
-  <div class="d-flex align-items-center gap-3 px-4 py-3 border-bottom bg-white shadow-sm">
-    <div
-      class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
-      style="width: 44px; height: 44px; background: #1aacdc; font-size: 18px"
-    >
+  <div class="chat-window-header">
+    <div class="conv-avatar conv-avatar-lg">
       {{ conversation.otherPartyName[0] }}
     </div>
-    <div class="flex-grow-1">
-      <div class="fw-semibold" style="color: #1a1a2e">{{ conversation.otherPartyName }}</div>
-      <small class="text-muted" style="font-size: 12px">
-        <span *ngIf="isTyping"> <i class="fa-regular fa-comment-dots"></i> جاري الكتابة... </span>
+    <div class="chat-header-info">
+      <div class="chat-header-name">{{ conversation.otherPartyName }}</div>
+      <small class="chat-header-status">
+        <span *ngIf="isTyping"><i class="fa-regular fa-comment-dots"></i> جاري الكتابة...</span>
         <span *ngIf="!isTyping">متصل الآن</span>
       </small>
     </div>
   </div>
 
-  <!-- Messages Area -->
-  <div class="flex-grow-1 overflow-auto p-4 d-flex flex-column gap-2" style="background: #f0f2f5">
-    <app-message-buddle *ngFor="let msg of messages" [message]="msg"> </app-message-buddle>
+  <!-- Messages -->
+  <div class="chat-messages-area">
+    <app-message-buddle *ngFor="let msg of messages" [message]="msg"></app-message-buddle>
 
-    <!-- Empty -->
-    <div *ngIf="messages.length === 0" class="text-center text-muted my-auto">
+    <div *ngIf="messages.length === 0" class="chat-no-messages">
       <i class="fa-regular fa-comment-dots"></i>
-        ابدأ المحادثة
+      ابدأ المحادثة
     </div>
   </div>
 
   <!-- Input -->
-  <div class="px-4 py-3 border-top bg-white">
-    <div class="d-flex align-items-center gap-2">
-      <label
-        class="btn btn-light border rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0"
-        style="width: 40px; height: 40px"
-        title="إرفاق ملف"
-      >
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <input type="file" hidden (change)="onFileSelected($event)" />
-      </label>
+  <div class="chat-input-bar">
+    <label class="chat-attach-btn" title="إرفاق ملف">
+      <i class="fa-solid fa-paperclip"></i>
+      <input type="file" hidden (change)="onFileSelected($event)" />
+    </label>
 
-      <input
-        type="text"
-        class="form-control rounded-pill"
-        [(ngModel)]="newMessage"
-        (input)="onTyping()"
-        (keyup.enter)="sendMessage()"
-        placeholder="اكتب رسالتك..."
-      />
+    <input
+      type="text"
+      class="chat-text-input"
+      [(ngModel)]="newMessage"
+      (input)="onTyping()"
+      (keyup.enter)="sendMessage()"
+      placeholder="اكتب رسالتك..."
+    />
 
-      <button
-        class="btn rounded-circle text-white d-flex align-items-center justify-content-center flex-shrink-0"
-        style="width: 40px; height: 40px; background: #1aacdc"
-        (click)="sendMessage()"
-      >
-        <i class="fa-solid fa-paper-plane"></i>
-      </button>
-    </div>
+    <button class="chat-send-btn" (click)="sendMessage()">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
   </div>
+
 </div>
