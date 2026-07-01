@@ -1,126 +1,95 @@
-<div dir="rtl">
+<div class="avail-page" dir="rtl">
+
   <!-- Header -->
-  <div class="text-end mb-4">
-    <h1 class="fw-bold" style="font-size: 28px; color: #1a1a2e">طلبات متاحة</h1>
-    <p class="text-muted" style="font-size: 15px">قدّم عروضك على الطلبات المتاحة في منطقتك.</p>
+  <div class="page-header-wrap">
+    <h1 class="page-title">طلبات متاحة</h1>
+    <p class="page-sub">قدّم عروضك على الطلبات المتاحة في منطقتك</p>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border" role="status" style="color: #1aacdc"></div>
-    <p class="mt-3 text-muted">جاري التحميل...</p>
+  <div *ngIf="loading" class="profile-loading">
+    <div class="spinner-border" role="status" style="color:#E8620A"></div>
+    <p>جاري التحميل...</p>
   </div>
 
   <!-- Error -->
-  <div *ngIf="errorMsg && !loading" class="alert alert-danger text-end rounded-4">
+  <div *ngIf="errorMsg && !loading" class="edit-alert-danger">
+    <i class="fa-solid fa-triangle-exclamation"></i>
     {{ errorMsg }}
   </div>
 
   <!-- Empty -->
-  <div *ngIf="!loading && !errorMsg && requests.length === 0" class="text-center py-5 text-muted">
-    <i class="fa-regular fa-folder-open mb-3" style="font-size: 40px"></i>
-    <p>لا توجد طلبات متاحة حالياً</p>
+  <div *ngIf="!loading && !errorMsg && requests.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="fa-regular fa-folder-open"></i>
+    </div>
+    <h3>لا توجد طلبات متاحة حالياً</h3>
+    <p>تابعنا، طلبات جديدة بتظهر باستمرار</p>
   </div>
 
   <!-- Requests List -->
-  <div
-    *ngFor="let req of requests"
-    class="bg-white rounded-4 p-3 mb-3"
-    style="border: 1px solid #e8edf2"
-  >
-    <div class="d-flex align-items-center gap-3">
-      <!-- Icon - اليمين -->
-      <div
-        class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-auto"
-        style="width: 46px; height: 46px; background: #e8f7fc; color: #1aacdc"
-      >
+  <div class="avail-list" *ngIf="!loading && requests.length > 0">
+    <div *ngFor="let req of requests" class="avail-card">
+
+      <div class="avail-service-ico">
         <i class="fa-solid fa-wrench"></i>
       </div>
 
-      <!-- Info - الوسط -->
-      <div class="flex-grow-1 text-end">
-        <div class="d-flex align-items-center justify-content-start gap-2 mb-1">
-          <h6 class="fw-bold mb-0" style="color: #1a1a2e">{{ req.title }}</h6>
-          <span class="badge rounded-pill" [ngClass]="urgencyClass(req.urgency)">
+      <div class="avail-info">
+        <div class="avail-title-row">
+          <span *ngIf="req.isEmergency" class="emergency-pill">طارئ</span>
+          <span class="urgency-pill" [ngClass]="urgencyClass(req.urgency)">
             {{ urgencyLabel(req.urgency) }}
           </span>
-          <span *ngIf="req.isEmergency" class="badge rounded-pill bg-danger">طارئ</span>
+          <span class="avail-title">{{ req.title }}</span>
         </div>
-        <div class="d-flex justify-content-start gap-3 text-muted" style="font-size: 13px">
-          <span
-            ><i class="fa-regular fa-calendar ms-1"></i
-            >{{ req.scheduledAt | date: 'dd/MM/yyyy' }}</span
-          >
-          <span><i class="fa-solid fa-tag ms-1"></i>تصنيف {{ req.categoryId }}</span>
+        <div class="avail-meta">
+          <span><i class="fa-solid fa-tag"></i> تصنيف {{ req.categoryId }}</span>
+          <span><i class="fa-regular fa-calendar"></i> {{ req.scheduledAt | date: 'dd/MM/yyyy' }}</span>
         </div>
       </div>
 
-      <!-- Button - اليسار -->
-      <button
-        class="btn text-white fw-semibold flex-shrink-0"
-        (click)="openBidModal(req.id)"
-        style="background: #1aacdc; border-radius: 10px; padding: 8px 18px; font-size: 14px"
-      >
-        <i class="fa-solid fa-paper-plane ms-2"></i>
+      <button class="btn-bid" (click)="openBidModal(req.id)">
+        <i class="fa-solid fa-paper-plane"></i>
         تقديم عرض
       </button>
+
     </div>
   </div>
 
   <!-- Modal -->
-  <div
-    *ngIf="showModal"
-    class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-    style="background: rgba(0, 0, 0, 0.5); z-index: 1050"
-  >
-    <div class="bg-white rounded-4 p-4" style="width: 100%; max-width: 460px" dir="rtl">
-      <div class="d-flex align-items-center mb-4">
-        <button class="btn btn-light rounded-circle px-2 py-1" (click)="closeModal()">
-          <i class="fa-solid fa-xmark text-primary"></i>
+  <div *ngIf="showModal" class="modal-overlay">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <button class="modal-close" (click)="closeModal()">
+          <i class="fa-solid fa-xmark"></i>
         </button>
-        <h5 class="fw-bold mb-0" style="color: #1a1a2e">تقديم عرض</h5>
+        <div class="modal-title">تقديم عرض</div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label fw-semibold">السعر المقترح (ج.م)</label>
-        <input
-          type="number"
-          class="form-control text-end"
-          [(ngModel)]="bidPrice"
-          placeholder="مثال: 250"
-        />
+      <div class="edit-field">
+        <label class="edit-label"><i class="fa-solid fa-sack-dollar"></i> السعر المقترح (ج.م)</label>
+        <input type="number" class="edit-input" [(ngModel)]="bidPrice" placeholder="مثال: 250" />
       </div>
 
-      <div class="mb-3">
-        <label class="form-label fw-semibold">الوقت المتوقع (بالدقائق)</label>
-        <input
-          type="number"
-          class="form-control text-end"
-          [(ngModel)]="bidTime"
-          placeholder="مثال: 120"
-        />
+      <div class="edit-field">
+        <label class="edit-label"><i class="fa-regular fa-clock"></i> الوقت المتوقع (بالدقائق)</label>
+        <input type="number" class="edit-input" [(ngModel)]="bidTime" placeholder="مثال: 120" />
       </div>
 
-      <div class="mb-4">
-        <label class="form-label fw-semibold">رسالة للعميل</label>
-        <textarea
-          class="form-control text-end"
-          rows="3"
-          [(ngModel)]="bidMessage"
-          placeholder="اشرح خبرتك ولماذا أنت الخيار الأمثل..."
-        >
-        </textarea>
+      <div class="edit-field">
+        <label class="edit-label"><i class="fa-regular fa-comment"></i> رسالة للعميل</label>
+        <textarea class="edit-textarea" rows="3" [(ngModel)]="bidMessage"
+                  placeholder="اشرح خبرتك ولماذا أنت الخيار الأمثل..."></textarea>
       </div>
 
-      <button
-        class="btn w-100 text-white fw-bold py-3 rounded-3"
-        style="background: #1aacdc"
-        [disabled]="submitting || !bidPrice || !bidMessage"
-        (click)="submitBid()"
-      >
-        <i class="fa-solid fa-paper-plane me-2"></i>
+      <button class="btn-save" [disabled]="submitting || !bidPrice || !bidMessage" (click)="submitBid()">
+        <i class="fa-solid fa-paper-plane"></i>
         {{ submitting ? 'جاري الإرسال...' : 'إرسال العرض' }}
       </button>
+
     </div>
   </div>
+
 </div>

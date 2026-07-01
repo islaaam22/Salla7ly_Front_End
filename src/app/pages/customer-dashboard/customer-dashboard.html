@@ -1,0 +1,113 @@
+<div class="dash-page" dir="rtl">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <button class="btn-new-request" routerLink="/customer/new-request">
+      <i class="fa-solid fa-plus"></i>
+      طلب جديد
+    </button>
+    <div>
+      <span class="dash-welcome">أهلاً، {{ userName }}</span>
+      <h1 class="dash-title">لوحة التحكم</h1>
+      <p class="dash-sub">نظرة سريعة على نشاطك على المنصة</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="dash-stats-grid">
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#fff1e8">
+        <i class="fa-regular fa-clock" style="color:#E8620A"></i>
+      </div>
+      <div class="dash-stat-val">{{ activeRequestsCount }}</div>
+      <div class="dash-stat-label">طلبات نشطة</div>
+    </div>
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#e1f5ee">
+        <i class="fa-solid fa-circle-check" style="color:#10b981"></i>
+      </div>
+      <div class="dash-stat-val">{{ completedRequestsCount }}</div>
+      <div class="dash-stat-label">طلبات مكتملة</div>
+    </div>
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#e8f3ff">
+        <i class="fa-solid fa-wallet" style="color:#1787e0"></i>
+      </div>
+      <div class="dash-stat-val">{{ walletBalance }} ج</div>
+      <div class="dash-stat-label">رصيد المحفظة</div>
+    </div>
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#fefce8">
+        <i class="fa-regular fa-bell" style="color:#f59e0b"></i>
+      </div>
+      <div class="dash-stat-val">{{ newNotificationsCount }}</div>
+      <div class="dash-stat-label">إشعارات جديدة</div>
+    </div>
+
+  </div>
+
+  <!-- Bottom -->
+  <div class="dash-bottom-grid">
+
+    <!-- Active Requests -->
+    <div class="dash-card">
+
+      <div class="dash-card-header">
+        <a routerLink="/customer/my-requests" class="view-all-link">
+          عرض الكل <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h3 class="dash-card-title">الطلبات النشطة</h3>
+      </div>
+
+      <div *ngFor="let req of activeRequests" class="dash-request-item">
+        <span [class]="'req-status-badge ' + getStatusClass(req.status)">
+          {{ getStatusLabel(req.status) }}
+        </span>
+        <div class="dash-request-right">
+          <div class="dash-request-title">{{ req.title }}</div>
+          <div class="dash-request-tech">
+            <i class="fa-solid fa-user-tie"></i>
+            م. {{ req.technicianName ?? 'لم يُحدد بعد' }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeRequests.length === 0" class="dash-empty">
+        <i class="fa-solid fa-inbox"></i>
+        لا توجد طلبات نشطة
+      </div>
+
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="dash-card">
+
+      <div class="dash-card-header">
+        <i class="fa-solid fa-chart-line" style="color:#E8620A"></i>
+        <h3 class="dash-card-title">نشاط حديث</h3>
+      </div>
+
+      <div *ngFor="let act of recentActivity" class="dash-activity-item">
+        <div class="dash-activity-icon" [style.background]="act.iconBg">
+          <i [class]="act.icon" [style.color]="act.iconColor"></i>
+        </div>
+        <div class="dash-activity-text">
+          <div class="dash-activity-title">{{ act.title }}</div>
+          <div class="dash-activity-time">{{ act.time }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="recentActivity.length === 0" class="dash-empty">
+        <i class="fa-regular fa-clock"></i>
+        لا يوجد نشاط حديث
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,15 +1,18 @@
-<div class="page-wrapper" dir="rtl">
+<div class="task-page" dir="rtl">
 
   <!-- Breadcrumb -->
   <div class="breadcrumb">
-    <a (click)="goBack()" class="back-link">← المهام الموكلة</a>
-    <h2>تفاصيل المهمة</h2>
+    <button class="back-link" (click)="goBack()">
+      <i class="fa-solid fa-arrow-right"></i>
+      المهام الموكلة
+    </button>
   </div>
+  <h1 class="page-title pb-3">تفاصيل المهمة</h1>
 
   <!-- Loading -->
   @if (loading) {
-    <div style="text-align: center; padding: 80px 0">
-      <div class="spinner-border text-primary"></div>
+    <div class="profile-loading">
+      <div class="spinner-border" role="status" style="color:#E8620A"></div>
     </div>
   }
 
@@ -17,7 +20,7 @@
     <div class="details-layout">
 
       <!-- Main Content -->
-      <div class="main-content">
+      <div class="main-col">
 
         <!-- Request Info Card -->
         <div class="info-card">
@@ -25,34 +28,45 @@
             <span [class]="'status-badge ' + getStatusClass(request.status)">
               {{ getStatusLabel(request.status) }}
             </span>
-            <h3>{{ request.title }}</h3>
+            <h2 class="task-title">{{ request.title }}</h2>
           </div>
 
           <div class="info-grid">
             <div class="info-item">
-              <i class="fa-regular fa-calendar"></i>
-              <div>
+              <div class="info-item-icon">
+                <i class="fa-regular fa-calendar"></i>
+              </div>
+              <div class="info-item-text">
                 <span class="label">الموعد</span>
                 <span class="value">{{ request.scheduledAt | date:'dd/MM/yyyy - hh:mm a' }}</span>
               </div>
             </div>
+
             <div class="info-item">
-              <i class="fa-solid fa-location-dot"></i>
-              <div>
+              <div class="info-item-icon">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div class="info-item-text">
                 <span class="label">العنوان</span>
                 <span class="value">{{ request.address ?? 'غير محدد' }}</span>
               </div>
             </div>
+
             <div class="info-item">
-              <i class="fa-solid fa-wrench"></i>
-              <div>
+              <div class="info-item-icon">
+                <i class="fa-solid fa-wrench"></i>
+              </div>
+              <div class="info-item-text">
                 <span class="label">نوع الخدمة</span>
                 <span class="value">{{ request.categoryName ?? 'غير محدد' }}</span>
               </div>
             </div>
+
             <div class="info-item">
-              <i class="fa-regular fa-user"></i>
-              <div>
+              <div class="info-item-icon">
+                <i class="fa-regular fa-user"></i>
+              </div>
+              <div class="info-item-text">
                 <span class="label">العميل</span>
                 <span class="value">{{ request.customerName ?? 'غير محدد' }}</span>
               </div>
@@ -60,8 +74,8 @@
           </div>
 
           @if (request.description) {
-            <div class="description">
-              <h5>وصف المشكلة</h5>
+            <div class="description-box">
+              <h5><i class="fa-regular fa-comment-dots"></i> وصف المشكلة</h5>
               <p>{{ request.description }}</p>
             </div>
           }
@@ -70,7 +84,7 @@
         <!-- Images -->
         @if (request.imageUrls?.length > 0) {
           <div class="info-card">
-            <h5>صور المشكلة</h5>
+            <h5 class="section-h"><i class="fa-regular fa-image"></i> صور المشكلة</h5>
             <div class="images-grid">
               @for (img of request.imageUrls; track img) {
                 <div class="img-box">
@@ -82,14 +96,20 @@
         }
 
         <!-- Actions -->
-        <div class="info-card actions-card">
-          <h5>إجراءات</h5>
+        <div class="info-card">
+          <h5 class="section-h"><i class="fa-solid fa-bolt"></i> إجراءات</h5>
 
           @if (successMsg) {
-            <div class="alert-success">{{ successMsg }}</div>
+            <div class="alert-success">
+              <i class="fa-solid fa-circle-check"></i>
+              {{ successMsg }}
+            </div>
           }
           @if (errorMsg) {
-            <div class="alert-error">{{ errorMsg }}</div>
+            <div class="alert-error">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              {{ errorMsg }}
+            </div>
           }
 
           <div class="actions-row">
@@ -109,18 +129,21 @@
       </div>
 
       <!-- Side Panel -->
-      <div class="side-panel">
-        <div class="info-card">
+      <div class="side-col">
+        <div class="side-card">
+
           @if (request.price) {
             <div class="price-box">
               <span class="price-label">السعر المتفق عليه</span>
               <span class="price-value">{{ request.price }} ج</span>
             </div>
           }
+
           <button class="btn-chat" (click)="goToChat()">
             <i class="fa-regular fa-message"></i>
             محادثة العميل
           </button>
+
         </div>
       </div>
 

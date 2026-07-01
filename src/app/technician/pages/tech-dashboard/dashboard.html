@@ -1,0 +1,131 @@
+<div class="dash-page" dir="rtl">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <span class="dash-welcome">أهلاً، {{ technicianName }}</span>
+    <h1 class="dash-title">لوحة الفني</h1>
+    <p class="dash-sub">ملخص أدائك ومهامك القادمة</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="dash-stats-grid">
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#e8f3ff">
+        <i class="fa-solid fa-chart-line" style="color:#1787e0"></i>
+      </div>
+      <div class="dash-stat-val">{{ completionRate }}%</div>
+      <div class="dash-stat-label">نسبة الإنجاز</div>
+    </div>
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#fefce8">
+        <i class="fa-solid fa-star" style="color:#f59e0b"></i>
+      </div>
+      <div class="dash-stat-val">{{ averageRating }}</div>
+      <div class="dash-stat-label">متوسط التقييم</div>
+    </div>
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#e1f5ee">
+        <i class="fa-solid fa-sack-dollar" style="color:#10b981"></i>
+      </div>
+      <div class="dash-stat-val">{{ monthlyEarnings }} ج</div>
+      <div class="dash-stat-label">أرباح هذا الشهر</div>
+    </div>
+
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:#fff1e8">
+        <i class="fa-solid fa-briefcase" style="color:#E8620A"></i>
+      </div>
+      <div class="dash-stat-val">{{ activeTasksCount }}</div>
+      <div class="dash-stat-label">مهام نشطة</div>
+    </div>
+
+  </div>
+
+  <!-- Quick Links -->
+  <div class="quick-links-grid">
+
+    <a routerLink="/technician/edit-profile" class="quick-link-card">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>تعديل الملف</span>
+      <div class="quick-link-icon"><i class="fa-solid fa-user-pen"></i></div>
+    </a>
+
+    <a routerLink="/technician/verification" class="quick-link-card">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>التوثيق</span>
+      <div class="quick-link-icon"><i class="fa-solid fa-shield-halved"></i></div>
+    </a>
+
+    <a routerLink="/technician/wallet" class="quick-link-card">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>الأرباح</span>
+      <div class="quick-link-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+    </a>
+
+    <a routerLink="/technician/available-requests" class="quick-link-card">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>طلبات متاحة</span>
+      <div class="quick-link-icon"><i class="fa-regular fa-clipboard"></i></div>
+    </a>
+
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="dash-bottom-grid">
+
+    <!-- Reviews -->
+    <div class="dash-card">
+      <h3 class="dash-card-title">آخر التقييمات</h3>
+
+      <div class="review-item" *ngFor="let review of recentReviews">
+        <div class="review-stars">
+          <i class="fa-solid fa-star" *ngFor="let s of [1,2,3,4,5]"
+             [style.color]="s <= review.rating ? '#f59e0b' : 'rgba(10,15,30,.12)'"></i>
+        </div>
+        <div class="review-name">{{ review.customerName }}</div>
+        <div class="review-comment">"{{ review.comment }}"</div>
+      </div>
+
+    </div>
+
+    <!-- Today's Schedule -->
+    <div class="dash-card">
+      <div class="dash-card-header">
+        <a routerLink="/technician/assigned-requests" class="view-all-link">عرض الكل</a>
+        <h3 class="dash-card-title">جدول اليوم</h3>
+      </div>
+
+      <div class="schedule-item" *ngFor="let task of todaySchedule">
+        <div class="schedule-right">
+          <div class="schedule-time">
+            <i class="fa-regular fa-clock"></i>
+            {{ task.time }}
+          </div>
+          <div>
+            <div class="schedule-title">{{ task.title }} — {{ task.customerName }}</div>
+            <div class="schedule-location">{{ task.address }}</div>
+          </div>
+        </div>
+
+        <div class="schedule-left">
+          <span [class]="'schedule-status ' + task.statusClass">{{ task.statusLabel }}</span>
+          <button class="btn-schedule-details" (click)="goToDetails(task.id)">عرض التفاصيل</button>
+          <button class="btn-schedule-chat" (click)="goToChat(task.id)">
+            <i class="fa-regular fa-message"></i>
+            محادثة
+          </button>
+        </div>
+      </div>
+
+      <div class="schedule-empty" *ngIf="todaySchedule.length === 0">
+        لا توجد مهام مجدولة اليوم
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
