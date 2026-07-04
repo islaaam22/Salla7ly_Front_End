@@ -1,5 +1,155 @@
-/* .conv-list { width: 320px; border-left: 1px solid #eee; overflow-y: auto; }
-.conv-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; }
-.conv-item:hover { background: #f5f5f5; }
-.conv-avatar { width: 44px; height: 44px; border-radius: 50%; background: #1AACDC; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-.conv-badge { background: #1AACDC; color: white; border-radius: 50%; padding: 2px 7px; font-size: 12px; } */
+.convlist-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  font-family: 'Cairo', sans-serif;
+}
+
+/* ── HEADER ── */
+.convlist-header {
+  padding: 18px;
+  border-bottom: 1px solid rgba(10,15,30,.07);
+}
+
+.convlist-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0A0F1E;
+  margin: 0 0 14px;
+}
+.convlist-title i { color: #E8620A; }
+
+.convlist-search-wrap { position: relative; }
+.convlist-search-wrap i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+.convlist-search-input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid rgba(10,15,30,.1);
+  border-radius: 999px;
+  background: #fafaf8;
+  padding: 0 36px 0 14px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  color: #0A0F1E;
+  text-align: right;
+  outline: none;
+  transition: all .2s;
+}
+.convlist-search-input:focus {
+  border-color: #E8620A;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(232,98,10,.08);
+}
+
+/* ── LIST ── */
+.convlist-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.conv-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(10,15,30,.05);
+  cursor: pointer;
+  transition: background .2s;
+}
+.conv-item:hover { background: #fafaf8; }
+
+.conv-avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  background: #E8620A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.conv-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.conv-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.conv-name {
+  font-weight: 700;
+  color: #0A0F1E;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conv-time {
+  color: #94a3b8;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.conv-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.conv-last-msg {
+  color: #5C6880;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conv-unread-badge {
+  background: #E8620A;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+/* ── EMPTY ── */
+.convlist-empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 60px 20px;
+  font-size: 14px;
+}
+.convlist-empty i {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: #cbd5e1;
+}

@@ -1,138 +1,117 @@
-<!-- wallet.html -->
-<div class="d-flex min-vh-100" dir="rtl">
-  <app-customer-sidebar></app-customer-sidebar>
-  <main class="flex-grow-1 overflow-auto">
-    <div class="p-5 bg-body-secondary">
+<div class="wallet-page" dir="rtl">
+
+
   <!-- Header -->
-  <div class="text-end mb-4">
-    <h1 class="fw-bold" style="font-size: 32px; color: #1a1a2e">المحفظة</h1>
-    <p class="text-muted">إدارة رصيدك ومعاملاتك المالية.</p>
+  <div class="wallet-header">
+    <h1 class="wallet-title">المحفظة</h1>
+    <p class="wallet-sub">إدارة رصيدك ومعاملاتك المالية</p>
   </div>
 
-  <div class="row g-3 mb-4">
-    <!-- Balance Widget -->
-    <div class="col-12 col-lg-8">
-      <div
-        class="rounded-4 wallet p-4 h-100 text-white d-flex flex-column justify-content-between"
-        style="background: linear-gradient(135deg, #16a0e6, #05b9f5); cursor: pointer"
-      >
-        <div class="text-end mb-3">
-          <p class="mb-1 opacity-75" style="font-size: 14px; font-weight: bold">الرصيد الحالي</p>
-          <h2 class="fw-bold mb-0" style="font-size: 38px">{{ balance | number: '1.0-0' }} ج.م</h2>
-        </div>
+  <!-- Top Row -->
+  <div class="wallet-top-grid">
 
-        <div class="d-flex gap-2">
-          <button class="btn paid fw-semibold rounded-4 flex-grow-1 flex-md-grow-0">
-            طرق الدفع
-          </button>
-          <button
-            class="btn btn-light charge fw-semibold rounded-4 flex-grow-1 flex-md-grow-0"
-            style="color: #0f1f3d; border-radius: 10px; padding: 10px 22px"
-            (click)="openTopUpModal()"
-          >
-            <i class="fa-solid fa-plus ms-1"></i> شحن الرصيد
-          </button>
-        </div>
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div class="balance-card-top">
+        <span class="balance-label">الرصيد الحالي</span>
+        <div class="balance-value">{{ balance | number:'1.0-0' }} <span>ج.م</span></div>
+      </div>
+      <div class="balance-btns">
+        <button class="btn-charge" (click)="openTopUpModal()">
+          <i class="fa-solid fa-plus"></i>
+          شحن الرصيد
+        </button>
+        <button class="btn-payment-methods">
+          <i class="fa-solid fa-credit-card"></i>
+          طرق الدفع
+        </button>
       </div>
     </div>
 
-    <!-- Card Widget -->
-    <div class="col-12 col-lg-4">
-      <div
-        class="bg-white wallet rounded-4 p-4 h-100"
-        style="border: 1px solid #e8edf2; cursor: pointer"
-      >
-        <div class="d-flex justify-content-between align-items-start mb-4">
-          <div
-            class="rounded-circle d-flex align-items-center justify-content-center"
-            style="width: 44px; height: 44px; background: #e8f7fc; color: #1aacdc"
-          >
-            <i class="fa-regular fa-credit-card"></i>
-          </div>
-        </div>
-
-        <h6 class="fw-bold mb-1" style="color: #1a1a2e">بطاقة افتراضية</h6>
-        <p class="text-muted mb-3" style="letter-spacing: 2px" dir="ltr">**** **** **** 4343</p>
-
-        <a
-          href="#"
-          class="text-decoration-none fw-semibold"
-          style="color: #1aacdc; font-size: 14px"
-        >
-          إدارة البطاقات
-        </a>
+    <!-- Virtual Card -->
+    <div class="virtual-card">
+      <div class="virtual-card-icon">
+        <i class="fa-regular fa-credit-card"></i>
       </div>
+      <div class="virtual-card-info">
+        <h6 class="virtual-card-title">بطاقة افتراضية</h6>
+        <p class="virtual-card-num" dir="ltr">**** **** **** 4343</p>
+      </div>
+      <a href="#" class="virtual-card-link">إدارة البطاقات</a>
     </div>
+
   </div>
 
   <!-- Transactions -->
-  <div class="bg-white rounded-4 p-4" style="border: 1px solid #e8edf2">
-    <h6 class="fw-bold text-end mb-4" style="color: #1a1a2e">آخر المعاملات</h6>
+  <div class="transactions-card">
+    <h3 class="transactions-title">آخر المعاملات</h3>
 
-    <div
-      *ngFor="let tx of transactions"
-      class="d-flex align-items-center justify-content-between py-3"
-      style="border-bottom: 3px solid #f0f2f5"
-    >
-      <!-- Info + Icon -->
-      <div class="d-flex align-items-center gap-3">
-        <div
-          class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-          [style.background]="tx.type === 'in' ? '#e7f8ee' : '#fdeaea'"
-          [style.color]="tx.type === 'in' ? '#16a34a' : '#dc2626'"
-          style="width: 38px; height: 38px;"
-        >
-          <i
-            class=" fa-solid"
-            [class.fa-down-left-and-up-right-to-center]="tx.type === 'in'"
-            [class.fa-up-right-and-down-left-from-center]="tx.type === 'out'"
-          ></i>
-        </div>
-        <div class="text-end">
-          <div class="fw-semibold" style="color: #1a1a2e; font-size: 15px">{{ tx.title }}</div>
-          <small class="text-muted">{{ tx.date }}</small>
-        </div>
+    <div *ngFor="let tx of transactions" class="tx-item">
+      <div
+        class="tx-icon"
+        [style.background]="tx.type === 'in' ? '#e1f5ee' : '#fef2f2'"
+        [style.color]="tx.type === 'in' ? '#10b981' : '#e74c3c'"
+      >
+        <i
+          class="fa-solid"
+          [class.fa-down-left-and-up-right-to-center]="tx.type === 'in'"
+          [class.fa-up-right-and-down-left-from-center]="tx.type !== 'in'"
+        ></i>
       </div>
-      <!-- Amount -->
-      <span class="fw-bold" [style.color]="tx.type === 'in' ? '#16a34a' : '#dc2626'">
+      <div class="tx-info">
+        <div class="tx-title">{{ tx.title }}</div>
+        <small class="tx-date">{{ tx.date }}</small>
+      </div>
+      <span class="tx-amount" [class.tx-in]="tx.type === 'in'" [class.tx-out]="tx.type !== 'in'">
         {{ tx.type === 'in' ? '+' : '-' }}{{ tx.amount }} ج.م
       </span>
     </div>
 
-    <div *ngIf="transactions.length === 0" class="text-center text-muted py-4">
+    <div *ngIf="transactions.length === 0" class="tx-empty">
+      <i class="fa-regular fa-clock"></i>
       لا توجد معاملات حتى الآن
     </div>
   </div>
 
   <!-- Top Up Modal -->
-  <div
-    *ngIf="showTopUpModal"
-    class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-    style="background: rgba(0, 0, 0, 0.5); z-index: 1050"
-  >
-    <div class="bg-white rounded-4 p-4" style="width: 100%; max-width: 420px" dir="rtl">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <button class="btn btn-light rounded-circle" (click)="closeTopUpModal()">
+  <div class="modal-overlay" *ngIf="showTopUpModal">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <button class="modal-close" (click)="closeTopUpModal()">
           <i class="fa-solid fa-xmark"></i>
         </button>
-        <h5 class="fw-bold mb-0">شحن الرصيد</h5>
+        <h5 class="modal-title">شحن الرصيد</h5>
       </div>
 
-      <div class="mb-4">
-        <label class="form-label fw-semibold">المبلغ (ج.م)</label>
+      <!-- Quick amounts -->
+      <div class="quick-amounts">
+        <button
+          *ngFor="let amt of quickAmounts"
+          class="quick-amount-btn"
+          [class.selected]="topUpAmount === amt"
+          (click)="topUpAmount = amt"
+        >
+          {{ amt }} ج
+        </button>
+      </div>
+
+      <div class="modal-field">
+        <label class="modal-label">أو أدخل مبلغاً آخر (ج.م)</label>
         <input
           type="number"
-          class="form-control text-end"
+          class="modal-input"
           [(ngModel)]="topUpAmount"
           placeholder="مثال: 100"
         />
       </div>
 
-      <button class="btn w-100 text-white fw-bold py-3 rounded-3" style="background: #1aacdc">
-        <i class="fa-solid fa-plus me-2"></i> تأكيد الشحن
+      <button class="btn-confirm-charge">
+        <i class="fa-solid fa-plus"></i>
+        تأكيد الشحن
       </button>
+
     </div>
   </div>
-    </div>
-  </main>
+
 </div>

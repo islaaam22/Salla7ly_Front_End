@@ -1,0 +1,90 @@
+<div class="earnings-page" dir="rtl">
+
+  <!-- Header -->
+  <div class="earnings-header">
+    <h1 class="earnings-title">الأرباح</h1>
+    <p class="earnings-sub">تابع أرباحك واسحبها عبر Stripe Connect</p>
+  </div>
+
+  <!-- Top Row -->
+  <div class="earnings-top-grid">
+
+    <!-- Small cards -->
+    <div class="small-cards-col">
+
+      <div class="small-card">
+        <div class="small-card-icon" style="background:#fefce8">
+          <i class="fa-regular fa-clock" style="color:#d97706"></i>
+        </div>
+        <div class="small-card-val">{{ pendingBalance }} ج</div>
+        <div class="small-card-label">رصيد معلّق</div>
+        <div class="small-card-note">يتحرر خلال {{ pendingDays }} أيام</div>
+      </div>
+
+      <div class="small-card">
+        <div class="small-card-icon" style="background:#e8f3ff">
+          <i class="fa-solid fa-wallet" style="color:#1787e0"></i>
+        </div>
+        <div class="small-card-val">{{ totalWithdrawn }} ج</div>
+        <div class="small-card-label">إجمالي المسحوب</div>
+      </div>
+
+    </div>
+
+    <!-- Big balance card -->
+    <div class="balance-card">
+      <span class="balance-label">الرصيد المتاح للسحب</span>
+      <div class="balance-value">{{ availableBalance }} <span>ج.م</span></div>
+      <div class="balance-change">
+        <i class="fa-solid fa-arrow-trend-up"></i>
+        +{{ growthPercent }}% مقارنة بالشهر الماضي
+      </div>
+      <button class="btn-withdraw" (click)="withdrawEarnings()">
+        <i class="fa-solid fa-download"></i>
+        سحب الأرباح
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="earnings-bottom-grid">
+
+    <!-- Withdrawal History -->
+    <div class="earnings-card">
+      <h3 class="earnings-card-title">سجل السحوبات</h3>
+
+      <div class="withdrawal-item" *ngFor="let w of withdrawalHistory">
+        <div class="withdrawal-amount">{{ w.amount }} ج</div>
+        <div class="withdrawal-info">
+          <span class="withdrawal-month">{{ w.month }}</span>
+          <span [class]="'withdrawal-status ' + w.statusClass">
+            <i [class]="w.statusIcon"></i>
+            {{ w.statusLabel }}
+          </span>
+        </div>
+      </div>
+
+      <div class="withdrawal-empty" *ngIf="withdrawalHistory.length === 0">
+        لا توجد سحوبات بعد
+      </div>
+    </div>
+
+    <!-- Last 4 Months Performance -->
+    <div class="earnings-card">
+      <h3 class="earnings-card-title">أداء آخر 4 شهور</h3>
+
+      <div class="bars-chart">
+        <div class="bar-col" *ngFor="let m of monthlyPerformance">
+          <div class="bar-amount">{{ m.amount }} ج</div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.height.%]="m.percentHeight"></div>
+          </div>
+          <div class="bar-month">{{ m.month }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

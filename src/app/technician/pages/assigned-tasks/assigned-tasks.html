@@ -1,71 +1,84 @@
-<div class="page-wrapper" dir="rtl">
+<div class="assigned-page" dir="rtl">
 
-  <div class="page-header">
-    <div>
-      <h2>المهام الموكلة</h2>
-      <p>كل المهام المسندة إليك من العملاء.</p>
-    </div>
+  <!-- Header -->
+  <div class="page-header-wrap">
+    <h1 class="page-title">المهام الموكلة</h1>
+    <p class="page-sub">كل المهام المسندة إليك من العملاء</p>
   </div>
 
+  <!-- Loading -->
   @if (loading) {
-    <div style="text-align: center; padding: 80px 0">
-      <div class="spinner-border text-primary"></div>
+    <div class="profile-loading">
+      <div class="spinner-border" role="status" style="color:#E8620A"></div>
+      <p>جاري التحميل...</p>
     </div>
   }
 
-  @if (errorMsg) {
-    <div class="error-banner">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ errorMsg }}
-      <button class="btn-retry" (click)="loadTasks()">إعادة المحاولة</button>
-    </div>
-  }
-
-  @if (!loading && !errorMsg && requests.length === 0) {
+  <!-- Empty -->
+  @if (!loading && requests.length === 0) {
     <div class="empty-state">
-      <i class="fa-solid fa-clipboard-list"></i>
-      <p>لا توجد مهام موكلة حالياً</p>
-      <small>ستظهر هنا المهام بعد قبول العملاء لعروضك</small>
+      <div class="empty-icon">
+        <i class="fa-solid fa-clipboard-list"></i>
+      </div>
+      <h3>لا توجد مهام موكلة حالياً</h3>
+      <p>المهام اللي بتتسند إليك هتظهر هنا</p>
     </div>
   }
 
+  <!-- Requests -->
   @if (!loading && requests.length > 0) {
-    <div class="requests-list">
+    <div class="assigned-list">
       @for (req of requests; track req.id) {
-        <div class="request-card">
+        <div class="assigned-card">
 
-          <div class="card-top">
-            <div>
-              <h5 class="card-title">{{ req.title }}</h5>
-              <p class="card-client">العميل: {{ req.customerName ?? 'غير محدد' }}</p>
+          <!-- Top -->
+          <div class="assigned-top">
+            <div class="assigned-top-right">
+              <div class="assigned-ico">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+              </div>
+              <div>
+                <h5 class="assigned-title">{{ req.title }}</h5>
+                <p class="assigned-client">
+                  <i class="fa-solid fa-user"></i>
+                  العميل: {{ req.customerName ?? 'غير محدد' }}
+                </p>
+              </div>
             </div>
             <span [class]="'status-badge ' + getStatusClass(req.status)">
               {{ getStatusLabel(req.status) }}
             </span>
           </div>
 
-          <div class="card-meta">
-            <span>
-              <i class="fa-regular fa-calendar"></i>
-              {{ req.scheduledAt | date:'dd/MM/yyyy - hh:mm a' }}
-            </span>
-            <span>
-              <i class="fa-solid fa-location-dot"></i>
-              {{ req.address ?? 'غير محدد' }}
-            </span>
-            @if (req.price) {
-              <span class="price">
-                <i class="fa-solid fa-tag"></i> {{ req.price }} ج
-              </span>
-            }
-          </div>
+          <div class="card-divider"></div>
 
-          <div class="card-actions">
-            <button class="btn-chat" (click)="goToChat(req.id)">
-              <i class="fa-regular fa-message"></i> محادثة العميل
-            </button>
-            <button class="btn-details" (click)="goToDetails(req.id)">
-              التفاصيل
-            </button>
+          <!-- Bottom -->
+          <div class="card-bottom">
+            <div class="card-meta">
+              <span class="meta-item">
+                <i class="fa-regular fa-calendar"></i>
+                {{ req.scheduledAt | date:'dd/MM/yyyy - hh:mm a' }}
+              </span>
+              <span class="meta-item">
+                <i class="fa-solid fa-location-dot"></i>
+                {{ req.address ?? 'غير محدد' }}
+              </span>
+              @if (req.price) {
+                <span class="meta-item meta-price">
+                  <i class="fa-solid fa-tag"></i>
+                  {{ req.price }} ج
+                </span>
+              }
+            </div>
+            <div class="card-actions">
+              <button class="btn-chat" (click)="goToChat(req.id)">
+                <i class="fa-regular fa-message"></i>
+                محادثة العميل
+              </button>
+              <button class="btn-details" (click)="goToDetails(req.id)">
+                التفاصيل
+              </button>
+            </div>
           </div>
 
         </div>

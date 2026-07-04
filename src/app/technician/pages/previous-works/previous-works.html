@@ -1,9 +1,10 @@
-<div class="page-wrapper" dir="rtl">
+<div class="portfolio-page" dir="rtl">
+
   <!-- Header -->
   <div class="page-header">
     <div>
-      <h2>أعمالي السابقة</h2>
-      <p>أضف صور لأعمالك السابقة ليتعرف عليها العملاء.</p>
+      <h1 class="page-title">أعمالي السابقة</h1>
+      <p class="page-sub">أضف صور لأعمالك السابقة ليتعرف عليها العملاء</p>
     </div>
     <button class="btn-add" (click)="openModal()">
       <i class="fa-solid fa-plus"></i>
@@ -13,17 +14,23 @@
 
   <!-- Loading -->
   @if (loading) {
-    <div class="loading">
-      <div class="spinner"></div>
+    <div class="profile-loading">
+      <div class="spinner-border" role="status" style="color:#E8620A"></div>
     </div>
   }
 
-  <!-- Empty State -->
+  <!-- Empty -->
   @if (!loading && portfolios.length === 0) {
     <div class="empty-state">
-      <i class="fa-regular fa-image"></i>
-      <p>لا توجد أعمال سابقة بعد</p>
-      <button class="btn-add" (click)="openModal()">أضف أول مشروع</button>
+      <div class="empty-icon">
+        <i class="fa-regular fa-image"></i>
+      </div>
+      <h3>لا توجد أعمال سابقة بعد</h3>
+      <p>أضف أعمالك السابقة ليثق بك العملاء أكتر</p>
+      <button class="btn-add" (click)="openModal()">
+        <i class="fa-solid fa-plus"></i>
+        أضف أول مشروع
+      </button>
     </div>
   }
 
@@ -32,14 +39,16 @@
     <div class="portfolio-grid">
       @for (item of portfolios; track item.id) {
         <div class="portfolio-card">
+
+          <button class="btn-delete" (click)="openDeleteConfirm(item.id)">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+
           <div class="card-images">
             <div class="image-box">
               <span class="image-label">قبل</span>
               @if (item.imageUrlBefore) {
-                <img
-                  [src]="'https://sala7ly.runasp.net' + item.imageUrlBefore"
-                  [alt]="item.title"
-                />
+                <img [src]="'https://sala7ly.runasp.net' + item.imageUrlBefore" [alt]="item.title" />
               } @else {
                 <div class="placeholder-img">
                   <i class="fa-regular fa-image"></i>
@@ -66,36 +75,34 @@
             }
           </div>
 
-          <button class="btn-delete" (click)="openDeleteConfirm(item.id)">
-            <i class="fa-regular fa-trash-can"></i>
-          </button>
         </div>
       }
     </div>
   }
 
-  <!-- Modal -->
+  <!-- Add Project Modal -->
   @if (showModal) {
     <div class="modal-overlay" (click)="closeModal()">
       <div class="modal-box" (click)="$event.stopPropagation()">
+
         <div class="modal-header">
-          <h3 class="text-end">إضافة مشروع جديد</h3>
-          <button class="btn-close-modal" (click)="closeModal()">✕</button>
+          <button class="btn-close-modal" (click)="closeModal()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <h3>إضافة مشروع جديد</h3>
         </div>
 
         <div class="modal-body">
+
           <div class="form-group">
-            <label>عنوان المشروع</label>
+            <label><i class="fa-solid fa-heading"></i> عنوان المشروع</label>
             <input type="text" [(ngModel)]="form.title" placeholder="مثال: تركيب تكييف سبليت" />
           </div>
 
           <div class="form-group">
-            <label>الوصف</label>
-            <textarea
-              [(ngModel)]="form.description"
-              rows="3"
-              placeholder="اشرح العمل الذي قمت به..."
-            ></textarea>
+            <label><i class="fa-solid fa-align-right"></i> الوصف</label>
+            <textarea [(ngModel)]="form.description" rows="3"
+                      placeholder="اشرح العمل الذي قمت به..."></textarea>
           </div>
 
           <div class="images-row">
@@ -103,89 +110,67 @@
               <label>صورة قبل</label>
               <div class="upload-box" (click)="beforeInput.click()">
                 @if (beforePreview) {
-                  <img
-                    [src]="beforePreview"
-                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px"
-                  />
+                  <img [src]="beforePreview" />
                 } @else {
                   <i class="fa-solid fa-upload"></i>
                 }
               </div>
-              <input
-                #beforeInput
-                type="file"
-                accept="image/*"
-                hidden
-                (change)="onImageSelect($event, 'before')"
-              />
+              <input #beforeInput type="file" accept="image/*" hidden (change)="onImageSelect($event, 'before')" />
             </div>
 
             <div class="form-group">
               <label>صورة بعد</label>
               <div class="upload-box" (click)="afterInput.click()">
                 @if (afterPreview) {
-                  <img
-                    [src]="afterPreview"
-                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px"
-                  />
+                  <img [src]="afterPreview" />
                 } @else {
                   <i class="fa-solid fa-upload"></i>
                 }
               </div>
-              <input
-                #afterInput
-                type="file"
-                accept="image/*"
-                hidden
-                (change)="onImageSelect($event, 'after')"
-              />
+              <input #afterInput type="file" accept="image/*" hidden (change)="onImageSelect($event, 'after')" />
             </div>
           </div>
 
           @if (errorMsg) {
-            <div class="alert-error">{{ errorMsg }}</div>
+            <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ errorMsg }}</div>
           }
           @if (successMsg) {
-            <div class="alert-success">{{ successMsg }}</div>
+            <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ successMsg }}</div>
           }
+
         </div>
 
         <div class="modal-footer">
           <button class="btn-save" [disabled]="submitting" (click)="submitProject()">
+            <i class="fa-regular fa-floppy-disk"></i>
             {{ submitting ? 'جاري الحفظ...' : 'حفظ المشروع' }}
           </button>
         </div>
+
       </div>
     </div>
   }
 
+  <!-- Delete Confirm Modal -->
   @if (showDeleteConfirm) {
     <div class="modal-overlay" (click)="cancelDelete()">
-      <div
-        class="modal-box"
-        style="max-width: 400px; text-align: center"
-        (click)="$event.stopPropagation()"
-      >
-        <div class="modal-header">
-          <h3>حذف المشروع</h3>
+      <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+        <div class="delete-icon-wrap">
+          <i class="fa-regular fa-trash-can"></i>
         </div>
-        <div class="modal-body">
-          <i
-            class="fa-regular fa-trash-can"
-            style="font-size: 48px; color: #ef4444; margin-bottom: 16px"
-          ></i>
-          <p style="font-size: 16px; color: #374151">هل أنت متأكد من حذف هذا المشروع؟</p>
-          <p style="font-size: 14px; color: #9ca3af">لا يمكن التراجع عن هذا الإجراء.</p>
+
+        <h3 class="delete-title">حذف المشروع</h3>
+        <p class="delete-sub">هل أنت متأكد من حذف هذا المشروع؟</p>
+        <p class="delete-note">لا يمكن التراجع عن هذا الإجراء</p>
+
+        <div class="delete-actions">
+          <button class="btn-confirm-delete" (click)="confirmDelete()">نعم، احذف</button>
+          <button class="btn-cancel-delete" (click)="cancelDelete()">إلغاء</button>
         </div>
-        <div class="modal-footer" style="display: flex; gap: 12px">
-          <button class="btn-save" style="background: #ef4444; flex: 1" (click)="confirmDelete()">
-            نعم، احذف
-          </button>
-          <button class="btn-save" style="background: #6b7280; flex: 1" (click)="cancelDelete()">
-            إلغاء
-          </button>
-        </div>
+
       </div>
     </div>
   }
+
 </div>

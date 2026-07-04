@@ -1,12 +1,12 @@
 <div class="d-flex">
   <!-- Sidebar -->
-  <aside class="sidebar ">
+  <aside class="sidebar-wrap">
     <!-- Logo -->
     <div class="sidebar-logo">
       <div class="logo-icon">
-        <i class="fa-solid fa-wrench"></i>
+        <img src="images/Logo-removebg-preview.png" style="width:70px ;" alt="">
       </div>
-      <span>صلحلي</span>
+      <span>صلّح<em>لي</em></span>
     </div>
 
     <!-- Nav Items -->
@@ -23,21 +23,22 @@
     </nav>
 
     <!-- Footer -->
-    <div class="sidebar-footer text-end">
+    <div class="sidebar-footer">
       <div class="user-info">
-        <div class="user-avatar">{{ avatarLetter }}</div>
         <div class="user-details">
           <div class="name">{{ technicianName }}</div>
-          <div class="role text-end">فني</div>
+          <div class="role">فني</div>
         </div>
+        <div class="user-avatar">{{ avatarLetter }}</div>
       </div>
-
-      <button class="w-100 border-1 rounded-2 btn btn-danger" (click)="logout()">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
         <span>تسجيل الخروج</span>
-        <i class="fa-solid fa-right-from-bracket me-2"></i>
       </button>
     </div>
   </aside>
+
+
 
   <!-- Main Content -->
   <main class="main-content">
