@@ -1,47 +1,69 @@
 <div class="container py-4" dir="rtl">
 
-  <!-- header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold mb-0">الإشعارات</h3>
-    <span *ngIf="unreadCount() > 0" class="badge bg-primary rounded-pill">
-      {{ unreadCount() }} جديد
-    </span>
+    <h5 class="fw-bold mb-0" style="color:#1a1f2e;">الإشعارات</h5>
+
+    <div class="d-flex align-items-center gap-2">
+      <button *ngIf="unreadCount() > 0"
+              (click)="markAllRead()"
+              class="btn btn-sm"
+              style="border:1px solid #f26419; color:#f26419; border-radius:20px; font-weight:500;">
+        تحديد الكل كمقروء
+      </button>
+      <span *ngIf="unreadCount() > 0"
+            class="badge rounded-pill"
+            style="background:#f26419; color:#ffffff;">
+        {{ unreadCount() }} غير مقروءة
+      </span>
+    </div>
   </div>
 
-  <!-- empty state -->
   <div *ngIf="notifications().length === 0" class="text-center text-muted py-5">
-    <div class="fs-1 mb-2">🔔</div>
+    <i class="fa-regular fa-bell fs-1 d-block mb-2" style="color:#f26419; opacity:0.5;"></i>
     <p>لا توجد إشعارات حالياً.</p>
   </div>
 
-  <!-- list -->
-  <div class="d-flex flex-column gap-2">
+  <div class="d-flex flex-column gap-3">
     <div *ngFor="let n of notifications()"
          (click)="onClick(n)"
-         class="card border-0 shadow-sm"
-         style="cursor: pointer;"
-         [class.bg-light]="!n.isRead">
-      <div class="card-body d-flex align-items-start gap-3 p-3">
+         class="d-flex align-items-center gap-3 p-4 position-relative notif-card"
+         style="cursor:pointer; border-radius:16px; transition:transform .12s, box-shadow .12s, background .2s;"
+         [style.background]="n.isRead ? '#f4f1ea' : '#fff1e3'"
+         [style.border]="n.isRead ? '1px solid #e0dccf' : '1px solid #f7c9a6'"
+         [style.box-shadow]="n.isRead ? 'none' : '0 3px 10px rgba(242,100,25,0.12)'">
 
-        <!-- icon bubble -->
-        <span class="badge bg-primary-subtle text-primary fs-5 p-2 rounded-circle">
-          {{ iconFor(n.type) }}
-        </span>
+      <span *ngIf="!n.isRead"
+            class="position-absolute"
+            style="right:0; top:18px; bottom:18px; width:4px; background:#f26419; border-radius:0;"></span>
 
-        <!-- text -->
-        <div class="flex-grow-1 text-end">
-          <div class="fw-bold" [class.text-primary]="!n.isRead">{{ n.title }}</div>
-          <div class="text-muted small">{{ n.body }}</div>
-          <div class="text-muted" style="font-size: 12px;">{{ n.sentAt | date:'short' }}</div>
-        </div>
+      <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+            style="width:54px; height:54px;"
+            [style.background]="n.isRead ? '#eceae3' : bubbleBg(n.type)">
+        <i [class]="iconFor(n.type)"
+           [style.color]="n.isRead ? '#9a9a90' : iconColor(n.type)"
+           style="font-size:24px;"></i>
+      </span>
 
-        <!-- unread dot -->
-        <span *ngIf="!n.isRead"
-              class="rounded-circle bg-primary mt-1"
-              style="width: 10px; height: 10px;"></span>
+      <div class="flex-grow-1" style="min-width:0;">
+        <div [class.fw-bold]="!n.isRead"
+             style="margin-bottom:4px; font-size:16px;"
+             [style.color]="n.isRead ? '#7a7a72' : '#1a1f2e'">{{ n.title }}</div>
+        <div class="text-truncate" style="font-size:14px;"
+             [style.color]="n.isRead ? '#a0a096' : '#8a8f9a'">{{ n.body }}</div>
+      </div>
 
+      <div class="flex-shrink-0 align-self-start" style="font-size:12px;"
+           [style.color]="n.isRead ? '#b0b0a6' : '#a0a4ad'">
+        {{ n.sentAt | date:'short' }}
       </div>
     </div>
   </div>
 
 </div>
+
+<style>
+.notif-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(242,100,25,0.15) !important;
+}
+</style>

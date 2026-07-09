@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { NotificationService } from '../../services/notification-service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class Login {
   constructor(
     private router: Router,
     private authService: Auth,
+    private notificationService: NotificationService,
   ) {}
 
   selectRole(role: 'Customer' | 'Technician' | 'Admin') {
@@ -70,6 +72,9 @@ export class Login {
           res.refreshToken,
           res.userName ?? res.name ?? this.email.split('@')[0],
         );
+
+        this.notificationService.startConnection();
+
         this.redirectByRole(this.selectedRole);
       },
 
