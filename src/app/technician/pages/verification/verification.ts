@@ -47,7 +47,7 @@ export class TechnicianVerification implements OnInit {
     return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 
-loadStatus() {
+  loadStatus() {
     // Check localStorage FIRST before showing any loading spinner
     const savedStatus = localStorage.getItem('verification_status');
     if (
@@ -76,17 +76,32 @@ loadStatus() {
           return;
         }
 
-        this.http.get(
+        this.http.get<any[]>(
           `${this.apiUrl}/TechnicianVerification/technician/${techId}`,
           { headers: this.authHeaders() }
         ).subscribe({
-          next: (data: any) => {
-            const s = (data?.status || 'none').toLowerCase();
+          next: (list: any[]) => {
+            // the endpoint returns an ARRAY — pick the most recent verification
+            const data = Array.isArray(list) && list.length > 0
+              ? [...list].sort(
+                  (a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+                )[0]
+              : null;
+
+            if (!data) {
+              this.status = 'none';
+              localStorage.removeItem('verification_status');
+              this.loadingStatus = false;
+              return;
+            }
+
+            const s = (data.status || '').toString().toLowerCase();
             if (s === 'approved') this.status = 'approved';
             else if (s === 'rejected') this.status = 'rejected';
             else if (s === 'pending') this.status = 'pending';
             else this.status = 'none';
-            this.rejectionReason = data?.rejectionReason || '';
+
+            this.rejectionReason = data.rejectionReason || '';
             localStorage.setItem('verification_status', this.status);
             this.loadingStatus = false;
           },
