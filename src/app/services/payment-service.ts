@@ -36,11 +36,11 @@ export class PaymentService {
   }
 
   releasePayment(requestId: number): Observable<ApiResponse<string>> {
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/release`, requestId);
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/release`, { requestId });
   }
 
   refundPayment(requestId: number): Observable<ApiResponse<string>> {
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/refund`, requestId);
+    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/refund`, { requestId });
   }
 
   getEscrow(requestId: number): Observable<ApiResponse<EscrowDto>> {

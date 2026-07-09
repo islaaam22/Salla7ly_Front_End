@@ -85,29 +85,58 @@ export class MyRequests implements OnInit {
     this.router.navigate(['/customer/submit-bid', requestId]);
   }
 
-  /** "Complete Service" on assigned/inprogress → call API then navigate to review */
+  /** "Complete Service" on assigned/inprogress → create payment first, then complete */
   completeService(requestId: number) {
     this.completingId = requestId;
     this.errorMsg = null;
 
-    this.requestService.completeRequest(requestId).subscribe({
-      next: () => {
+    // First, check if payment already exists, if not create it
+    this.paymentService.getEscrow(requestId).subscribe({
+      next: (escrowRes) => {
+        if (escrowRes.success && escrowRes.data) {
+          // Payment already exists, just complete the request
+          this.finalizeCompletion(requestId);
+        } else {
+          // No payment exists, create it first
+          this.paymentService.createEscrow(requestId).subscribe({
+            next: () => {
+              // Payment created successfully, now complete the request
+              this.finalizeCompletion(requestId);
+            },
+            error: () => {
+              this.completingId = null;
+              this.errorMsg = 'فشل إنشاء الدفع المؤجل. يرجى المحاولة لاحقًا.';
+            }
+          });
+        }
+      },
+      error: () => {
+        // Assume no payment exists if get fails, try to create
         this.paymentService.createEscrow(requestId).subscribe({
-          next: (res) => {
-            this.completingId = null;
-            const req = this.requests.find(r => r.id === requestId);
-            if (req) req.status = 'completed';
-            this.router.navigate(['/customer/review', requestId]);
+          next: () => {
+            this.finalizeCompletion(requestId);
           },
           error: () => {
             this.completingId = null;
-            this.errorMsg = 'تم إتمام الخدمة، لكن فشل إنشاء الدفع المؤجل. يرجى المحاولة لاحقًا.';
+            this.errorMsg = 'فشل إنشاء الدفع المؤجل. يرجى المحاولة لاحقًا.';
           }
         });
+      }
+    });
+  }
+
+  /** Final step: mark request as completed and navigate to review */
+  finalizeCompletion(requestId: number) {
+    this.requestService.completeRequest(requestId).subscribe({
+      next: () => {
+        this.completingId = null;
+        const req = this.requests.find(r => r.id === requestId);
+        if (req) req.status = 'completed';
+        this.router.navigate(['/customer/review', requestId]);
       },
       error: () => {
         this.completingId = null;
-        this.errorMsg = 'حدث خطأ أثناء إتمام الخدمة. يرجى المحاولة مرة أخرى.';
+        this.errorMsg = 'فشل إتمام الطلب. يرجى المحاولة مرة أخرى.';
       }
     });
   }
