@@ -7,6 +7,14 @@
     <p class="wallet-sub">إدارة رصيدك ومعاملاتك المالية</p>
   </div>
 
+  @if (errorMsg) {
+    <div class="alert alert-danger" role="alert">{{ errorMsg }}</div>
+  }
+
+  @if (successMsg) {
+    <div class="alert alert-success" role="alert">{{ successMsg }}</div>
+  }
+
   <!-- Top Row -->
   <div class="wallet-top-grid">
 
@@ -21,7 +29,7 @@
           <i class="fa-solid fa-plus"></i>
           شحن الرصيد
         </button>
-        <button class="btn-payment-methods">
+        <button class="btn-payment-methods" (click)="openPaymentMethods()">
           <i class="fa-solid fa-credit-card"></i>
           طرق الدفع
         </button>
@@ -106,10 +114,14 @@
         />
       </div>
 
-      <button class="btn-confirm-charge">
+      <button class="btn-confirm-charge" (click)="confirmTopUp()" [disabled]="loading">
         <i class="fa-solid fa-plus"></i>
-        تأكيد الشحن
+        {{ loading ? 'جاري الإرسال...' : 'تأكيد الشحن' }}
       </button>
+
+      <div class="mt-3 text-muted small">
+        سيتم استخدام طريقة الدفع الافتراضية المتاحة من الباك إند عند تأكيد الشحن.
+      </div>
 
     </div>
   </div>

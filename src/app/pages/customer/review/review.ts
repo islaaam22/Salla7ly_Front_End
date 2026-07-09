@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { RequestService } from '../../../services/request';
 import { ReviewService, SubmitReviewDto } from '../../../services/review-service';
+import { PaymentService } from '../../../services/payment-service';
 
 @Component({
   selector: 'app-review',
@@ -23,6 +24,7 @@ export class Review implements OnInit {
   pageLoading     = true;
   alreadyReviewed = false;
   submitLoading   = false;
+  refundLoading    = false;
 
   successMsg = '';
   errorMsg   = '';
@@ -47,7 +49,8 @@ export class Review implements OnInit {
     private route:          ActivatedRoute,
     private router:         Router,
     private requestService: RequestService,
-    private reviewService:  ReviewService
+    private reviewService:  ReviewService,
+    private paymentService: PaymentService
   ) {}
 
   ngOnInit() {
@@ -107,7 +110,23 @@ export class Review implements OnInit {
   goToMyRequests() {
     this.router.navigate(['/customer/my-requests']);
   }
+  refundPayment() {
+    if (this.refundLoading) return;
+    this.refundLoading = true;
+    this.errorMsg = '';
+    this.successMsg = '';
 
+    this.paymentService.refundPayment(this.requestId).subscribe({
+      next: () => {
+        this.refundLoading = false;
+        this.successMsg = 'تمت معالجة الاسترداد بنجاح';
+      },
+      error: (err) => {
+        this.refundLoading = false;
+        this.errorMsg = err?.error?.message ?? 'تعذر استرداد المبلغ';
+      }
+    });
+  }
   // ─── Submission ──────────────────────────────────────────────────────────
 
   onSubmit() {

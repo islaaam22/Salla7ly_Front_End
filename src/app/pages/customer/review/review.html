@@ -159,6 +159,11 @@
         </button>
       }
 
+      <button class="btn-submit btn-back mt-3" [disabled]="refundLoading" (click)="refundPayment()">
+        <i class="fa-solid fa-rotate-left"></i>
+        {{ refundLoading ? 'جاري...' : 'استرداد المبلغ' }}
+      </button>
+
       <!-- Back (after submission or when already reviewed) -->
       @if (alreadyReviewed) {
         <button class="btn-submit btn-back" (click)="goToMyRequests()">
