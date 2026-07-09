@@ -1,25 +1,24 @@
 <div class="container py-4" dir="rtl">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <a
-      routerLink="/customer/received-bids"
-      class="text-decoration-none text-muted"
-      style="font-size: 14px"
-    >
-      العروض المستلمة ←
+  <div class="mb-3">
+    <a routerLink="/customer/received-bids" class="btn-back-nav">
+      <span class="btn-back-icon">
+        <i class="fa-solid fa-arrow-right"></i>
+      </span>
+      الرجوع إلى العروض المستلمة
     </a>
-  </nav>
+  </div>
 
   <div class="mt-4">
     <h2 class="fw-bold mb-1" style="font-size: 32px; color: #0f172a">مقارنة العروض</h2>
     <div class="d-flex align-items-center justify-content-end ms-5 fw-bold gap-2 text-success" style="font-size: 14px">
       <i class="fa-solid fa-wifi"></i>
-      متصل   
+      متصل
       </div>
       <p class="text-muted mb-0">اختر أفضل عرض لطلبك رقم {{ groups[0].request.id }}</p>
-      
+
   <div *ngIf="isLoading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status"></div>
-    
+
   </div>
 
   <div *ngIf="!isLoading && groups.length === 0" class="text-center py-5 text-muted">
