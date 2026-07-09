@@ -1,484 +1,227 @@
-<div class="container-fluid px-0 min-vh-100">
-  <div class="row w-100 min-vh-100 g-0">
-    <!-- right side -->
-    <div class="col-lg-6 d-none d-lg-flex left-panel">
-      <div class="left-header features-items">
-        <div class="logo">
-          <img src="images/Logo-removebg-preview.png" alt="" style="width: 200px; height: 140px" />
-        </div>
-      </div>
+<div class="register-page" dir="rtl">
+  <div class="register-layout">
 
-      <div class="left-content">
-        <h1 class="fw-bold m-0">ابدا رحلتك</h1>
-        <h1 class="fw-bold mb-4">مع صلحلي اليوم</h1>
-        <div class="features">
-          <div class="features-items">
-            <i class="fa-solid fa-shield-halved ms-2"></i>
-            <span>تحقق كامل من الفنيين</span>
-          </div>
-          <div class="features-items">
-            <i class="fa-solid fa-wand-magic-sparkles ms-2"></i>
-            <span>نظام عروض ذكي</span>
-          </div>
-          <div class="features-items">
-            <i class="fa-solid fa-bolt ms-2"></i>
-            <span>استجابة سريعة</span>
-          </div>
-        </div>
-      </div>
+    <!-- RIGHT: Form Side -->
+    <div class="register-form-side">
+      <div class="register-form-inner">
 
-      <div class="left-footer">© صلحلي 2025</div>
-    </div>
-
-    <!-- left side -->
-    <div
-      class="col-lg-6 d-flex justify-content-center align-items-center"
-      style="background: #f5f7fa"
-    >
-      <div class="form-wrapper">
-        <h3 class="fw-bold mt-3">أنشأ حسابك في صلحلي</h3>
-        <p class="text-muted">أختر نوع الحساب وأكمل بياناتك</p>
-
-        <div class="row g-3 mb-3">
-          <div class="col-md-4">
-            <button
-              (click)="selectRole('customer')"
-              class="btn customer rounded-4 p-4 w-100 d-flex align-items-center gap-4"
-              [class.active-role]="selectedRole === 'customer'"
-            >
-              <div
-                [class.active-icon]="selectedRole === 'customer'"
-                class="icon-circle d-flex justify-content-center align-items-center rounded-pill"
-              >
-                <i class="fa-solid fa-user"></i>
-              </div>
-              <div class="txt text-start">
-                <p class="mb-0 fw-bold">عميل</p>
-                <small class="text-muted">أبحث خدمات.</small>
-              </div>
-            </button>
-          </div>
-          <div class="col-md-4">
-            <button
-              (click)="selectRole('tech')"
-              class="btn tech rounded-4 p-4 w-100 d-flex align-items-center gap-4"
-              [class.active-role]="selectedRole === 'tech'"
-            >
-              <div
-                [class.active-icon]="selectedRole === 'tech'"
-                class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill"
-              >
-                <i class="fa-solid fa-helmet-safety"></i>
-              </div>
-              <div class="txt text-start">
-                <p class="mb-0 fw-bold">فني</p>
-                <small class="text-muted">أقدم خدمات.</small>
-              </div>
-            </button>
-          </div>
-          <div class="col-md-4">
-            <button
-              (click)="selectRole('admin')"
-              class="btn admin rounded-4 p-4 w-100 d-flex align-items-center gap-4"
-              [class.active-role]="selectedRole === 'admin'"
-            >
-              <div
-                [class.active-icon]="selectedRole === 'admin'"
-                class="icon-circle2 d-flex align-items-center justify-content-center rounded-pill"
-              >
-                <i class="fa-solid fa-user-tie"></i>
-              </div>
-              <div class="txt text-start">
-                <p class="mb-0 fw-bold">مشرف</p>
-                <small class="text-muted">إدارة المنصة.</small>
-              </div>
-            </button>
-          </div>
+        <!-- Logo -->
+        <div class="reg-logo">
+          <div class="reg-logo-icon"><i class="fa-solid fa-wrench"></i></div>
+          <span>صلّح<em>لي</em></span>
         </div>
 
-        <form (ngSubmit)="onRegister()">
-          <div *ngIf="selectedRole === 'customer'" class="form-text text-end">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
-                    >الاسم الكامل</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="name"
-                    [(ngModel)]="customer.name"
-                    id="exampleInputName1"
-                    placeholder="الاسم بالكامل"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
+        <div class="reg-heading">
+          <h2>أنشئ حسابك في صلحلي</h2>
+          <p>اختر نوع الحساب وأكمل بياناتك</p>
+        </div>
 
-                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">
-                    {{ nameError }}
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
-                    >البريد الالكتروني</label
-                  >
-                  <input
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    [(ngModel)]="customer.email"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="example@gmail.com"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">
-                    {{ emailError }}
-                  </div>
-                </div>
-              </div>
+        <!-- Role Cards -->
+        <div class="role-cards">
+
+          <button
+            class="role-card"
+            [class.active]="selectedRole === 'customer'"
+            (click)="selectRole('customer')"
+          >
+            <div class="role-card-icon">
+              <i class="fa-solid fa-user"></i>
             </div>
-          </div>
-
-          <div *ngIf="selectedRole === 'customer'" class="form-text text-end">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label
-                    for="exampleInputPassword1"
-                    class="form-label text-black fw-bold w-100 text-end mb-2"
-                    >كلمة المرور</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    name="password"
-                    [(ngModel)]="customer.password"
-                    required
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                    id="exampleInputPassword1"
-                  />
-
-                  <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
-                    {{ passwordError }}
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label
-                    for="exampleInputAddress"
-                    class="form-label text-black fw-bold w-100 text-end mb-2"
-                    >رقم الهاتف</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="PhoneNumber"
-                    [(ngModel)]="customer.phoneNumber"
-                    id="exampleInputAddress"
-                    placeholder="رقم الهاتف"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                </div>
-              </div>
+            <div class="role-card-text">
+              <span class="role-card-title">عميل</span>
+              <small>أبحث عن خدمات</small>
             </div>
-          </div>
-
-          <div *ngIf="selectedRole === 'customer'" class="form-text text-end">
-            <div class="mb-3">
-              <label
-                for="exampleInputImageUrl"
-                class="form-label text-black fw-bold w-100 text-end mb-2"
-                >رابط الصورة الشخصية</label
-              >
-              <input
-                type="file"
-                class="form-control"
-                name="imageUrl"
-                accept="image/*"
-                (change)="onFileSelected($event)"
-                id="exampleInputImageUrl"
-                placeholder="رابط الصورة الشخصية"
-                style="height: 60px; border-radius: 18px; border: 1px solid #d9e1e8; padding: 17px"
-              />
-            </div>
-          </div>
-
-          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
-                    >الاسم الكامل</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="name"
-                    [(ngModel)]="technician.name"
-                    id="exampleInputName1"
-                    placeholder="الاسم بالكامل"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-
-                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">
-                    {{ nameError }}
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
-                    >البريد الالكتروني</label
-                  >
-                  <input
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    [(ngModel)]="technician.email"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="example@gmail.com"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">
-                    {{ emailError }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label
-                    for="exampleInputPassword1"
-                    class="form-label text-black fw-bold w-100 text-end mb-2"
-                    >كلمة المرور</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    name="password"
-                    [(ngModel)]="technician.password"
-                    required
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                    id="exampleInputPassword1"
-                  />
-
-                  <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
-                    {{ passwordError }}
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label
-                    for="exampleInputAddress"
-                    class="form-label text-black fw-bold w-100 text-end mb-2"
-                    >سنوات الخبرة</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="experienceYears"
-                    [(ngModel)]="technician.experienceYears"
-                    id="exampleInputAddress"
-                    placeholder="سنوات الخبرة"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="selectedRole === 'tech'" class="form-text text-end">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label
-                    for="exampleInputAddress"
-                    class="form-label text-black fw-bold w-100 text-end mb-2"
-                    >رقم الهاتف</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="phoneNumber"
-                    [(ngModel)]="technician.phoneNumber"
-                    id="exampleInputAddress"
-                    placeholder="رقم الهاتف"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label
-                    for="exampleInputImageUrl"
-                    class="form-label text-black fw-bold w-100 text-end mb-2"
-                    >رابط الصورة الشخصية</label
-                  >
-                  <input
-                    type="file"
-                    class="form-control"
-                    name="imageUrl"
-                    accept="image/*"
-                    (change)="onFileSelected($event)"
-                    id="exampleInputImageUrl"
-                    placeholder="رابط الصورة الشخصية"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 17px;
-                    "
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="selectedRole === 'admin'" class="form-text text-end">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputName" class="form-label fw-bold w-100 text-end mb-2"
-                    >الاسم الكامل</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="name"
-                    [(ngModel)]="admin.name"
-                    id="exampleInputName1"
-                    placeholder="الاسم بالكامل"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-
-                  <div *ngIf="nameError" class="text-danger small mt-1 text-end">
-                    {{ nameError }}
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-labe fw-bold w-100 text-end mb-2"
-                    >البريد الالكتروني</label
-                  >
-                  <input
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    [(ngModel)]="admin.email"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="example@gmail.com"
-                    style="
-                      height: 60px;
-                      border-radius: 18px;
-                      border: 1px solid #d9e1e8;
-                      padding: 0 24px;
-                    "
-                  />
-                  <div *ngIf="emailError" class="text-danger small mt-1 text-end">
-                    {{ emailError }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="selectedRole === 'admin'" class="form-text text-end">
-            <div class="mb-3">
-              <label
-                for="exampleInputPassword1"
-                class="form-label text-black fw-bold w-100 text-end mb-2"
-                >كلمة المرور</label
-              >
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                [(ngModel)]="admin.password"
-                required
-                style="
-                  height: 60px;
-                  border-radius: 18px;
-                  border: 1px solid #d9e1e8;
-                  padding: 0 24px;
-                "
-                id="exampleInputPassword1"
-              />
-
-              <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
-                {{ passwordError }}
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" class="btn w-100 rounded-pill mt-2 mb-3 p-3 fw-bold btn-primary">
-            إنشاء حساب
           </button>
-          <p class="text-center d-flex align-content-center justify-content-center">
-            لديك حساب بالفعل ؟ <a routerLink="/login" class="text-decoration-none">تسجيل دخول</a>
+
+          <button
+            class="role-card"
+            [class.active]="selectedRole === 'tech'"
+            (click)="selectRole('tech')"
+          >
+            <div class="role-card-icon">
+              <i class="fa-solid fa-helmet-safety"></i>
+            </div>
+            <div class="role-card-text">
+              <span class="role-card-title">فني</span>
+              <small>أقدم خدمات</small>
+            </div>
+          </button>
+
+          <button
+            class="role-card"
+            [class.active]="selectedRole === 'admin'"
+            (click)="selectRole('admin')"
+          >
+            <div class="role-card-icon">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div class="role-card-text">
+              <span class="role-card-title">مشرف</span>
+              <small>إدارة المنصة</small>
+            </div>
+          </button>
+
+        </div>
+
+        <!-- Form -->
+        <form (ngSubmit)="onRegister()">
+
+          <!-- ═══ CUSTOMER FIELDS ═══ -->
+          <ng-container *ngIf="selectedRole === 'customer'">
+            <div class="fields-row">
+              <div class="form-field">
+                <label class="field-label">الاسم الكامل</label>
+                <input type="text" class="field-input" name="name"
+                       [(ngModel)]="customer.name" placeholder="الاسم بالكامل" />
+                <div *ngIf="nameError" class="field-error">{{ nameError }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">البريد الإلكتروني</label>
+                <input type="email" class="field-input" name="email"
+                       [(ngModel)]="customer.email" placeholder="example@gmail.com"
+                       style="direction:ltr;text-align:right" />
+                <div *ngIf="emailError" class="field-error">{{ emailError }}</div>
+              </div>
+            </div>
+            <div class="fields-row">
+              <div class="form-field">
+                <label class="field-label">كلمة المرور</label>
+                <input type="password" class="field-input" name="password"
+                       [(ngModel)]="customer.password" placeholder="••••••••" required />
+                <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">رقم الهاتف</label>
+                <input type="text" class="field-input" name="PhoneNumber"
+                       [(ngModel)]="customer.phoneNumber" placeholder="01XXXXXXXXX"
+                       style="direction:ltr;text-align:right" />
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="field-label">الصورة الشخصية</label>
+              <label class="file-upload-box">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>اضغط لرفع صورة</span>
+                <input type="file" name="imageUrl" accept="image/*"
+                       (change)="onFileSelected($event)" hidden />
+              </label>
+            </div>
+          </ng-container>
+
+          <!-- ═══ TECHNICIAN FIELDS ═══ -->
+          <ng-container *ngIf="selectedRole === 'tech'">
+            <div class="fields-row">
+              <div class="form-field">
+                <label class="field-label">الاسم الكامل</label>
+                <input type="text" class="field-input" name="name"
+                       [(ngModel)]="technician.name" placeholder="الاسم بالكامل" />
+                <div *ngIf="nameError" class="field-error">{{ nameError }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">البريد الإلكتروني</label>
+                <input type="email" class="field-input" name="email"
+                       [(ngModel)]="technician.email" placeholder="example@gmail.com"
+                       style="direction:ltr;text-align:right" />
+                <div *ngIf="emailError" class="field-error">{{ emailError }}</div>
+              </div>
+            </div>
+            <div class="fields-row">
+              <div class="form-field">
+                <label class="field-label">كلمة المرور</label>
+                <input type="password" class="field-input" name="password"
+                       [(ngModel)]="technician.password" placeholder="••••••••" required />
+                <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">سنوات الخبرة</label>
+                <input type="number" class="field-input" name="experienceYears"
+                       [(ngModel)]="technician.experienceYears" placeholder="مثال: 5" />
+              </div>
+            </div>
+            <div class="fields-row">
+              <div class="form-field">
+                <label class="field-label">رقم الهاتف</label>
+                <input type="text" class="field-input" name="phoneNumber"
+                       [(ngModel)]="technician.phoneNumber" placeholder="01XXXXXXXXX"
+                       style="direction:ltr;text-align:right" />
+              </div>
+              <div class="form-field">
+                <label class="field-label">الصورة الشخصية</label>
+                <label class="file-upload-box file-upload-sm">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <span>رفع صورة</span>
+                  <input type="file" name="imageUrl" accept="image/*"
+                         (change)="onFileSelected($event)" hidden />
+                </label>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ═══ ADMIN FIELDS ═══ -->
+          <ng-container *ngIf="selectedRole === 'admin'">
+            <div class="fields-row">
+              <div class="form-field">
+                <label class="field-label">الاسم الكامل</label>
+                <input type="text" class="field-input" name="name"
+                       [(ngModel)]="admin.name" placeholder="الاسم بالكامل" />
+                <div *ngIf="nameError" class="field-error">{{ nameError }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">البريد الإلكتروني</label>
+                <input type="email" class="field-input" name="email"
+                       [(ngModel)]="admin.email" placeholder="example@gmail.com"
+                       style="direction:ltr;text-align:right" />
+                <div *ngIf="emailError" class="field-error">{{ emailError }}</div>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="field-label">كلمة المرور</label>
+              <input type="password" class="field-input" name="password"
+                     [(ngModel)]="admin.password" placeholder="••••••••" required />
+              <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
+            </div>
+          </ng-container>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-register">
+            إنشاء حساب
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+
+          <p class="reg-login-link">
+            لديك حساب بالفعل؟
+            <a routerLink="/login">تسجيل دخول</a>
           </p>
+
         </form>
       </div>
     </div>
+
+    <!-- LEFT: Dark Side -->
+    <div class="register-dark-side">
+
+      <!-- Content -->
+      <div class="reg-dark-content">
+        <h1>ابدأ رحلتك<br/>مع <span>صلحلي</span> اليوم</h1>
+        <p>انضم لآلاف العملاء والفنيين على أسرع منصة صيانة منزلية في مصر.</p>
+        <div class="reg-features">
+          <div class="reg-feature">
+            <div class="reg-feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <span>تحقق كامل من الفنيين</span>
+          </div>
+          <div class="reg-feature">
+            <div class="reg-feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <span>نظام عروض بالذكاء الاصطناعي</span>
+          </div>
+          <div class="reg-feature">
+            <div class="reg-feature-icon"><i class="fa-solid fa-bolt"></i></div>
+            <span>استجابة سريعة في دقائق</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-dark-footer">© صلحلي ٢٠٢٦</div>
+    </div>
+
   </div>
 </div>
