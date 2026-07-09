@@ -1,24 +1,27 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, effect, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification-service';
 
 @Component({
-  selector: 'app-notifications',
+  selector: 'app-notification-toast',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './notifications.html'
+  templateUrl: './notification-toast.html'
 })
-export class Notifications implements OnInit {
+export class NotificationToast {
   private notificationService = inject(NotificationService);
-  private router = inject(Router);
 
-  notifications = this.notificationService.notifications;
-  unreadCount = this.notificationService.unreadCount;
+  visible = signal(false);
+  current = this.notificationService.latestNotification;
 
-  ngOnInit(): void {
-    this.notificationService.loadNotifications();
-    this.notificationService.startConnection();
+  constructor() {
+    effect(() => {
+      const n = this.current();
+      if (n) {
+        this.visible.set(true);
+        setTimeout(() => this.visible.set(false), 5000);
+      }
+    });
   }
 
   iconFor(type: string): string {
@@ -35,9 +38,7 @@ export class Notifications implements OnInit {
       default:              return 'fa-regular fa-bell';
     }
   }
-markAllRead(): void {
-  this.notificationService.markAllAsRead();
-}
+
   bubbleBg(type: string): string {
     switch (type) {
       case 'bid_accepted': return '#e8f5e9';
@@ -60,24 +61,15 @@ markAllRead(): void {
     }
   }
 
-  onClick(n: any): void {
-    if (!n.isRead) this.notificationService.markAsRead(n.id);
-
-    const route = this.routeFor(n.type);
-    if (route) this.router.navigate([route]);
+  borderColor(n: any): string {
+    if (n.type === 'payment') {
+      const incoming = n.title?.includes('إضافة') || n.title?.includes('شحن');
+      return incoming ? '#2e7d32' : '#dc3545';
+    }
+    return this.iconColor(n.type);
   }
 
-  private routeFor(type: string): string | null {
-    const role = localStorage.getItem('role');
-
-    switch (type) {
-      case 'verification':
-        return role === 'Admin' ? '/admin/technicians' : '/technician/verification';
-      case 'new_bid':       return '/customer/received-bids';
-      case 'bid_accepted':  return '/technician/assigned-tasks';
-      case 'chat':          return '/customer/chat';
-      case 'payment':       return '/wallet';
-      default:              return null;
-    }
+  close(): void {
+    this.visible.set(false);
   }
 }

@@ -1,0 +1,25 @@
+<div *ngIf="visible() && current() as n"
+     class="position-fixed top-0 start-50 translate-middle-x mt-3 shadow-lg bg-white"
+     [style.border-right]="'5px solid ' + borderColor(n)"
+     style="z-index:1080; min-width:320px; max-width:400px; border:1px solid #eef0f2; border-radius:12px; animation:slideDown 0.3s ease;"
+     dir="rtl">
+  <div class="d-flex align-items-start gap-3 p-3">
+    <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+          style="width:44px; height:44px;"
+          [style.background]="bubbleBg(n.type)">
+      <i [class]="iconFor(n.type)" [style.color]="iconColor(n.type)" style="font-size:20px;"></i>
+    </span>
+    <div class="flex-grow-1 text-end" style="min-width:0;">
+      <div class="fw-bold" style="margin-bottom:2px;">{{ n.title }}</div>
+      <div class="text-muted small">{{ n.body }}</div>
+    </div>
+    <button (click)="close()" class="btn-close" style="font-size:12px;"></button>
+  </div>
+</div>
+
+<style>
+@keyframes slideDown {
+  from { transform: translate(-50%, -20px); opacity: 0; }
+  to   { transform: translate(-50%, 0); opacity: 1; }
+}
+</style>
