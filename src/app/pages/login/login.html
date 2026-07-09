@@ -1,170 +1,142 @@
-<div class="container-fluid vh-100 p-0">
-  <div class="row h-100 m-0">
-    <!-- Left Side -->
-    <div class="col-6 d-flex justify-content-center align-items-center" style="background: #f5f7fa">
-      <div style="width: 540px">
-        <div class="mb-5">
-          <h2 class="fw-bold text-end mb-1" style="font-size: 33px; color: #0f172a">
-            تسجيل الدخول
-          </h2>
+<div class="login-page" dir="rtl">
+  <div class="login-layout">
 
-          <p class="text-end text-muted" style="font-size: 18px">اختر نوع حسابك ثم أدخل بياناتك.</p>
+    <!-- RIGHT: Form Side -->
+    <div class="login-form-side">
+      <div class="login-form-inner">
 
-          <!-- باقي الفورم -->
+        <!-- Logo -->
+        <div class="login-logo">
+          <div class="login-logo-icon"><img src="images/Logo-removebg-preview.png" width="80px" alt=""></div>
+          <span>صلّح<em>لي</em></span>
         </div>
+
+        <div class="login-heading">
+          <h2>تسجيل الدخول</h2>
+          <p>اختر نوع حسابك ثم أدخل بياناتك</p>
+        </div>
+
         <!-- Role Toggle -->
-        <div
-          class="d-flex mb-5 p-1 rounded-4"
-          style="background: #e9eef4; border: 1px solid #dbe3ea; height: 60px"
-        >
+        <div class="role-toggle">
           <button
-            class="btn flex-fill rounded-4 border-0 fw-semibold"
-            [ngClass]="
-              selectedRole === 'Customer'
-                ? 'bg-white shadow-sm text-dark'
-                : 'text-secondary bg-transparent'
-            "
+            class="role-btn"
+            [class.active]="selectedRole === 'Customer'"
             (click)="selectRole('Customer')"
           >
-            <i class="fa-regular fa-user me-2"></i>
+            <i class="fa-regular fa-user"></i>
             عميل
           </button>
-
           <button
-            class="btn flex-fill rounded-4 border-0 fw-semibold"
-            [ngClass]="
-              selectedRole === 'Technician'
-                ? 'bg-white shadow-sm text-dark'
-                : 'text-secondary bg-transparent'
-            "
+            class="role-btn"
+            [class.active]="selectedRole === 'Technician'"
             (click)="selectRole('Technician')"
           >
-            <i class="fa-solid fa-toolbox me-2"></i>
+            <i class="fa-solid fa-toolbox"></i>
             فني
           </button>
-
           <button
-            class="btn flex-fill rounded-4 border-0 fw-semibold"
-            [ngClass]="
-              selectedRole === 'Admin'
-                ? 'bg-white shadow-sm text-dark'
-                : 'text-secondary bg-transparent'
-            "
+            class="role-btn"
+            [class.active]="selectedRole === 'Admin'"
             (click)="selectRole('Admin')"
           >
-            <i class="fa-solid fa-shield me-2"></i>
+            <i class="fa-solid fa-shield"></i>
             مشرف
           </button>
         </div>
 
+        <!-- Form -->
         <form (ngSubmit)="onLogin()">
-          <div class="mb-4">
-            <label class="form-label fw-bold w-100 text-end mb-2"> البريد الإلكتروني </label>
 
+          <div class="form-field">
+            <label class="field-label">البريد الإلكتروني</label>
             <input
               type="email"
-              class="form-control text-end"
+              class="field-input"
               [(ngModel)]="email"
               name="email"
               placeholder="email@example.com"
+              style="direction:ltr; text-align:right"
               required
-              style="height: 60px; border-radius: 18px; border: 1px solid #d9e1e8; padding: 0 24px"
             />
-
-            <div *ngIf="emailError" class="text-danger small mt-1 text-end">{{ emailError }}</div>
+            <div *ngIf="emailError" class="field-error">{{ emailError }}</div>
           </div>
 
-          <div class="mb-4">
-            <label class="form-label fw-bold w-100 text-end mb-2"> كلمة المرور </label>
-
+          <div class="form-field">
+            <div class="field-label-row">
+              <label class="field-label" style="margin:0">كلمة المرور</label>
+            </div>
             <input
               type="password"
-              class="form-control text-end"
+              class="field-input"
               [(ngModel)]="password"
               name="password"
               placeholder="••••••••"
               required
-              style="height: 60px; border-radius: 18px; border: 1px solid #d9e1e8; padding: 0 24px"
             />
-
-            <div *ngIf="passwordError" class="text-danger small mt-1 text-end">
-              {{ passwordError }}
-            </div>
-
-            <div class="text-end mt-2">
-              <a
-                routerLink="/forgot-password"
-                class="text-primary text-decoration-none"
-                style="font-size: 14px"
-              >
-                نسيت كلمة المرور؟
-              </a>
-            </div>
+            <a routerLink="/forgot-password" class="forgot-link">نسيت كلمة المرور؟</a>
+            <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
           </div>
 
-          <div *ngIf="errorMsg" class="alert alert-danger text-end">
+          <div *ngIf="errorMsg" class="login-alert">
+            <i class="fa-solid fa-triangle-exclamation"></i>
             {{ errorMsg }}
           </div>
-          <button
-            type="submit"
-            class="btn w-100 text-white fw-bold"
-            [disabled]="loading"
-            style="
-              height: 60px;
-              border: none;
-              border-radius: 18px;
-              font-size: 20px;
-              background: linear-gradient(90deg, #3eacdf, #4290d0);
-            "
-          >
+
+          <button type="submit" class="btn-login" [disabled]="loading">
             {{ loading ? 'جاري الدخول...' : 'دخول' }}
+            <i class="fa-solid fa-arrow-left" *ngIf="!loading"></i>
           </button>
+
         </form>
 
-        <p class="text-center mt-4" style="font-size: 16px">
+        <p class="login-register-link">
           ليس لديك حساب؟
-
-          <a routerLink="/register" class="text-primary fw-semibold text-decoration-none">
-            إنشاء حساب جديد
-          </a>
+          <a routerLink="/register">إنشاء حساب جديد</a>
         </p>
+
       </div>
     </div>
 
-    <!-- Right Side -->
-    <div
-      class="col-6 d-flex flex-column"
-      style="background: linear-gradient(135deg, #1787e0 0%, #30aaaa 100%); padding: 50px"
-    >
-      <!-- Logo -->
-      <div class="d-flex justify-content-start align-items-center gap-3">
-        <div
-          class="rounded-circle d-flex justify-content-center align-items-center"
-          style="width: 42px; height: 42px; background: rgba(255, 255, 255, 0.18)"
-        >
-          <i class="fa-solid fa-wrench text-white"></i>
-        </div>
-        <span class="text-white fw-bold" style="font-size: 22px"> صلّحلي </span>
+    <!-- LEFT: Dark Side -->
+    <div class="login-dark-side">
 
+      <!-- Hero Image -->
+      <div class="login-hero-img-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900&q=85"
+          alt="فني صلحلي"
+          class="login-hero-img"
+        />
+        <div class="login-hero-overlay"></div>
       </div>
 
-      <!-- Content -->
-      <div class="my-auto text-end pe-5">
-        <h1 class="text-white fw-bold mb-4" style="font-size: 40px; line-height: 1.1">
-          مرحباً بعودتك إلى
-          <br />
-          منصتك المفضلة
+      <!-- Content over image -->
+      <div class="login-dark-content">
+        <h1>
+          مرحباً بعودتك<br/>
+          إلى <span>صلّحلي</span>
         </h1>
+        <p>سجّل الدخول وتابع طلباتك أو ابدأ طلباً جديداً بكل سهولة وأمان.</p>
 
-        <p class="text-white" style="font-size: 22px; opacity: 0.9; line-height: 1.8">
-          .سجّل الدخول وتابع طلباتك أو ابدأ طلباً جديداً بكل سهولة
-        </p>
+        <div class="login-features">
+          <div class="login-feature">
+            <div class="login-feature-icon"><i class="fa-solid fa-bolt"></i></div>
+            <span>فنيون يصلونك في دقائق</span>
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <span>خدمة موثوقة ومضمونة</span>
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-icon"><i class="fa-solid fa-tag"></i></div>
+            <span>أسعار شفافة بدون مفاجآت</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Footer -->
-      <div class="text-end">
-        <span class="text-white" style="opacity: 0.6; font-size: 18px"> صلّحلي ٢٠٢٦ © </span>
-      </div>
+      <div class="login-dark-footer">© صلّحلي ٢٠٢٦</div>
+
     </div>
+
   </div>
 </div>
