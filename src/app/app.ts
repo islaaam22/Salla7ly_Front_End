@@ -3,12 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { Register } from './pages/register/register';
 import { NotificationService } from './services/notification-service';
 import { NotificationToast } from './pages/notification-toast/notification-toast';
-
+import { AiSupport } from './pages/ai-support/ai-support';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NotificationToast],
+  imports: [RouterOutlet, NotificationToast, AiSupport],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
