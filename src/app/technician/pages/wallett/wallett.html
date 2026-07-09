@@ -6,6 +6,14 @@
     <p class="earnings-sub">تابع أرباحك واسحبها عبر Stripe Connect</p>
   </div>
 
+  @if (errorMsg) {
+    <div class="alert alert-danger" role="alert">{{ errorMsg }}</div>
+  }
+
+  @if (successMsg) {
+    <div class="alert alert-success" role="alert">{{ successMsg }}</div>
+  }
+
   <!-- Top Row -->
   <div class="earnings-top-grid">
 
@@ -39,9 +47,13 @@
         <i class="fa-solid fa-arrow-trend-up"></i>
         +{{ growthPercent }}% مقارنة بالشهر الماضي
       </div>
-      <button class="btn-withdraw" (click)="withdrawEarnings()">
+      <div class="mt-3">
+        <label class="form-label">الحساب البنكي أو رقم الحساب</label>
+        <input class="form-control" [(ngModel)]="bankAccount" placeholder="مثال: 1234567890" />
+      </div>
+      <button class="btn-withdraw mt-3" (click)="withdrawEarnings()" [disabled]="loading">
         <i class="fa-solid fa-download"></i>
-        سحب الأرباح
+        {{ loading ? 'جاري الإرسال...' : 'سحب الأرباح' }}
       </button>
     </div>
 

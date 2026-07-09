@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RequestService } from '../../../services/request';
+import { PaymentService } from '../../../services/payment-service';
 
 @Component({
   selector: 'app-my-requests',
@@ -15,7 +16,11 @@ export class MyRequests implements OnInit {
   completingId: number | null = null;
   errorMsg: string | null = null;
 
-  constructor(private requestService: RequestService, private router: Router) {}
+  constructor(
+    private requestService: RequestService,
+    private paymentService: PaymentService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadRequests();
@@ -87,11 +92,18 @@ export class MyRequests implements OnInit {
 
     this.requestService.completeRequest(requestId).subscribe({
       next: () => {
-        this.completingId = null;
-        // Optimistically update status in the list
-        const req = this.requests.find(r => r.id === requestId);
-        if (req) req.status = 'completed';
-        this.router.navigate(['/customer/review', requestId]);
+        this.paymentService.createEscrow(requestId).subscribe({
+          next: (res) => {
+            this.completingId = null;
+            const req = this.requests.find(r => r.id === requestId);
+            if (req) req.status = 'completed';
+            this.router.navigate(['/customer/review', requestId]);
+          },
+          error: () => {
+            this.completingId = null;
+            this.errorMsg = 'تم إتمام الخدمة، لكن فشل إنشاء الدفع المؤجل. يرجى المحاولة لاحقًا.';
+          }
+        });
       },
       error: () => {
         this.completingId = null;

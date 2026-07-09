@@ -38,6 +38,7 @@ import { Dashboard as AdminDashboard } from './admin/pages/dashboard/dashboard';
 import { Dashboard as TechnicianDashboard } from './technician/pages/tech-dashboard/dashboard';
 import { AdminCustomers } from './admin/pages/customers/customers';
 import { Wallet as CustomerWallet } from './pages/wallet/wallet';
+import { AdminWallet } from './pages/admin-wallet/admin-wallet';
 import { AdminRequests } from './admin/pages/requests/requests';
 import { AdminBids } from './admin/pages/Bids/bids';
 import { AdminReviews } from './admin/pages/reviews/reviews';
@@ -111,6 +112,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: AdminDashboard },
       { path: 'notifications', component: Notifications },
       { path: 'customers', component: AdminCustomers },
+      { path: 'wallet', component: AdminWallet },
       { path: 'requests', component: AdminRequests },
       { path: 'Bids', component: AdminBids },
       { path: 'reviews', component: AdminReviews },
