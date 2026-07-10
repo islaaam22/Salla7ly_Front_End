@@ -18,10 +18,11 @@ export class Register implements OnInit {
 
   // قائمة الكاتيجوريز المتاحة
   availableCategories = [
-    { id: 1, name: 'كهرباء' },
     { id: 2, name: 'سباكة' },
-    { id: 3, name: 'تكييف' },
-    { id: 4, name: 'نجارة' },
+    { id: 4, name: 'اجهزة' },
+    { id: 5, name: 'نجارة' },
+    { id: 6, name: 'تكييف' },
+    { id: 7, name: 'كهرباء' },
   ];
 
   ngOnInit() {
