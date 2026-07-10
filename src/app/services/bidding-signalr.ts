@@ -66,10 +66,12 @@ export class BiddingSignalRService {
   }
 
   joinRequest(requestId: number): Promise<void> {
+    if (!this.isConnected) return Promise.resolve();
     return this.connection.invoke('JoinRequest', requestId.toString());
   }
 
   leaveRequest(requestId: number): Promise<void> {
+    if (!this.isConnected) return Promise.resolve();
     return this.connection.invoke('LeaveRequest', requestId.toString());
   }
 }

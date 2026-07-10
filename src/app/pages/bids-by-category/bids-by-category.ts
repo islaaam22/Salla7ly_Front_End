@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -19,6 +17,7 @@ interface RequestGroup {
 @Component({
   selector: 'app-bids-by-category',
   templateUrl: './bids-by-category.html',
+  styleUrl: './bids-by-category.css',
   imports: [CommonModule, RouterLink],
 })
 export class BidsByCategoryComponent implements OnInit, OnDestroy {

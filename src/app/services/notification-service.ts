@@ -19,6 +19,11 @@ export class NotificationService {
 
   // ── REST ──────────────────────────────────
 
+  /** Plain observable version, useful for composing with forkJoin (e.g. dashboards) */
+  fetchNotifications(): Observable<AppNotification[]> {
+    return this.http.get<AppNotification[]>(this.apiUrl);
+  }
+
   loadNotifications(): void {
     this.http.get<AppNotification[]>(this.apiUrl).subscribe({
       next: (list) => {
@@ -28,7 +33,7 @@ export class NotificationService {
       error: () => {}
     });
   }
- 
+
 
   markAsRead(id: number): void {
     this.http.put(`${this.apiUrl}/${id}/read`, {}).subscribe({

@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BiddingSignalRService } from '../../services/bidding-signalr';
 import { RequestService } from '../../services/bid-api';
+import { Auth } from '../../services/auth';
 import { Bid } from '../../models/bid-models';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-bid-comparison',
   templateUrl: './submit-bids.html',
+  styleUrl: './submit-bids.css',
   imports: [CommonModule, FormsModule, RouterLink]
 })
 export class BidComparisonComponent implements OnInit, OnDestroy {
@@ -25,19 +27,36 @@ export class BidComparisonComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private requestService: RequestService,
-    private signalR: BiddingSignalRService
+    private signalR: BiddingSignalRService,
+    private auth: Auth
   ) {}
 
   ngOnInit(): void {
     this.requestId = +this.route.snapshot.paramMap.get('id')!;
     this.loadBids();
     this.listenToSignalR();
+    this.connectSignalR();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.signalR.leaveRequest(this.requestId);
+  }
+
+  private connectSignalR(): void {
+    const token = this.auth.getToken();
+    if (!token) return;
+
+    const ready = this.signalR.isConnected
+      ? Promise.resolve()
+      : this.signalR.connect(token);
+
+    ready
+      .then(() => this.signalR.joinRequest(this.requestId))
+      .catch(() => {
+        // Live updates are a nice-to-have here — the bid list already loaded via REST.
+      });
   }
 
   private loadBids(): void {
