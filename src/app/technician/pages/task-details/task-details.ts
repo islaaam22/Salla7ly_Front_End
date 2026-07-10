@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RequestService } from '../../../services/request';
+import { PaymentService } from '../../../services/payment-service';
 
 @Component({
   selector: 'app-task-details',
@@ -13,13 +14,15 @@ export class TaskDetailsComponent implements OnInit {
   request: any = null;
   loading = true;
   starting = false;
+  releasing = false;
   successMsg = '';
   errorMsg = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private requestService: RequestService
+    private requestService: RequestService,
+    private paymentService: PaymentService
   ) {}
 
   ngOnInit() {
@@ -92,6 +95,25 @@ export class TaskDetailsComponent implements OnInit {
   isAlreadyStarted(): boolean {
     const s = this.normalizeStatus(this.request?.status);
     return s === 'inprogress' || s === 'completed';
+  }
+
+  releasePayment() {
+    if (!this.request?.id || this.releasing) return;
+    this.releasing = true;
+    this.successMsg = '';
+    this.errorMsg = '';
+
+    this.paymentService.releasePayment(this.request.id).subscribe({
+      next: () => {
+        this.releasing = false;
+        this.successMsg = 'تم تحرير المبلغ بنجاح إلى المحفظة الخاصة بالفني';
+        this.request = { ...this.request, status: 'completed' };
+      },
+      error: (err) => {
+        this.releasing = false;
+        this.errorMsg = err?.error?.message ?? 'تعذر تحرير الدفع';
+      }
+    });
   }
 
   goToChat() {

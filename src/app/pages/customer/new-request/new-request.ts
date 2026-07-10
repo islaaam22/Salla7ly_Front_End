@@ -99,7 +99,7 @@ export class NewRequest implements OnInit {
       const seen = new Set<string>();
 
       this.uniqueAddresses = list.filter(addr => {
-        const key = `${addr.addressDetails}-${addr.city}-${addr.district}`.trim();
+        const key = `${addr.street}-${addr.city}-${addr.district}`.trim();
 
         if (seen.has(key)) {
           return false;
@@ -128,7 +128,7 @@ export class NewRequest implements OnInit {
 
   selectAddress(addr: CustomerAddress) {
     this.selectedAddressId    = addr.id;
-    this.form.serviceAddress  = addr.addressDetails;
+    this.form.serviceAddress  = addr.street ?? '';
     this.form.city            = addr.city    ?? '';
     this.form.district        = addr.district ?? '';
   }
@@ -148,7 +148,7 @@ onAddressChange(value: any) {
 }
 
   addressLabel(addr: CustomerAddress): string {
-    const parts = [addr.addressDetails, addr.district, addr.city].filter(Boolean);
+    const parts = [addr.title, addr.street, addr.district, addr.city].filter(Boolean);
     return parts.join('، ');
   }
 

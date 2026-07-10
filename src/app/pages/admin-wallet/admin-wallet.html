@@ -1,0 +1,34 @@
+<div class="container-fluid py-4" dir="rtl">
+  <h3 class="mb-3">إحصائيات المحفظة</h3>
+
+  @if (errorMsg) {
+    <div class="alert alert-danger">{{ errorMsg }}</div>
+  }
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">إجمالي الإيداعات</h6>
+          <h3>{{ stats.totalDeposits | number:'1.0-0' }} ج</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">إجمالي السحوبات</h6>
+          <h3>{{ stats.totalWithdrawals | number:'1.0-0' }} ج</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="text-muted">الرصيد المعلق</h6>
+          <h3>{{ stats.pendingBalance | number:'1.0-0' }} ج</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
