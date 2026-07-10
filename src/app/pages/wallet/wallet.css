@@ -358,3 +358,18 @@
   .balance-value { font-size: 2rem; }
   .balance-btns { flex-direction: column; }
 }
+
+
+.modal-error {
+  color: #e74c3c;
+  font-size: 13px;
+  font-weight: 700;
+  margin: -12px 0 16px;
+  text-align: right;
+}
+
+.btn-confirm-charge:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+  transform: none !important;
+}

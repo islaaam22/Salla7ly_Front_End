@@ -2,8 +2,11 @@
 
   <!-- Breadcrumb -->
   <div class="text-end mb-2">
-    <a routerLink="/customer/my-requests" class="text-primary text-decoration-none">
-      ← طلباتي
+    <a routerLink="/customer/my-requests" class="btn-back-to-requests">
+      <span class="btn-back-icon">
+        <i class="fa-solid fa-arrow-right"></i>
+      </span>
+      طلباتي
     </a>
   </div>
 
@@ -158,6 +161,11 @@
           }
         </button>
       }
+
+      <button class="btn-submit btn-back mt-3" [disabled]="refundLoading" (click)="refundPayment()">
+        <i class="fa-solid fa-rotate-left"></i>
+        {{ refundLoading ? 'جاري...' : 'استرداد المبلغ' }}
+      </button>
 
       <!-- Back (after submission or when already reviewed) -->
       @if (alreadyReviewed) {

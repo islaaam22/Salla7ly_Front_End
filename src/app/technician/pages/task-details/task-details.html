@@ -120,6 +120,12 @@
               <i class="fa-solid fa-circle-check"></i>
               {{ starting ? 'جاري...' : isAlreadyStarted() ? 'تم البدء' : 'بدء المهمة' }}
             </button>
+            @if (request.status === 'completed' || request.status === 'Completed') {
+              <button class="btn-complete" [disabled]="releasing" (click)="releasePayment()">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+                {{ releasing ? 'جاري...' : 'تحرير الدفع' }}
+              </button>
+            }
             <button class="btn-cancel" (click)="goBack()">
               إلغاء
             </button>

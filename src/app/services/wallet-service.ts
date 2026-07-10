@@ -71,6 +71,14 @@ export class WalletService {
     });
   }
 
+  /** POST /api/wallet/withdraw — confirmed present in Swagger, added from omar's branch */
+  withdraw(amount: number, bankAccount: string): Observable<ApiResponse<{ message?: string }>> {
+    return this.http.post<ApiResponse<{ message?: string }>>(`${this.apiUrl}/withdraw`, {
+      amount,
+      bankAccount,
+    });
+  }
+
   extractBalance(res: ApiResponse<WalletData> | null | undefined): number {
     return res?.data?.balance ?? 0;
   }
