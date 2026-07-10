@@ -1,85 +1,101 @@
 <div class="wallet-page" dir="rtl">
 
-
   <!-- Header -->
   <div class="wallet-header">
     <h1 class="wallet-title">المحفظة</h1>
     <p class="wallet-sub">إدارة رصيدك ومعاملاتك المالية</p>
   </div>
 
-  @if (errorMsg) {
-    <div class="alert alert-danger" role="alert">{{ errorMsg }}</div>
-  }
-
-  @if (successMsg) {
-    <div class="alert alert-success" role="alert">{{ successMsg }}</div>
-  }
-
-  <!-- Top Row -->
-  <div class="wallet-top-grid">
-
-    <!-- Balance Card -->
-    <div class="balance-card">
-      <div class="balance-card-top">
-        <span class="balance-label">الرصيد الحالي</span>
-        <div class="balance-value">{{ balance | number:'1.0-0' }} <span>ج.م</span></div>
-      </div>
-      <div class="balance-btns">
-        <button class="btn-charge" (click)="openTopUpModal()">
-          <i class="fa-solid fa-plus"></i>
-          شحن الرصيد
-        </button>
-        <button class="btn-payment-methods" (click)="openPaymentMethods()">
-          <i class="fa-solid fa-credit-card"></i>
-          طرق الدفع
-        </button>
-      </div>
-    </div>
-
-    <!-- Virtual Card -->
-    <div class="virtual-card">
-      <div class="virtual-card-icon">
-        <i class="fa-regular fa-credit-card"></i>
-      </div>
-      <div class="virtual-card-info">
-        <h6 class="virtual-card-title">بطاقة افتراضية</h6>
-        <p class="virtual-card-num" dir="ltr">**** **** **** 4343</p>
-      </div>
-      <a href="#" class="virtual-card-link">إدارة البطاقات</a>
-    </div>
-
+  <!-- returning from Stripe checkout -->
+  <div class="tx-empty" *ngIf="isConfirmingPayment">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    جاري تأكيد عملية الدفع...
   </div>
 
-  <!-- Transactions -->
-  <div class="transactions-card">
-    <h3 class="transactions-title">آخر المعاملات</h3>
+  <ng-container *ngIf="!isConfirmingPayment">
 
-    <div *ngFor="let tx of transactions" class="tx-item">
-      <div
-        class="tx-icon"
-        [style.background]="tx.type === 'in' ? '#e1f5ee' : '#fef2f2'"
-        [style.color]="tx.type === 'in' ? '#10b981' : '#e74c3c'"
-      >
-        <i
-          class="fa-solid"
-          [class.fa-down-left-and-up-right-to-center]="tx.type === 'in'"
-          [class.fa-up-right-and-down-left-from-center]="tx.type !== 'in'"
-        ></i>
-      </div>
-      <div class="tx-info">
-        <div class="tx-title">{{ tx.title }}</div>
-        <small class="tx-date">{{ tx.date }}</small>
-      </div>
-      <span class="tx-amount" [class.tx-in]="tx.type === 'in'" [class.tx-out]="tx.type !== 'in'">
-        {{ tx.type === 'in' ? '+' : '-' }}{{ tx.amount }} ج.م
-      </span>
+    <!-- loading -->
+    <div class="tx-empty" *ngIf="isLoading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      جاري تحميل بيانات المحفظة...
     </div>
 
-    <div *ngIf="transactions.length === 0" class="tx-empty">
-      <i class="fa-regular fa-clock"></i>
-      لا توجد معاملات حتى الآن
+    <!-- error -->
+    <div class="tx-empty" *ngIf="!isLoading && loadError">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      حصل خطأ أثناء تحميل المحفظة
     </div>
-  </div>
+
+    <ng-container *ngIf="!isLoading && !loadError">
+
+      <!-- Top Row -->
+      <div class="wallet-top-grid">
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+          <div class="balance-card-top">
+            <span class="balance-label">الرصيد الحالي</span>
+            <div class="balance-value">{{ balance | number:'1.0-0' }} <span>{{ currency }}</span></div>
+          </div>
+          <div class="balance-btns">
+            <button class="btn-charge" (click)="openTopUpModal()">
+              <i class="fa-solid fa-plus"></i>
+              شحن الرصيد
+            </button>
+            <button class="btn-payment-methods">
+              <i class="fa-solid fa-credit-card"></i>
+              طرق الدفع
+            </button>
+          </div>
+        </div>
+
+        <!-- Virtual Card -->
+        <div class="virtual-card">
+          <div class="virtual-card-icon">
+            <i class="fa-regular fa-credit-card"></i>
+          </div>
+          <div class="virtual-card-info">
+            <h6 class="virtual-card-title">بطاقة افتراضية</h6>
+            <p class="virtual-card-num" dir="ltr">**** **** **** 4343</p>
+          </div>
+          <a href="#" class="virtual-card-link">إدارة البطاقات</a>
+        </div>
+
+      </div>
+
+      <!-- Transactions -->
+      <div class="transactions-card">
+        <h3 class="transactions-title">آخر المعاملات</h3>
+
+        <div *ngFor="let tx of transactions" class="tx-item">
+          <div
+            class="tx-icon"
+            [style.background]="isIncoming(tx) ? '#e1f5ee' : '#fef2f2'"
+            [style.color]="isIncoming(tx) ? '#10b981' : '#e74c3c'"
+          >
+            <i
+              class="fa-solid"
+              [class.fa-down-left-and-up-right-to-center]="isIncoming(tx)"
+              [class.fa-up-right-and-down-left-from-center]="!isIncoming(tx)"
+            ></i>
+          </div>
+          <div class="tx-info">
+            <div class="tx-title">{{ txTitle(tx) }}</div>
+            <small class="tx-date">{{ txDate(tx) }}</small>
+          </div>
+          <span class="tx-amount" [class.tx-in]="isIncoming(tx)" [class.tx-out]="!isIncoming(tx)">
+            {{ isIncoming(tx) ? '+' : '-' }}{{ tx.amount }} {{ currency }}
+          </span>
+        </div>
+
+        <div *ngIf="transactions.length === 0" class="tx-empty">
+          <i class="fa-regular fa-clock"></i>
+          لا توجد معاملات حتى الآن
+        </div>
+      </div>
+
+    </ng-container>
+  </ng-container>
 
   <!-- Top Up Modal -->
   <div class="modal-overlay" *ngIf="showTopUpModal">
@@ -114,14 +130,13 @@
         />
       </div>
 
-      <button class="btn-confirm-charge" (click)="confirmTopUp()" [disabled]="loading">
-        <i class="fa-solid fa-plus"></i>
-        {{ loading ? 'جاري الإرسال...' : 'تأكيد الشحن' }}
-      </button>
+      <p class="modal-error" *ngIf="topUpError">{{ topUpError }}</p>
 
-      <div class="mt-3 text-muted small">
-        سيتم استخدام طريقة الدفع الافتراضية المتاحة من الباك إند عند تأكيد الشحن.
-      </div>
+      <button class="btn-confirm-charge" (click)="confirmTopUp()" [disabled]="isSubmittingTopUp">
+        <i class="fa-solid fa-spinner fa-spin" *ngIf="isSubmittingTopUp"></i>
+        <i class="fa-solid fa-plus" *ngIf="!isSubmittingTopUp"></i>
+        {{ isSubmittingTopUp ? 'جاري التحويل لصفحة الدفع...' : 'تأكيد الشحن' }}
+      </button>
 
     </div>
   </div>

@@ -6,97 +6,147 @@
     <p class="earnings-sub">تابع أرباحك واسحبها عبر Stripe Connect</p>
   </div>
 
-  @if (errorMsg) {
-    <div class="alert alert-danger" role="alert">{{ errorMsg }}</div>
-  }
-
-  @if (successMsg) {
-    <div class="alert alert-success" role="alert">{{ successMsg }}</div>
-  }
-
-  <!-- Top Row -->
-  <div class="earnings-top-grid">
-
-    <!-- Small cards -->
-    <div class="small-cards-col">
-
-      <div class="small-card">
-        <div class="small-card-icon" style="background:#fefce8">
-          <i class="fa-regular fa-clock" style="color:#d97706"></i>
-        </div>
-        <div class="small-card-val">{{ pendingBalance }} ج</div>
-        <div class="small-card-label">رصيد معلّق</div>
-        <div class="small-card-note">يتحرر خلال {{ pendingDays }} أيام</div>
-      </div>
-
-      <div class="small-card">
-        <div class="small-card-icon" style="background:#e8f3ff">
-          <i class="fa-solid fa-wallet" style="color:#1787e0"></i>
-        </div>
-        <div class="small-card-val">{{ totalWithdrawn }} ج</div>
-        <div class="small-card-label">إجمالي المسحوب</div>
-      </div>
-
-    </div>
-
-    <!-- Big balance card -->
-    <div class="balance-card">
-      <span class="balance-label">الرصيد المتاح للسحب</span>
-      <div class="balance-value">{{ availableBalance }} <span>ج.م</span></div>
-      <div class="balance-change">
-        <i class="fa-solid fa-arrow-trend-up"></i>
-        +{{ growthPercent }}% مقارنة بالشهر الماضي
-      </div>
-      <div class="mt-3">
-        <label class="form-label">الحساب البنكي أو رقم الحساب</label>
-        <input class="form-control" [(ngModel)]="bankAccount" placeholder="مثال: 1234567890" />
-      </div>
-      <button class="btn-withdraw mt-3" (click)="withdrawEarnings()" [disabled]="loading">
-        <i class="fa-solid fa-download"></i>
-        {{ loading ? 'جاري الإرسال...' : 'سحب الأرباح' }}
-      </button>
-    </div>
-
+  <!-- loading -->
+  <div class="withdrawal-empty" *ngIf="isLoading">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    جاري تحميل بيانات المحفظة...
   </div>
 
-  <!-- Bottom Row -->
-  <div class="earnings-bottom-grid">
+  <!-- error -->
+  <div class="withdrawal-empty" *ngIf="!isLoading && loadError">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    حصل خطأ أثناء تحميل بيانات المحفظة
+  </div>
 
-    <!-- Withdrawal History -->
-    <div class="earnings-card">
-      <h3 class="earnings-card-title">سجل السحوبات</h3>
+  <ng-container *ngIf="!isLoading && !loadError">
 
-      <div class="withdrawal-item" *ngFor="let w of withdrawalHistory">
-        <div class="withdrawal-amount">{{ w.amount }} ج</div>
-        <div class="withdrawal-info">
-          <span class="withdrawal-month">{{ w.month }}</span>
-          <span [class]="'withdrawal-status ' + w.statusClass">
-            <i [class]="w.statusIcon"></i>
-            {{ w.statusLabel }}
-          </span>
-        </div>
-      </div>
+    <!-- Top Row -->
+    <div class="earnings-top-grid">
 
-      <div class="withdrawal-empty" *ngIf="withdrawalHistory.length === 0">
-        لا توجد سحوبات بعد
-      </div>
-    </div>
+      <!-- Small cards -->
+      <div class="small-cards-col">
 
-    <!-- Last 4 Months Performance -->
-    <div class="earnings-card">
-      <h3 class="earnings-card-title">أداء آخر 4 شهور</h3>
-
-      <div class="bars-chart">
-        <div class="bar-col" *ngFor="let m of monthlyPerformance">
-          <div class="bar-amount">{{ m.amount }} ج</div>
-          <div class="bar-track">
-            <div class="bar-fill" [style.height.%]="m.percentHeight"></div>
+        <div class="small-card">
+          <div class="small-card-icon" style="background:#fefce8">
+            <i class="fa-regular fa-clock" style="color:#d97706"></i>
           </div>
-          <div class="bar-month">{{ m.month }}</div>
+          <div class="small-card-val">{{ pendingBalance }} {{ currency }}</div>
+          <div class="small-card-label">رصيد معلّق</div>
+          <div class="small-card-note">يتحرر خلال {{ pendingDays }} أيام</div>
         </div>
+
+        <div class="small-card">
+          <div class="small-card-icon" style="background:#e8f3ff">
+            <i class="fa-solid fa-wallet" style="color:#1787e0"></i>
+          </div>
+          <div class="small-card-val">{{ totalWithdrawn }} {{ currency }}</div>
+          <div class="small-card-label">إجمالي المسحوب</div>
+        </div>
+
       </div>
+
+      <!-- Big balance card -->
+      <div class="balance-card">
+        <span class="balance-label">الرصيد المتاح للسحب</span>
+        <div class="balance-value">{{ availableBalance }} <span>{{ currency }}</span></div>
+        <div class="balance-change" *ngIf="growthPercent !== 0">
+          <i class="fa-solid" [class.fa-arrow-trend-up]="growthPercent > 0" [class.fa-arrow-trend-down]="growthPercent < 0"></i>
+          {{ growthPercent > 0 ? '+' : '' }}{{ growthPercent }}% مقارنة بالشهر الماضي
+        </div>
+        <button class="btn-withdraw" (click)="withdrawEarnings()">
+          <i class="fa-solid fa-download"></i>
+          سحب الأرباح
+        </button>
+      </div>
+
     </div>
 
+    <!-- Bottom Row -->
+    <div class="earnings-bottom-grid">
+
+      <!-- Withdrawal History -->
+      <div class="earnings-card">
+        <h3 class="earnings-card-title">سجل السحوبات</h3>
+
+        <div class="withdrawal-item" *ngFor="let w of withdrawalHistory">
+          <div class="withdrawal-amount">{{ w.amount }} {{ currency }}</div>
+          <div class="withdrawal-info">
+            <span class="withdrawal-month">{{ txMonthLabel(w) }}</span>
+            <span class="withdrawal-status status-completed">
+              <i class="fa-solid fa-circle-check"></i>
+              {{ w.description || 'سحب أرباح' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="withdrawal-empty" *ngIf="withdrawalHistory.length === 0">
+          لا توجد سحوبات بعد
+        </div>
+      </div>
+
+      <!-- Last 4 Months Performance -->
+      <div class="earnings-card">
+        <h3 class="earnings-card-title">أداء آخر 4 شهور</h3>
+
+        <div class="bars-chart" *ngIf="monthlyPerformance.length > 0">
+          <div class="bar-col" *ngFor="let m of monthlyPerformance">
+            <div class="bar-amount">{{ m.amount }} {{ currency }}</div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.height.%]="m.percentHeight"></div>
+            </div>
+            <div class="bar-month">{{ m.month }}</div>
+          </div>
+        </div>
+
+        <div class="withdrawal-empty" *ngIf="monthlyPerformance.length === 0">
+          لا توجد بيانات كافية بعد
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <!-- Withdraw Modal -->
+  <div class="modal-overlay" *ngIf="showWithdrawModal">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <button class="modal-close" (click)="closeWithdrawModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h5 class="modal-title">سحب الأرباح</h5>
+      </div>
+
+      <div class="modal-field">
+        <label class="modal-label">المبلغ ({{ currency }})</label>
+        <input
+          type="number"
+          class="modal-input"
+          [(ngModel)]="withdrawAmount"
+          placeholder="مثال: 500"
+        />
+      </div>
+
+      <div class="modal-field">
+        <label class="modal-label">رقم الحساب البنكي / الآيبان</label>
+        <input
+          type="text"
+          class="modal-input"
+          [(ngModel)]="bankAccount"
+          placeholder="EG..."
+        />
+      </div>
+
+      <p class="modal-error" *ngIf="withdrawError">{{ withdrawError }}</p>
+
+      <button class="btn-confirm-charge" (click)="confirmWithdraw()" [disabled]="isSubmittingWithdraw">
+        <i class="fa-solid fa-spinner fa-spin" *ngIf="isSubmittingWithdraw"></i>
+        <i class="fa-solid fa-download" *ngIf="!isSubmittingWithdraw"></i>
+        {{ isSubmittingWithdraw ? 'جاري الإرسال...' : 'تأكيد السحب' }}
+      </button>
+
+    </div>
   </div>
 
 </div>

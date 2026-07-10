@@ -1,15 +1,12 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { WalletService, WalletDto, ApiResponse, WalletTransactionDto } from '../../../services/wallet-service';
 
-interface WithdrawalRecord {
-  amount: number;
-  month: string;
-  statusLabel: string;
-  statusClass: string;
-  statusIcon: string;
-}
+import {
+  WalletService,
+  WalletData,
+  WalletTransaction,
+} from '../../../services/wallet-service';
 
 interface MonthlyPerformance {
   month: string;
@@ -22,112 +19,157 @@ interface MonthlyPerformance {
   imports: [CommonModule, FormsModule],
   templateUrl: './wallett.html',
   styleUrl: './wallett.css',
-  providers: [DatePipe],
 })
 export class Wallet implements OnInit {
+  constructor(private walletService: WalletService) {}
+
+  // top cards — driven by real /api/wallet data
   pendingBalance = 0;
-  pendingDays = 0;
+  pendingDays = 7; // not returned by the API yet; kept as a static hint in the UI
   totalWithdrawn = 0;
   availableBalance = 0;
-  growthPercent = 0;
-  loading = false;
-  errorMsg: string | null = null;
-  successMsg: string | null = null;
-  bankAccount = '';
+  currency = 'EGP';
 
-  withdrawalHistory: WithdrawalRecord[] = [];
+  // derived from totalEarned/totalWithdrawn trend — best-effort until the API exposes a real delta
+  growthPercent = 0;
+
+  transactions: WalletTransaction[] = [];
+  withdrawalHistory: WalletTransaction[] = [];
   monthlyPerformance: MonthlyPerformance[] = [];
 
-  private rawPerformance: { month: string; amount: number }[] = [];
+  isLoading = true;
+  loadError = false;
 
-  constructor(private walletService: WalletService, private datePipe: DatePipe) {}
+  // withdraw modal state
+  showWithdrawModal = false;
+  withdrawAmount: number | null = null;
+  bankAccount = '';
+  isSubmittingWithdraw = false;
+  withdrawError = '';
 
   ngOnInit(): void {
     this.loadWallet();
   }
 
-  loadWallet(): void {
-    this.loading = true;
-    this.errorMsg = null;
+  private loadWallet(): void {
+    this.isLoading = true;
+    this.loadError = false;
+
     this.walletService.getWallet().subscribe({
-      next: (res: ApiResponse<WalletDto>) => {
-        this.loading = false;
-        if (res.success && res.data) {
-          this.availableBalance = Number(res.data.balance || 0);
-          this.pendingBalance = Number(res.data.pendingBalance || 0);
-          this.totalWithdrawn = Number(res.data.totalWithdrawn || 0);
-          this.withdrawalHistory = (res.data.transactions || [])
-            .filter((tx: WalletTransactionDto) => Number(tx.amount || 0) < 0)
-            .map((tx: WalletTransactionDto) => ({
-              amount: Math.abs(Number(tx.amount || 0)),
-              month: this.formatDate(tx.createdAt),
-              statusLabel: 'مكتمل',
-              statusClass: 'status-completed',
-              statusIcon: 'fa-solid fa-circle-check',
-            }));
+      next: (res) => {
+        const data: WalletData | undefined = res?.data;
+        this.pendingBalance = data?.pendingBalance ?? 0;
+        this.totalWithdrawn = data?.totalWithdrawn ?? 0;
+        this.availableBalance = data?.balance ?? 0;
+        this.currency = data?.currency || 'EGP';
 
-          this.rawPerformance = (res.data.transactions || [])
-            .slice(0, 4)
-            .map((tx: WalletTransactionDto, index: number) => ({
-              month: this.formatMonth(index),
-              amount: Math.abs(Number(tx.amount || 0)),
-            }));
+        this.transactions = this.walletService.extractTransactions(res);
+        this.withdrawalHistory = this.transactions.filter((t) => this.isWithdrawal(t));
+        this.buildMonthlyPerformance(this.transactions);
 
-          const maxAmount = Math.max(...this.rawPerformance.map((m) => m.amount), 1);
-          this.monthlyPerformance = this.rawPerformance.map((m) => ({
-            ...m,
-            percentHeight: Math.round((m.amount / maxAmount) * 100),
-          }));
-        } else {
-          this.errorMsg = res.message || 'تعذر تحميل بيانات المحفظة';
-        }
+        this.isLoading = false;
       },
       error: () => {
-        this.loading = false;
-        this.errorMsg = 'تعذر الاتصال بالخادم';
+        this.isLoading = false;
+        this.loadError = true;
       },
     });
   }
 
-  private formatDate(value?: string): string {
-    if (!value) return 'الآن';
-    const parsed = new Date(value);
-    return this.datePipe.transform(parsed, 'dd/MM/yyyy HH:mm') || value;
+  private isWithdrawal(tx: WalletTransaction): boolean {
+    const t = (tx.type || '').toLowerCase();
+    return t === 'withdraw' || t === 'withdrawal';
   }
 
-  private formatMonth(index: number): string {
-    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-    return months[index % months.length];
+  /** Groups deposit-type transactions by Arabic month name for the last-4-months bar chart. */
+  private buildMonthlyPerformance(transactions: WalletTransaction[]): void {
+    const monthNames = [
+      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+    ];
+
+    const totalsByMonth = new Map<string, number>();
+    for (const tx of transactions) {
+      const d = new Date(tx.createdOn);
+      if (isNaN(d.getTime())) continue;
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      totalsByMonth.set(key, (totalsByMonth.get(key) ?? 0) + tx.amount);
+    }
+
+    const sortedKeys = Array.from(totalsByMonth.keys()).sort().slice(-4);
+    const raw = sortedKeys.map((key) => {
+      const [, monthIdx] = key.split('-').map(Number);
+      return { month: monthNames[monthIdx], amount: totalsByMonth.get(key)! };
+    });
+
+    const maxAmount = Math.max(1, ...raw.map((m) => m.amount));
+    this.monthlyPerformance = raw.map((m) => ({
+      ...m,
+      percentHeight: Math.round((m.amount / maxAmount) * 100),
+    }));
+
+    if (raw.length >= 2) {
+      const last = raw[raw.length - 1].amount;
+      const prev = raw[raw.length - 2].amount || 1;
+      this.growthPercent = Math.round(((last - prev) / prev) * 100);
+    }
   }
 
-  withdrawEarnings(): void {
+  // ── withdraw modal ───────────────────────────────────────────
+
+  openWithdrawModal(): void {
+    this.showWithdrawModal = true;
+    this.withdrawAmount = null;
+    this.bankAccount = '';
+    this.withdrawError = '';
+  }
+
+  closeWithdrawModal(): void {
+    if (this.isSubmittingWithdraw) return;
+    this.showWithdrawModal = false;
+    this.withdrawError = '';
+  }
+
+  confirmWithdraw(): void {
+    if (!this.withdrawAmount || this.withdrawAmount <= 0) {
+      this.withdrawError = 'أدخل مبلغاً صحيحاً أكبر من صفر';
+      return;
+    }
+    if (this.withdrawAmount > this.availableBalance) {
+      this.withdrawError = 'المبلغ أكبر من الرصيد المتاح للسحب';
+      return;
+    }
     if (!this.bankAccount.trim()) {
-      this.errorMsg = 'يرجى إدخال حساب بنكي أو رقم الحساب';
+      this.withdrawError = 'أدخل رقم الحساب البنكي';
       return;
     }
 
-    this.loading = true;
-    this.errorMsg = null;
-    this.successMsg = null;
+    this.isSubmittingWithdraw = true;
+    this.withdrawError = '';
 
-    this.walletService.withdraw(this.availableBalance, this.bankAccount).subscribe({
-      next: (res: ApiResponse<{ message?: string }>) => {
-        this.loading = false;
-        if (res.success) {
-          this.successMsg = res.message || 'تم طلب السحب بنجاح';
-          this.bankAccount = '';
-          this.loadWallet();
-        } else {
-          this.errorMsg = res.message || 'تعذر إتمام عملية السحب';
-        }
+    this.walletService.withdraw(this.withdrawAmount, this.bankAccount.trim()).subscribe({
+      next: () => {
+        this.isSubmittingWithdraw = false;
+        this.showWithdrawModal = false;
+        this.loadWallet(); // refresh balances + history from the server
       },
       error: () => {
-        this.loading = false;
-        this.errorMsg = 'تعذر الاتصال بالخادم';
+        this.isSubmittingWithdraw = false;
+        this.withdrawError = 'حصل خطأ أثناء طلب السحب، حاول تاني';
       },
     });
   }
+
+  // kept for the old template binding name; now just opens the modal
+  withdrawEarnings(): void {
+    this.openWithdrawModal();
+  }
+
+  // ── display helpers ──────────────────────────────────────────
+
+  txMonthLabel(tx: WalletTransaction): string {
+    const d = new Date(tx.createdOn);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('ar-EG', { month: 'long' });
+  }
 }
-
-
-
