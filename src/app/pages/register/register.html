@@ -87,8 +87,9 @@
               <div class="form-field">
                 <label class="field-label">كلمة المرور</label>
                 <input type="password" class="field-input" name="password"
-                       [(ngModel)]="customer.password" placeholder="••••••••" required />
+                       [(ngModel)]="customer.password" placeholder="8 أحرف، حرف كبير وصغير ورقم ورمز" required />
                 <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
+                <small class="password-hint">8 أحرف على الأقل، تحتوي على حرف كبير وصغير ورقم ورمز خاص</small>
               </div>
               <div class="form-field">
                 <label class="field-label">رقم الهاتف</label>
@@ -101,7 +102,7 @@
               <label class="field-label">الصورة الشخصية</label>
               <label class="file-upload-box">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>اضغط لرفع صورة</span>
+                <span>{{ customerFile ? customerFile.name : 'اضغط لرفع صورة' }}</span>
                 <input type="file" name="imageUrl" accept="image/*"
                        (change)="onFileSelected($event)" hidden />
               </label>
@@ -129,8 +130,9 @@
               <div class="form-field">
                 <label class="field-label">كلمة المرور</label>
                 <input type="password" class="field-input" name="password"
-                       [(ngModel)]="technician.password" placeholder="••••••••" required />
+                       [(ngModel)]="technician.password" placeholder="8 أحرف، حرف كبير وصغير ورقم ورمز" required />
                 <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
+                <small class="password-hint">8 أحرف على الأقل، تحتوي على حرف كبير وصغير ورقم ورمز خاص</small>
               </div>
               <div class="form-field">
                 <label class="field-label">سنوات الخبرة</label>
@@ -147,11 +149,24 @@
               </div>
               <div class="form-field">
                 <label class="field-label">الصورة الشخصية</label>
-                <label class="file-upload-box file-upload-sm">
+                <label class="file-upload-box file-upload-sm" [class.has-file]="techFile">
                   <i class="fa-solid fa-cloud-arrow-up"></i>
-                  <span>رفع صورة</span>
+                  <span>{{ techFile ? techFile.name : 'رفع صورة' }}</span>
                   <input type="file" name="imageUrl" accept="image/*"
                          (change)="onFileSelected($event)" hidden />
+                </label>
+              </div>
+            </div>
+
+            <!-- ═══ CATEGORY SELECTION ═══ -->
+            <div class="form-field">
+              <label class="field-label">التخصصات</label>
+              <div class="category-checkboxes">
+                <label *ngFor="let cat of availableCategories" class="checkbox-label">
+                  <input type="checkbox" 
+                         [checked]="technician.categoryIds.includes(cat.id)" 
+                         (change)="toggleCategory(cat.id)" />
+                  <span>{{ cat.name }}</span>
                 </label>
               </div>
             </div>
@@ -177,15 +192,24 @@
             <div class="form-field">
               <label class="field-label">كلمة المرور</label>
               <input type="password" class="field-input" name="password"
-                     [(ngModel)]="admin.password" placeholder="••••••••" required />
+                     [(ngModel)]="admin.password" placeholder="8 أحرف، حرف كبير وصغير ورقم ورمز" required />
               <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
+              <small class="password-hint">8 أحرف على الأقل، تحتوي على حرف كبير وصغير ورقم ورمز خاص</small>
             </div>
           </ng-container>
 
+          <!-- Error Message -->
+          <div *ngIf="errorMsg" class="alert-error">
+            {{ errorMsg }}
+          </div>
+
           <!-- Submit -->
-          <button type="submit" class="btn-register">
-            إنشاء حساب
-            <i class="fa-solid fa-arrow-left"></i>
+          <button type="submit" class="btn-register" [disabled]="loading">
+            <span *ngIf="loading">جاري الإنشاء...</span>
+            <span *ngIf="!loading">
+              إنشاء حساب
+              <i class="fa-solid fa-arrow-left"></i>
+            </span>
           </button>
 
           <p class="reg-login-link">

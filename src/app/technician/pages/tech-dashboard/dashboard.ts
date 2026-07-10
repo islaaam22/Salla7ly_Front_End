@@ -31,6 +31,8 @@ export class Dashboard {
   monthlyEarnings = 4250;
   activeTasksCount = 4;
 
+
+  
   // reviews
   recentReviews: Review[] = [
     {
@@ -49,6 +51,8 @@ export class Dashboard {
       comment: 'محترف ومهذب',
     },
   ];
+
+
 
   // today schedule
   todaySchedule: ScheduleTask[] = [
@@ -80,6 +84,9 @@ export class Dashboard {
       statusClass: 'status-confirmed',
     },
   ];
+
+
+
 
   constructor(private router: Router) {}
 
