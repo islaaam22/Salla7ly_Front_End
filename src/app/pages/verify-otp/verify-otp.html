@@ -1,136 +1,105 @@
-<div class="container-fluid vh-100 p-0">
-  <div class="row h-100 m-0">
-    <!-- Left Side: Form -->
-    <div class="col-6 d-flex justify-content-center align-items-center" style="background: #f5f7fa">
-      <div style="width: 540px">
-        <div class="mb-5">
-          <h2 class="fw-bold text-end mb-1" style="font-size: 33px; color: #0f172a">
-            التحقق من الرمز
-          </h2>
-          <p class="text-end text-muted" style="font-size: 18px">
-            أدخل الرمز المكوّن من 6 أرقام الذي أرسلناه إلى بريدك الإلكتروني.
-          </p>
-          <p *ngIf="email" class="text-end fw-semibold" style="font-size: 16px; color: #1787e0">
-            {{ email }}
-          </p>
+<div class="auth-page" dir="rtl">
+  <div class="auth-layout">
+
+    <!-- RIGHT: Form Side -->
+    <div class="auth-form-side">
+      <div class="auth-form-inner">
+
+        <!-- Logo -->
+        <div class="auth-logo">
+          <div class="auth-logo-icon"><img width="80px" src="images/Logo-removebg-preview.png" alt=""></div>
+          <span>صلّح<em>لي</em></span>
+        </div>
+
+        <div class="auth-heading">
+          <h2>التحقق من الرمز</h2>
+          <p>أدخل الرمز المكوّن من 6 أرقام الذي أرسلناه إلى بريدك الإلكتروني</p>
+          <span *ngIf="email" class="auth-email-badge">{{ email }}</span>
         </div>
 
         <!-- OTP Boxes -->
-        <div class="d-flex justify-content-between mb-5 gap-2" dir="ltr">
+        <div class="otp-wrap" dir="ltr">
           <input
-            *ngFor="let i of [0, 1, 2, 3, 4, 5]; let idx = index"
+            *ngFor="let i of [0,1,2,3,4,5]; let idx = index"
             #otpInput
             type="text"
             maxlength="1"
             inputmode="numeric"
             pattern="[0-9]"
-            class="form-control text-center fw-bold otp-box"
+            class="otp-box"
             [(ngModel)]="otpDigits[idx]"
             [name]="'otp' + idx"
             (input)="onOtpInput($event, idx)"
             (keydown)="onOtpKeydown($event, idx)"
             (paste)="onOtpPaste($event)"
-            style="
-              height: 72px;
-              font-size: 28px;
-              border-radius: 16px;
-              border: 2px solid #d9e1e8;
-              flex: 1;
-              max-width: 72px;
-            "
           />
         </div>
 
-        <div *ngIf="otpError" class="text-danger small mb-3 text-end">
-          {{ otpError }}
-        </div>
+        <div *ngIf="otpError" class="field-error mb-3">{{ otpError }}</div>
 
-        <div *ngIf="errorMsg" class="alert alert-danger text-end mb-3" style="border-radius: 14px">
+        <div *ngIf="errorMsg" class="auth-alert mb-3">
+          <i class="fa-solid fa-triangle-exclamation"></i>
           {{ errorMsg }}
         </div>
 
-        <button
-          class="btn w-100 text-white fw-bold mb-4"
-          [disabled]="loading"
-          (click)="onVerify()"
-          style="
-            height: 60px;
-            border: none;
-            border-radius: 18px;
-            font-size: 20px;
-            background: linear-gradient(90deg, #3eacdf, #4290d0);
-          "
-        >
+        <button class="btn-auth" [disabled]="loading" (click)="onVerify()">
           {{ loading ? 'جاري التحقق...' : 'تحقق من الرمز' }}
+          <i class="fa-solid fa-arrow-left" *ngIf="!loading"></i>
         </button>
 
-        <p class="text-center" style="font-size: 16px">
+        <p class="auth-bottom-link mt-4">
           لم تستلم الرمز؟
           <button
-            class="btn btn-link text-primary fw-semibold p-0 text-decoration-none"
+            class="btn-resend"
             [disabled]="resendLoading || resendCooldown > 0"
             (click)="onResend()"
           >
-            <span *ngIf="resendCooldown > 0"> إعادة الإرسال بعد ({{ resendCooldown }}ث) </span>
+            <span *ngIf="resendCooldown > 0">إعادة الإرسال بعد ({{ resendCooldown }}ث)</span>
             <span *ngIf="resendCooldown === 0">
               {{ resendLoading ? 'جاري الإرسال...' : 'إعادة الإرسال' }}
             </span>
           </button>
         </p>
 
-        <p class="text-center mt-2" style="font-size: 16px">
-          <a routerLink="/forgot-password" class="text-secondary text-decoration-none">
-            <i class="fa-solid fa-arrow-right me-1"></i> العودة
+        <p class="auth-back-link">
+          <a routerLink="/forgot-password">
+            <i class="fa-solid fa-arrow-right"></i>
+            العودة
           </a>
         </p>
+
       </div>
     </div>
 
-    <!-- Right Side: Branding Panel -->
-    <div
-      class="col-6 d-flex flex-column"
-      style="background: linear-gradient(135deg, #1787e0 0%, #30aaaa 100%); padding: 50px"
-    >
-      <div class="d-flex justify-content-start align-items-center gap-3">
-        <div
-          class="rounded-circle d-flex justify-content-center align-items-center"
-          style="width: 42px; height: 42px; background: rgba(255, 255, 255, 0.18)"
-        >
-          <i class="fa-solid fa-wrench text-white"></i>
-        </div>
-        <span class="text-white fw-bold" style="font-size: 22px">صلّحلي</span>
-      </div>
+    <!-- LEFT: Dark Side -->
+    <div class="auth-dark-side otp-dark">
 
-      <div class="my-auto text-end pe-5">
-        <!-- Live OTP preview -->
-        <div class="d-flex justify-content-end gap-3 mb-5">
-          <div
-            *ngFor="let d of otpDigits"
-            class="rounded-3 d-flex justify-content-center align-items-center fw-bold"
-            style="
-              width: 50px;
-              height: 56px;
-              background: rgba(255, 255, 255, 0.2);
-              color: white;
-              font-size: 24px;
-            "
-          >
+      <div class="auth-dark-content">
+
+        <!-- Live OTP Preview -->
+        <div class="otp-preview" dir="ltr">
+          <div *ngFor="let d of otpDigits" class="otp-preview-box">
             {{ d || '—' }}
           </div>
         </div>
 
-        <h1 class="text-white fw-bold mb-4" style="font-size: 40px; line-height: 1.1">
-          تحقق من
-          <br />هويتك بأمان
-        </h1>
-        <p class="text-white" style="font-size: 22px; opacity: 0.9; line-height: 1.8">
-          .أرسلنا رمزاً سرياً إلى بريدك. أدخله للمتابعة
-        </p>
+        <h1>تحقق من<br/>هويتك <span>بأمان</span></h1>
+        <p>أرسلنا رمزاً سرياً إلى بريدك. أدخله للمتابعة وحماية حسابك.</p>
+
+        <div class="auth-features">
+          <div class="auth-feature">
+            <div class="auth-feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <span>رمز صالح لمدة 10 دقائق فقط</span>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon"><i class="fa-solid fa-lock"></i></div>
+            <span>تشفير كامل لبياناتك</span>
+          </div>
+        </div>
       </div>
 
-      <div class="text-end">
-        <span class="text-white" style="opacity: 0.6; font-size: 18px">صلّحلي ٢٠٢٦ ©</span>
-      </div>
+      <div class="auth-dark-footer">© صلّحلي ٢٠٢٦</div>
     </div>
+
   </div>
 </div>

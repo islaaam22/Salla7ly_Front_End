@@ -19,16 +19,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 20px;
 }
 
 .register-layout {
   width: 100%;
   max-width: 1500px;
-  height: 90vh;
-  max-height: 920px;
+  height: 95vh;
+  max-height: 900px;
   background: white;
-  border-radius: 30px;
+  border-radius: 24px;
   overflow: hidden;
   display: grid;
   grid-template-columns: 58% 42%;
@@ -47,29 +47,31 @@
 .register-form-inner {
   width: 100%;
   max-width: 760px;
-  padding: 45px 60px;
+  padding: 15px 30px;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 /* LOGO */
 .reg-logo {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 35px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 .reg-logo-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
-  font-size: 24px;
-  box-shadow: 0 12px 25px rgba(247, 147, 30, 0.3);
+  font-size: 18px;
+  box-shadow: 0 6px 14px rgba(247, 147, 30, 0.3);
 }
 .reg-logo span {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
   color: #222;
 }
@@ -80,55 +82,55 @@
 
 /* HEADING */
 .reg-heading {
-  margin-bottom: 30px;
+  margin-bottom: 12px;
 }
 .reg-heading h2 {
-  font-size: 34px;
+  font-size: 22px;
   font-weight: 800;
   color: #222;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 .reg-heading p {
   color: #777;
-  font-size: 17px;
+  font-size: 13px;
 }
 
 /* ROLE CARDS */
 .role-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 35px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
 }
 .role-card {
   border: 2px solid transparent;
   background: white;
-  border-radius: 22px;
-  padding: 18px;
+  border-radius: 14px;
+  padding: 10px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   cursor: pointer;
   transition: 0.35s;
 }
 .role-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   border-color: var(--orange);
 }
 .role-card.active {
   border-color: var(--orange);
-  box-shadow: 0 18px 35px rgba(247, 147, 30, 0.18);
+  box-shadow: 0 10px 20px rgba(247, 147, 30, 0.18);
 }
 .role-card-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #fff3e4;
   color: #021650;
-  font-size: 22px;
+  font-size: 18px;
   transition: 0.3s;
 }
 .role-card.active .role-card-icon {
@@ -143,9 +145,11 @@
 .role-card-title {
   font-weight: 700;
   color: #222;
+  font-size: 14px;
 }
 .role-card small {
   color: #888;
+  font-size: 11px;
 }
 
 
@@ -153,21 +157,22 @@
 .category-checkboxes {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 12px;
   color: #333;
   background: white;
-  padding: 12px 20px;
-  border-radius: 18px;
-  border: 2px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 2px solid #7777771d;
   transition: all 0.3s;
   user-select: none;
 }
@@ -175,13 +180,13 @@
 .checkbox-label:hover {
   border-color: var(--orange);
   background: #fff8ef;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(247, 147, 30, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(247, 147, 30, 0.12);
 }
 
 .checkbox-label input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   accent-color: var(--orange);
   cursor: pointer;
   margin: 0;
@@ -195,7 +200,7 @@
 .checkbox-label:has(input[type="checkbox"]:checked) {
   border-color: var(--orange);
   background: #fff3e4;
-  box-shadow: 0 8px 20px rgba(247, 147, 30, 0.18);
+  box-shadow: 0 4px 12px rgba(247, 147, 30, 0.18);
 }
 
 .checkbox-label span {
@@ -208,7 +213,7 @@
   .category-checkboxes {
     gap: 10px;
   }
-  
+
   .checkbox-label {
     padding: 10px 16px;
     font-size: 14px;
@@ -218,57 +223,58 @@
 
 /* FORM */
 form {
-  margin-top: 20px;
+  margin-top: 8px;
 }
 .fields-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 18px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 .form-field {
   display: flex;
   flex-direction: column;
 }
 .field-label {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   font-weight: 700;
   color: #333;
-  font-size: 15px;
+  font-size: 13px;
 }
 .field-input {
-  height: 60px;
-  border-radius: 18px;
-  border: 2px solid var(--border);
+  height: 42px;
+  border-radius: 12px;
+  border: 2px solid #7777771d;
   background: white;
-  padding: 0 22px;
-  font-size: 15px;
+  padding: 0 14px;
+  font-size: 13px;
   transition: 0.3s;
 }
 .field-input:focus {
   outline: none;
   border-color: var(--orange);
-  box-shadow: 0 0 0 5px rgba(247, 147, 30, 0.12);
+  box-shadow: 0 0 0 3px rgba(247, 147, 30, 0.12);
 }
 .field-error {
   color: #d93025;
-  font-size: 13px;
-  margin-top: 6px;
+  font-size: 11px;
+  margin-top: 3px;
 }
 
 /* UPLOAD */
 .file-upload-box {
   border: 2px dashed #d7d1c8;
   background: white;
-  border-radius: 20px;
-  height: 90px;
+  border-radius: 12px;
+  padding: 12px;
+  height: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: 0.35s;
-  gap: 8px;
+  gap: 4px;
 }
 .file-upload-box:hover {
   border-color: var(--orange);
@@ -276,49 +282,72 @@ form {
 }
 .file-upload-box i {
   color: var(--orange);
-  font-size: 28px;
+  font-size: 18px;
 }
 .file-upload-box span {
   color: #666;
   font-weight: 600;
+  font-size: 12px;
 }
 .file-upload-sm {
-  height: 60px;
+  height: 42px;
 }
 
 /* BUTTON */
 .btn-register {
   width: 100%;
-  height: 62px;
+  height: 46px;
   border: none;
-  border-radius: 20px;
-  background: var(--orange);
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--orange) 0%, #ff9d4d 100%);
   color: white;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   cursor: pointer;
-  transition: 0.3s;
-  margin-top: 10px;
-  box-shadow: 0 18px 35px rgba(247, 147, 30, 0.28);
+  transition: all 0.3s ease;
+  margin-top: 6px;
+  box-shadow: 0 8px 20px rgba(247, 147, 30, 0.35), 0 2px 8px rgba(247, 147, 30, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+.btn-register::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 .btn-register:hover {
-  background: #e67e00;
+  background: linear-gradient(135deg, #e67e00 0%, #ff8c3d 100%);
   transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(247, 147, 30, 0.45), 0 4px 12px rgba(247, 147, 30, 0.25);
+}
+.btn-register:hover::before {
+  opacity: 1;
 }
 .btn-register:hover i {
   transform: translateX(-4px);
+}
+.btn-register:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(247, 147, 30, 0.4);
 }
 
 /* LOGIN LINK */
 .reg-login-link {
   text-align: center;
-  margin-top: 22px;
+  margin-top: 12px;
   color: #666;
-  font-size: 15px;
+  font-size: 13px;
+  padding-bottom: 8px;
 }
 .reg-login-link a {
   color: var(--orange);
