@@ -47,19 +47,6 @@
             </div>
           </button>
 
-          <button
-            class="role-card"
-            [class.active]="selectedRole === 'admin'"
-            (click)="selectRole('admin')"
-          >
-            <div class="role-card-icon">
-              <i class="fa-solid fa-user-tie"></i>
-            </div>
-            <div class="role-card-text">
-              <span class="role-card-title">مشرف</span>
-              <small>إدارة المنصة</small>
-            </div>
-          </button>
 
         </div>
 
@@ -89,7 +76,6 @@
                 <input type="password" class="field-input" name="password"
                        [(ngModel)]="customer.password" placeholder="8 أحرف، حرف كبير وصغير ورقم ورمز" required />
                 <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
-                <small class="password-hint">8 أحرف على الأقل، تحتوي على حرف كبير وصغير ورقم ورمز خاص</small>
               </div>
               <div class="form-field">
                 <label class="field-label">رقم الهاتف</label>
@@ -132,7 +118,6 @@
                 <input type="password" class="field-input" name="password"
                        [(ngModel)]="technician.password" placeholder="8 أحرف، حرف كبير وصغير ورقم ورمز" required />
                 <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
-                <small class="password-hint">8 أحرف على الأقل، تحتوي على حرف كبير وصغير ورقم ورمز خاص</small>
               </div>
               <div class="form-field">
                 <label class="field-label">سنوات الخبرة</label>
@@ -163,8 +148,8 @@
               <label class="field-label">التخصصات</label>
               <div class="category-checkboxes">
                 <label *ngFor="let cat of availableCategories" class="checkbox-label">
-                  <input type="checkbox" 
-                         [checked]="technician.categoryIds.includes(cat.id)" 
+                  <input type="checkbox"
+                         [checked]="technician.categoryIds.includes(cat.id)"
                          (change)="toggleCategory(cat.id)" />
                   <span>{{ cat.name }}</span>
                 </label>
@@ -172,31 +157,6 @@
             </div>
           </ng-container>
 
-          <!-- ═══ ADMIN FIELDS ═══ -->
-          <ng-container *ngIf="selectedRole === 'admin'">
-            <div class="fields-row">
-              <div class="form-field">
-                <label class="field-label">الاسم الكامل</label>
-                <input type="text" class="field-input" name="name"
-                       [(ngModel)]="admin.name" placeholder="الاسم بالكامل" />
-                <div *ngIf="nameError" class="field-error">{{ nameError }}</div>
-              </div>
-              <div class="form-field">
-                <label class="field-label">البريد الإلكتروني</label>
-                <input type="email" class="field-input" name="email"
-                       [(ngModel)]="admin.email" placeholder="example@gmail.com"
-                       style="direction:ltr;text-align:right" />
-                <div *ngIf="emailError" class="field-error">{{ emailError }}</div>
-              </div>
-            </div>
-            <div class="form-field">
-              <label class="field-label">كلمة المرور</label>
-              <input type="password" class="field-input" name="password"
-                     [(ngModel)]="admin.password" placeholder="8 أحرف، حرف كبير وصغير ورقم ورمز" required />
-              <div *ngIf="passwordError" class="field-error">{{ passwordError }}</div>
-              <small class="password-hint">8 أحرف على الأقل، تحتوي على حرف كبير وصغير ورقم ورمز خاص</small>
-            </div>
-          </ng-container>
 
           <!-- Error Message -->
           <div *ngIf="errorMsg" class="alert-error">
