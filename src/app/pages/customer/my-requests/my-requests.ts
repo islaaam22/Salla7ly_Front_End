@@ -85,44 +85,13 @@ export class MyRequests implements OnInit {
     this.router.navigate(['/customer/submit-bid', requestId]);
   }
 
-  /** "Complete Service" on assigned/inprogress → create payment first, then complete */
+  /** "Complete Service" on assigned/inprogress → mark as completed (payment already done when bid accepted) */
   completeService(requestId: number) {
     this.completingId = requestId;
     this.errorMsg = null;
 
-    // First, check if payment already exists, if not create it
-    this.paymentService.getEscrow(requestId).subscribe({
-      next: (escrowRes) => {
-        if (escrowRes.success && escrowRes.data) {
-          // Payment already exists, just complete the request
-          this.finalizeCompletion(requestId);
-        } else {
-          // No payment exists, create it first
-          this.paymentService.createEscrow(requestId).subscribe({
-            next: () => {
-              // Payment created successfully, now complete the request
-              this.finalizeCompletion(requestId);
-            },
-            error: () => {
-              this.completingId = null;
-              this.errorMsg = 'فشل إنشاء الدفع المؤجل. يرجى المحاولة لاحقًا.';
-            }
-          });
-        }
-      },
-      error: () => {
-        // Assume no payment exists if get fails, try to create
-        this.paymentService.createEscrow(requestId).subscribe({
-          next: () => {
-            this.finalizeCompletion(requestId);
-          },
-          error: () => {
-            this.completingId = null;
-            this.errorMsg = 'فشل إنشاء الدفع المؤجل. يرجى المحاولة لاحقًا.';
-          }
-        });
-      }
-    });
+    // Payment already created when bid was accepted, just complete the request
+    this.finalizeCompletion(requestId);
   }
 
   /** Final step: mark request as completed and navigate to review */
