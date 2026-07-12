@@ -26,13 +26,12 @@
 }
 
 
-
-
 .login-logo {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .login-logo-icon {
