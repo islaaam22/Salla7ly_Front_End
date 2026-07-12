@@ -83,18 +83,6 @@
         ></textarea>
       </div>
 
-      <!-- Image URL -->
-      <div class="edit-field">
-        <label class="edit-label me-3">رابط الصورة الشخصية <i class="fa-solid fa-image"></i> </label>
-        <input
-          type="text"
-          class="edit-input"
-          [(ngModel)]="imageUrl"
-          name="imageUrl"
-          placeholder="https://example.com/image.jpg"
-          style="direction: ltr; text-align: right"
-        />
-      </div>
 
       <div *ngIf="errorMsg" class="edit-alert-danger">
         <i class="fa-solid fa-triangle-exclamation"></i>
@@ -111,59 +99,5 @@
       </button>
     </div>
 
-    <!-- LEFT (side col): Change Password -->
-    <div class="d-flex flex-column gap-3">
-      <div class="preview-card-dark">
-        <div class="lock-icon">
-          <i class="fa-solid fa-lock"></i>
-        </div>
-        <div class="preview-card-title">تغيير كلمة المرور</div>
-        <div class="preview-card-sub">حافظ على أمان حسابك بكلمة مرور قوية</div>
-        <div class="pw-tip">
-          <i class="fa-solid fa-circle-info"></i>
-          استخدم كلمة مرور لا تقل عن 8 أحرف وتحتوي على أرقام ورموز
-        </div>
-      </div>
-
-      <div class="edit-card">
-        <div class="edit-field">
-          <label class="edit-label"><i class="fa-solid fa-key"></i> كلمة المرور الحالية</label>
-          <input
-            type="password"
-            class="edit-input"
-            [(ngModel)]="currentPassword"
-            name="currentPassword"
-          />
-        </div>
-
-        <div class="edit-field">
-          <label class="edit-label"><i class="fa-solid fa-lock"></i> كلمة المرور الجديدة</label>
-          <input type="password" class="edit-input" [(ngModel)]="newPassword" name="newPassword" />
-        </div>
-
-        <div class="edit-field">
-          <label class="edit-label"><i class="fa-solid fa-lock"></i> تأكيد كلمة المرور</label>
-          <input
-            type="password"
-            class="edit-input"
-            [(ngModel)]="confirmPassword"
-            name="confirmPassword"
-          />
-        </div>
-
-        <div *ngIf="passwordError" class="edit-alert-danger">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          {{ passwordError }}
-        </div>
-        <div *ngIf="passwordSuccess" class="edit-alert-success">
-          <i class="fa-solid fa-circle-check"></i>
-          {{ passwordSuccess }}
-        </div>
-
-        <button class="btn-save-dark" [disabled]="passwordLoading" (click)="onChangePassword()">
-          {{ passwordLoading ? 'جاري الحفظ...' : 'تحديث كلمة المرور' }}
-        </button>
-      </div>
-    </div>
   </div>
 </div>

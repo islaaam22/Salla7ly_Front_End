@@ -5,7 +5,8 @@ import { AiChatMessage } from '../models/ai-support-model';
 
 @Injectable({ providedIn: 'root' })
 export class AiSupportService {
- private apiUrl = 'https://sala7ly.runasp.net/api/ai-support/ask';
+  private apiUrl = 'https://sala7ly.runasp.net/api/ai-support/ask';
+
   constructor(private http: HttpClient) {}
 
   ask(message: string, history: AiChatMessage[]): Observable<{ reply: string }> {

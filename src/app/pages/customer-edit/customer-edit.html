@@ -83,21 +83,6 @@
             />
           </div>
 
-          <!-- Address -->
-          <div class="edit-field">
-            <label class="edit-label">
-              <i class="fa-solid fa-location-dot"></i>
-              العنوان
-            </label>
-            <input
-              type="text"
-              class="edit-input"
-              [(ngModel)]="mainAddress"
-              name="addressDetails"
-              placeholder="مثال: المعادي، القاهرة"
-            />
-          </div>
-
           <!-- Actions -->
           <div class="d-flex gap-3 mt-2">
             <button class="edit-save-btn" (click)="save()" [disabled]="saving">
