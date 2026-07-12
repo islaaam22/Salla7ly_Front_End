@@ -69,6 +69,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'notifications', component: Notifications },
+      
       { path: 'dashboard', component: CustomerDashboard },
       { path: 'cusdash', component: CustomerDashboard },
       { path: 'customer-dashboard', component: CustomerDashboard },

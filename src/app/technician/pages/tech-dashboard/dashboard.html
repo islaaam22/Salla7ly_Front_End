@@ -1,131 +1,124 @@
-<div class="dash-page" dir="rtl">
+<div class="container py-4" dir="rtl">
 
   <!-- Header -->
-  <div class="dash-header">
-    <span class="dash-welcome">أهلاً، {{ technicianName }}</span>
-    <h1 class="dash-title">لوحة الفني</h1>
-    <p class="dash-sub">ملخص أدائك ومهامك القادمة</p>
+  <div class="text-end mb-4">
+    <small style="color:#E8620A; font-weight:600;">أهلاً، {{ technicianName }}</small>
+    <h3 class="fw-bold mb-0" style="color:#1A1A2E;">لوحة الفني</h3>
+    <small class="text-muted">ملخص أدائك ومهامك القادمة</small>
   </div>
 
-  <!-- Stats -->
-  <div class="dash-stats-grid">
-
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon" style="background:#e8f3ff">
-        <i class="fa-solid fa-chart-line" style="color:#1787e0"></i>
+  <!-- Stat cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fff4e0; color:#F4A340;"><i class="fa-solid fa-star"></i></div>
+        <div class="stat-value">{{ averageRating }}</div>
+        <div class="stat-label">متوسط التقييم</div>
       </div>
-      <div class="dash-stat-val">{{ completionRate }}%</div>
-      <div class="dash-stat-label">نسبة الإنجاز</div>
     </div>
 
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon" style="background:#fefce8">
-        <i class="fa-solid fa-star" style="color:#f59e0b"></i>
+    <div class="col-md-3 col-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#e8f5e9; color:#2e7d32;"><i class="fa-solid fa-sack-dollar"></i></div>
+        <div class="stat-value">{{ totalEarned }} ج</div>
+        <div class="stat-label">إجمالي الأرباح</div>
       </div>
-      <div class="dash-stat-val">{{ averageRating }}</div>
-      <div class="dash-stat-label">متوسط التقييم</div>
     </div>
 
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon" style="background:#e1f5ee">
-        <i class="fa-solid fa-sack-dollar" style="color:#10b981"></i>
+    <div class="col-md-3 col-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#e7f1ff; color:#0d6efd;"><i class="fa-solid fa-wallet"></i></div>
+        <div class="stat-value">{{ walletBalance }} ج</div>
+        <div class="stat-label">رصيد المحفظة</div>
       </div>
-      <div class="dash-stat-val">{{ monthlyEarnings }} ج</div>
-      <div class="dash-stat-label">أرباح هذا الشهر</div>
     </div>
 
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon" style="background:#fff1e8">
-        <i class="fa-solid fa-briefcase" style="color:#E8620A"></i>
+    <div class="col-md-3 col-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fff0e6; color:#E8620A;"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="stat-value">{{ activeTasksCount }}</div>
+        <div class="stat-label">مهام نشطة</div>
       </div>
-      <div class="dash-stat-val">{{ activeTasksCount }}</div>
-      <div class="dash-stat-label">مهام نشطة</div>
     </div>
-
   </div>
 
-  <!-- Quick Links -->
-  <div class="quick-links-grid">
-
-    <a routerLink="/technician/edit-profile" class="quick-link-card">
-      <i class="fa-solid fa-arrow-left"></i>
-      <span>تعديل الملف</span>
-      <div class="quick-link-icon"><i class="fa-solid fa-user-pen"></i></div>
-    </a>
-
-    <a routerLink="/technician/verification" class="quick-link-card">
-      <i class="fa-solid fa-arrow-left"></i>
-      <span>التوثيق</span>
-      <div class="quick-link-icon"><i class="fa-solid fa-shield-halved"></i></div>
-    </a>
-
-    <a routerLink="/technician/wallet" class="quick-link-card">
-      <i class="fa-solid fa-arrow-left"></i>
-      <span>الأرباح</span>
-      <div class="quick-link-icon"><i class="fa-solid fa-sack-dollar"></i></div>
-    </a>
-
-    <a routerLink="/technician/available-requests" class="quick-link-card">
-      <i class="fa-solid fa-arrow-left"></i>
-      <span>طلبات متاحة</span>
-      <div class="quick-link-icon"><i class="fa-regular fa-clipboard"></i></div>
-    </a>
-
-  </div>
-
-  <!-- Bottom Section -->
-  <div class="dash-bottom-grid">
-
-    <!-- Reviews -->
-    <div class="dash-card">
-      <h3 class="dash-card-title">آخر التقييمات</h3>
-
-      <div class="review-item" *ngFor="let review of recentReviews">
-        <div class="review-stars">
-          <i class="fa-solid fa-star" *ngFor="let s of [1,2,3,4,5]"
-             [style.color]="s <= review.rating ? '#f59e0b' : 'rgba(10,15,30,.12)'"></i>
+  <!-- Second row: completed + notifications -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <div class="stat-card d-flex align-items-center justify-content-between" style="text-align:right;">
+        <div class="stat-icon m-0" style="background:#e8f5e9; color:#2e7d32;"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+          <div class="stat-value">{{ completedCount }}</div>
+          <div class="stat-label">طلبات مكتملة</div>
         </div>
-        <div class="review-name">{{ review.customerName }}</div>
-        <div class="review-comment">"{{ review.comment }}"</div>
       </div>
-
     </div>
-
-    <!-- Today's Schedule -->
-    <div class="dash-card">
-      <div class="dash-card-header">
-        <a routerLink="/technician/assigned-requests" class="view-all-link">عرض الكل</a>
-        <h3 class="dash-card-title">جدول اليوم</h3>
+    <div class="col-md-6">
+      <div class="stat-card d-flex align-items-center justify-content-between" style="text-align:right; cursor:pointer;"
+           [routerLink]="['/technician/notifications']">
+        <div class="stat-icon m-0" style="background:#fff4e0; color:#F4A340;"><i class="fa-regular fa-bell"></i></div>
+        <div>
+          <div class="stat-value">{{ unreadCount() }}</div>
+          <div class="stat-label">إشعارات جديدة</div>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <div class="schedule-item" *ngFor="let task of todaySchedule">
-        <div class="schedule-right">
-          <div class="schedule-time">
-            <i class="fa-regular fa-clock"></i>
-            {{ task.time }}
+  <!-- Panels -->
+  <div class="row g-4">
+
+    <!-- Today's schedule -->
+    <div class="col-lg-7">
+      <div class="panel-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <a [routerLink]="['/technician/assigned-tasks']" style="color:#E8620A; font-size:13px;">عرض الكل</a>
+          <h6 class="fw-bold mb-0" style="color:#1A1A2E;">جدول اليوم</h6>
+        </div>
+
+        <div *ngIf="todaySchedule.length === 0" class="text-center text-muted py-4">
+          <i class="fa-regular fa-calendar fs-3 d-block mb-2 opacity-50"></i>
+          لا توجد مهام اليوم
+        </div>
+
+        <div *ngFor="let task of todaySchedule"
+             class="d-flex align-items-center justify-content-between p-3 mb-2 task-row">
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-dark rounded-3" (click)="goToChat(task.id)">
+              <i class="fa-regular fa-comment"></i> محادثة
+            </button>
+            <button class="btn btn-sm btn-light rounded-3" (click)="goToDetails(task.id)">
+              عرض التفاصيل
+            </button>
+            <span class="badge align-self-center" [ngClass]="task.statusClass">{{ task.statusLabel }}</span>
           </div>
-          <div>
-            <div class="schedule-title">{{ task.title }} — {{ task.customerName }}</div>
-            <div class="schedule-location">{{ task.address }}</div>
+          <div class="text-end">
+            <div class="fw-semibold" style="color:#1A1A2E;">{{ task.title }} — {{ task.customerName }}</div>
+            <small class="text-muted">{{ task.address }}</small>
           </div>
-        </div>
-
-        <div class="schedule-left">
-          <span [class]="'schedule-status ' + task.statusClass">{{ task.statusLabel }}</span>
-          <button class="btn-schedule-details" (click)="goToDetails(task.id)">عرض التفاصيل</button>
-          <button class="btn-schedule-chat" (click)="goToChat(task.id)">
-            <i class="fa-regular fa-message"></i>
-            محادثة
-          </button>
+          <div class="text-muted small"><i class="fa-regular fa-clock"></i> {{ task.time }}</div>
         </div>
       </div>
+    </div>
 
-      <div class="schedule-empty" *ngIf="todaySchedule.length === 0">
-        لا توجد مهام مجدولة اليوم
+    <!-- Recent reviews -->
+    <div class="col-lg-5">
+      <div class="panel-card">
+        <h6 class="fw-bold mb-3 text-end" style="color:#1A1A2E;">آخر التقييمات</h6>
+
+        <div *ngIf="recentReviews.length === 0" class="text-center text-muted py-4">
+          لا توجد تقييمات بعد
+        </div>
+
+        <div *ngFor="let review of recentReviews" class="mb-3 pb-2 border-bottom text-end">
+          <div class="mb-1">
+            <i class="fa-solid fa-star" *ngFor="let s of [].constructor(review.rating)" style="color:#F4A340;"></i>
+          </div>
+          <div class="fw-semibold" style="color:#1A1A2E;">{{ review.customerName }}</div>
+          <small class="text-muted">"{{ review.comment }}"</small>
+        </div>
       </div>
-
     </div>
 
   </div>
-
 </div>
