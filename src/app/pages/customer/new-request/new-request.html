@@ -193,16 +193,115 @@
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>اضغط لرفع الصور</span>
           </div>
-          <div class="preview-list" *ngIf="selectedFiles.length > 0">
-            <span *ngFor="let f of selectedFiles; let i = index" class="preview-chip">
-              <i class="fa-solid fa-image"></i> {{ f.name }}
-              <i
-                class="fa-solid fa-xmark"
-                style="cursor: pointer; margin-right: 4px"
-                (click)="removeFile(i)"
-              ></i>
-            </span>
-          </div>
+          @if (selectedFiles.length > 0) {
+            <div class="preview-list">
+              @for (f of selectedFiles; track f; let i = $index) {
+                <span class="preview-chip">
+                  <i class="fa-solid fa-image"></i> {{ f.name }}
+                  <i
+                    class="fa-solid fa-xmark"
+                    style="cursor: pointer; margin-right: 4px"
+                    (click)="removeFile(i)"
+                  ></i>
+                </span>
+              }
+            </div>
+          }
+
+          <!-- Image Analysis Button -->
+          @if (selectedFiles.length > 0 && !autoFilledFromImage) {
+            <div class="ai-section" style="margin-top: 10px">
+              <button
+                type="button"
+                class="btn-ai"
+                (click)="onAnalyzeImages()"
+                [disabled]="imageAnalyzing"
+              >
+                <i class="fa-solid fa-camera"></i>
+                تحليل الصور بالذكاء الاصطناعي
+              </button>
+              @if (imageAnalysisError) {
+                <div class="ai-error">{{ imageAnalysisError }}</div>
+              }
+            </div>
+          }
+
+          <!-- Image Analysis Loading -->
+          @if (imageAnalyzing) {
+            <div class="ai-loading" style="margin-top: 10px">
+              <div
+                class="spinner-border text-primary"
+                role="status"
+                style="width: 24px; height: 24px"
+              ></div>
+              <span>جاري تحليل الصور...</span>
+            </div>
+          }
+
+          <!-- Image Analysis Results -->
+          @if (showImageAnalysis && imageAnalysisResult) {
+            <div class="ai-result-block" style="margin-top: 10px">
+              <div class="ai-result-header">
+                <i class="fa-solid fa-sparkles" style="color: #f59e0b"></i>
+                نتائج تحليل الصور
+              </div>
+
+              <div class="image-analysis-results">
+                @if (imageAnalysisResult.detectedProblem) {
+                  <div class="analysis-item">
+                    <strong><i class="fa-solid fa-wrench"></i> المشكلة المكتشفة:</strong>
+                    <span>{{ imageAnalysisResult.detectedProblem }}</span>
+                  </div>
+                }
+
+                @if (imageAnalysisResult.category) {
+                  <div class="analysis-item">
+                    <strong><i class="fa-solid fa-tag"></i> التصنيف:</strong>
+                    <span>{{ imageAnalysisResult.category }}</span>
+                  </div>
+                }
+
+                @if (imageAnalysisResult.severity) {
+                  <div class="analysis-item">
+                    <strong><i class="fa-solid fa-triangle-exclamation"></i> الخطورة:</strong>
+                    <span class="severity-badge" [ngClass]="getImageAnalysisSeverity()">
+                      {{ getImageAnalysisSeverityLabel() }}
+                    </span>
+                  </div>
+                }
+
+                @if (imageAnalysisResult.affectedComponents && imageAnalysisResult.affectedComponents.length > 0) {
+                  <div class="analysis-item">
+                    <strong><i class="fa-solid fa-list"></i> الأجزاء المتأثرة:</strong>
+                    <ul>
+                      @for (component of imageAnalysisResult.affectedComponents; track component) {
+                        <li>{{ component }}</li>
+                      }
+                    </ul>
+                  </div>
+                }
+
+                @if (imageAnalysisResult.suggestedDescription) {
+                  <div class="analysis-item">
+                    <strong><i class="fa-solid fa-lightbulb"></i> الوصف المقترح:</strong>
+                    <p class="suggested-desc">{{ imageAnalysisResult.suggestedDescription }}</p>
+                  </div>
+                }
+
+                <div class="analysis-item">
+                  <strong><i class="fa-solid fa-chart-line"></i> الثقة:</strong>
+                  <span>{{ (imageAnalysisResult.confidence * 100).toFixed(0) }}%</span>
+                </div>
+              </div>
+
+              <div class="ai-actions">
+                <button type="button" class="btn-ai-use" (click)="useImageAnalysisSuggestions()">
+                  <i class="fa-solid fa-copy"></i> استخدام الاقتراحات
+                </button>
+                <button type="button" class="btn-ai-cancel" (click)="closeImageAnalysis()">إغلاق</button>
+              </div>
+            </div>
+          }
         </div>
 
         <!-- Address Selection -->

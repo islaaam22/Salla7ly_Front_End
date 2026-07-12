@@ -7,25 +7,31 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading" class="profile-loading">
-    <div class="spinner-border" role="status" style="color:#E8620A"></div>
-    <p>جاري التحميل...</p>
-  </div>
+  @if (loading) {
+    <div class="profile-loading">
+      <div class="spinner-border" role="status" style="color:#E8620A"></div>
+      <p>جاري التحميل...</p>
+    </div>
+  }
 
   <!-- Error -->
-  <div *ngIf="errorMsg && !loading" class="edit-alert-danger">
-    <i class="fa-solid fa-triangle-exclamation"></i>
-    {{ errorMsg }}
-  </div>
+  @if (errorMsg && !loading) {
+    <div class="edit-alert-danger">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      {{ errorMsg }}
+    </div>
+  }
 
   <!-- Empty -->
-  <div *ngIf="!loading && !errorMsg && requests.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <i class="fa-regular fa-folder-open"></i>
+  @if (!loading && !errorMsg && requests.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fa-regular fa-folder-open"></i>
+      </div>
+      <h3>لا توجد طلبات متاحة حالياً</h3>
+      <p>تابعنا، طلبات جديدة بتظهر باستمرار</p>
     </div>
-    <h3>لا توجد طلبات متاحة حالياً</h3>
-    <p>تابعنا، طلبات جديدة بتظهر باستمرار</p>
-  </div>
+  }
 
   <!-- Requests List -->
   <div class="avail-list" *ngIf="!loading && requests.length > 0">
@@ -87,8 +93,10 @@
         </div>
       </div>
 
+        </div>
+      }
     </div>
-  </div>
+  }
 
   <!-- Bid Modal -->
   <div *ngIf="showModal" class="details-overlay" (click)="closeModal()">
