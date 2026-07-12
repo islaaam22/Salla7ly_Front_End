@@ -7,89 +7,110 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading" class="profile-loading">
-    <div class="spinner-border" role="status" style="color:#E8620A"></div>
-    <p>جاري التحميل...</p>
-  </div>
+  @if (loading) {
+    <div class="profile-loading">
+      <div class="spinner-border" role="status" style="color:#E8620A"></div>
+      <p>جاري التحميل...</p>
+    </div>
+  }
 
   <!-- Error -->
-  <div *ngIf="errorMsg && !loading" class="edit-alert-danger">
-    <i class="fa-solid fa-triangle-exclamation"></i>
-    {{ errorMsg }}
-  </div>
+  @if (errorMsg && !loading) {
+    <div class="edit-alert-danger">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      {{ errorMsg }}
+    </div>
+  }
 
   <!-- Empty -->
-  <div *ngIf="!loading && !errorMsg && requests.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <i class="fa-regular fa-folder-open"></i>
+  @if (!loading && !errorMsg && requests.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fa-regular fa-folder-open"></i>
+      </div>
+      <h3>لا توجد طلبات متاحة حالياً</h3>
+      <p>تابعنا، طلبات جديدة بتظهر باستمرار</p>
     </div>
-    <h3>لا توجد طلبات متاحة حالياً</h3>
-    <p>تابعنا، طلبات جديدة بتظهر باستمرار</p>
-  </div>
+  }
 
   <!-- Requests List -->
-  <div class="avail-list" *ngIf="!loading && requests.length > 0">
-    <div *ngFor="let req of requests" class="avail-card">
+  @if (!loading && requests.length > 0) {
+    <div class="avail-list">
+      @for (req of requests; track req.id) {
+        <div class="avail-card">
 
-      <div class="avail-service-ico">
-        <i class="fa-solid fa-wrench"></i>
-      </div>
+          <div class="avail-service-ico">
+            <i class="fa-solid fa-wrench"></i>
+          </div>
 
-      <div class="avail-info">
-        <div class="avail-title-row">
-          <span *ngIf="req.isEmergency" class="emergency-pill">طارئ</span>
-          <span class="urgency-pill" [ngClass]="urgencyClass(req.urgency)">
-            {{ urgencyLabel(req.urgency) }}
-          </span>
-          <span class="avail-title">{{ req.title }}</span>
+          <div class="avail-info">
+            <div class="avail-title-row">
+              @if (req.isEmergency) {
+                <span class="emergency-pill">طارئ</span>
+              }
+              <span class="urgency-pill" [ngClass]="urgencyClass(req.urgency)">
+                {{ urgencyLabel(req.urgency) }}
+              </span>
+              <span class="avail-title">{{ req.title }}</span>
+            </div>
+            <div class="avail-meta">
+              <span><i class="fa-solid fa-tag"></i> تصنيف {{ req.categoryId }}</span>
+              <span><i class="fa-regular fa-calendar"></i> {{ req.scheduledAt | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+
+          <button class="btn-bid" (click)="openBidModal(req.id)">
+            <i class="fa-solid fa-paper-plane"></i>
+            تقديم عرض
+          </button>
+
         </div>
-        <div class="avail-meta">
-          <span><i class="fa-solid fa-tag"></i> تصنيف {{ req.categoryId }}</span>
-          <span><i class="fa-regular fa-calendar"></i> {{ req.scheduledAt | date: 'dd/MM/yyyy' }}</span>
-        </div>
-      </div>
-
-      <button class="btn-bid" (click)="openBidModal(req.id)">
-        <i class="fa-solid fa-paper-plane"></i>
-        تقديم عرض
-      </button>
-
+      }
     </div>
-  </div>
+  }
 
   <!-- Modal -->
-  <div *ngIf="showModal" class="modal-overlay">
-    <div class="modal-box">
+  @if (showModal) {
+    <div class="modal-overlay">
+      <div class="modal-box">
 
-      <div class="modal-header">
-        <button class="modal-close" (click)="closeModal()">
-          <i class="fa-solid fa-xmark"></i>
+        <div class="modal-header">
+          <button class="modal-close" (click)="closeModal()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="modal-title">تقديم عرض</div>
+        </div>
+
+        <div class="edit-field">
+          <label class="edit-label"><i class="fa-solid fa-sack-dollar"></i> السعر المقترح (ج.م)</label>
+          <input
+            type="number"
+            class="edit-input"
+            [(ngModel)]="bidPrice"
+            placeholder="مثال: 250"
+          />
+          <!-- Server validation error will appear here -->
+          
+        </div>
+
+        <div class="edit-field">
+          <label class="edit-label"><i class="fa-regular fa-clock"></i> الوقت المتوقع (بالدقائق)</label>
+          <input type="number" class="edit-input" [(ngModel)]="bidTime" placeholder="مثال: 120" />
+        </div>
+
+        <div class="edit-field">
+          <label class="edit-label"><i class="fa-regular fa-comment"></i> رسالة للعميل</label>
+          <textarea class="edit-textarea" rows="3" [(ngModel)]="bidMessage"
+                    placeholder="اشرح خبرتك ولماذا أنت الخيار الأمثل..."></textarea>
+        </div>
+
+        <button class="btn-save" [disabled]="submitting || !bidPrice || !bidMessage" (click)="submitBid()">
+          <i class="fa-solid fa-paper-plane"></i>
+          {{ submitting ? 'جاري الإرسال...' : 'إرسال العرض' }}
         </button>
-        <div class="modal-title">تقديم عرض</div>
+
       </div>
-
-      <div class="edit-field">
-        <label class="edit-label"><i class="fa-solid fa-sack-dollar"></i> السعر المقترح (ج.م)</label>
-        <input type="number" class="edit-input" [(ngModel)]="bidPrice" placeholder="مثال: 250" />
-      </div>
-
-      <div class="edit-field">
-        <label class="edit-label"><i class="fa-regular fa-clock"></i> الوقت المتوقع (بالدقائق)</label>
-        <input type="number" class="edit-input" [(ngModel)]="bidTime" placeholder="مثال: 120" />
-      </div>
-
-      <div class="edit-field">
-        <label class="edit-label"><i class="fa-regular fa-comment"></i> رسالة للعميل</label>
-        <textarea class="edit-textarea" rows="3" [(ngModel)]="bidMessage"
-                  placeholder="اشرح خبرتك ولماذا أنت الخيار الأمثل..."></textarea>
-      </div>
-
-      <button class="btn-save" [disabled]="submitting || !bidPrice || !bidMessage" (click)="submitBid()">
-        <i class="fa-solid fa-paper-plane"></i>
-        {{ submitting ? 'جاري الإرسال...' : 'إرسال العرض' }}
-      </button>
-
     </div>
-  </div>
+  }
 
 </div>

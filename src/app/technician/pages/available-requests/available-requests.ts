@@ -25,6 +25,7 @@ export class AvailableRequests implements OnInit, OnDestroy {
   bidTime = '';
   bidMessage = '';
   submitting = false;
+  priceValidationError = '';
 
   private apiUrl = 'https://sala7ly.runasp.net/api';
   private destroy$ = new Subject<void>();
@@ -98,6 +99,7 @@ export class AvailableRequests implements OnInit, OnDestroy {
     this.bidPrice = '';
     this.bidTime = '';
     this.bidMessage = '';
+    this.priceValidationError = '';
     this.showModal = true;
   }
 
@@ -128,7 +130,8 @@ export class AvailableRequests implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.submitting = false;
-        console.error('Bid error:', err);
+        // Display backend error message to user
+        this.priceValidationError = err.error?.message || err.error?.title || 'حدث خطأ أثناء تقديم العرض';
       }
     });
   }

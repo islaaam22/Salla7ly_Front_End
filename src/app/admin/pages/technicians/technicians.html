@@ -105,17 +105,6 @@
               </button>
             }
 
-            <!-- Approved: suspend -->
-            @if (isApproved(tech)) {
-              <button
-                class="btn-suspend"
-                [disabled]="isProcessing(tech)"
-                (click)="suspend(tech)">
-                @if (isProcessing(tech)) { <span class="btn-spinner"></span> }
-                تعليق
-              </button>
-            }
-
             <!-- Suspended: reactivate -->
             @if (isSuspended(tech)) {
               <button
@@ -126,6 +115,13 @@
                 إعادة الاعتماد
               </button>
             }
+
+            <button
+              class="btn-delete"
+              [disabled]="isProcessing(tech) || deleting"
+              (click)="openDeleteModal(tech)">
+              <i class="fa-solid fa-trash"></i> حذف
+            </button>
           </div>
 
         </div>
@@ -171,6 +167,41 @@
             {{ rejecting ? 'جاري الرفض...' : 'تأكيد الرفض' }}
           </button>
           <button class="btn-cancel-modal" (click)="closeRejectModal()">إلغاء</button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- ── Delete Modal ─────────────────────────────────────────────────────── -->
+  @if (showDeleteModal) {
+    <div class="modal-overlay" (click)="closeDeleteModal()">
+      <div class="modal-box modal-box-sm" dir="rtl" (click)="$event.stopPropagation()">
+
+        <div class="delete-modal-icon-wrap">
+          <div class="delete-modal-icon-circle">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+        </div>
+
+        <h5 class="delete-modal-title">حذف الفني؟</h5>
+        <p class="delete-modal-text">
+          سيتم حذف الفني "م. {{ deleteTech?.name }}" نهائياً. لا يمكن التراجع.
+        </p>
+
+        @if (deleteErrorMsg) {
+          <div class="delete-error-msg">{{ deleteErrorMsg }}</div>
+        }
+
+        <div class="delete-modal-actions">
+          <button
+            class="btn-confirm-delete"
+            [disabled]="deleting"
+            (click)="confirmDelete()">
+            @if (deleting) { <span class="btn-spinner btn-spinner-white"></span> }
+            {{ deleting ? 'جاري الحذف...' : 'حذف' }}
+          </button>
+          <button class="btn-cancel-modal" (click)="closeDeleteModal()">إلغاء</button>
         </div>
 
       </div>

@@ -13,6 +13,9 @@ export interface ServiceRequest {
   customerName?: string;
   imageUrls?: string[];
   categoryName?: string;
+  // AI price estimation fields
+  aiPriceMin?: number;
+  aiPriceMax?: number;
 }
 
 export interface Category {

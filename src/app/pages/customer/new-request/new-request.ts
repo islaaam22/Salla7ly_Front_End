@@ -66,6 +66,13 @@ export class NewRequest implements OnInit {
   aiDone            = false;
   readonly AI_TOTAL_QUESTIONS = 3;
 
+  // ── Image Analysis State ───────────────────────────────────────────
+  imageAnalyzing      = false;
+  imageAnalysisResult: any = null;
+  imageAnalysisError  = '';
+  showImageAnalysis   = false;
+  autoFilledFromImage = false;
+
   constructor(
     private requestService: RequestService,
     private aiService:      AiService,
@@ -272,6 +279,78 @@ onAddressChange(value: any) {
     this.aiActive = false; this.aiDone = false; this.aiAnswers = [];
     this.aiCurrentQuestion = ''; this.aiCurrentAnswer = '';
     this.aiRefinedDescription = ''; this.aiError = '';
+  }
+
+  // ── Image Analysis Methods ───────────────────────────────────────────
+  onAnalyzeImages() {
+    if (this.selectedFiles.length === 0) {
+      this.imageAnalysisError = 'يرجى اختيار صورة واحدة على الأقل للتحليل';
+      return;
+    }
+
+    this.imageAnalyzing = true;
+    this.imageAnalysisError = '';
+
+    // Analyze the first image
+    this.aiService.analyzeImageUpload(this.selectedFiles[0]).subscribe({
+      next: (result) => {
+        this.imageAnalyzing = false;
+        this.imageAnalysisResult = result;
+        this.showImageAnalysis = true;
+
+        // Auto-fill form with AI suggestions
+        if (result.suggestedDescription && !this.autoFilledFromImage) {
+          this.form.description = result.suggestedDescription;
+          this.autoFilledFromImage = true;
+        }
+
+        // Auto-select category if AI detected one
+        if (result.category) {
+          const matchedCategory = this.categories.find(c =>
+            c.nameAr.includes(result.category) || result.category.includes(c.nameAr)
+          );
+          if (matchedCategory) {
+            this.selectCategory(matchedCategory.id);
+          }
+        }
+      },
+      error: (err) => {
+        this.imageAnalyzing = false;
+        this.imageAnalysisError = err.error?.message || 'فشل تحليل الصورة';
+      }
+    });
+  }
+
+  useImageAnalysisSuggestions() {
+    if (this.imageAnalysisResult?.suggestedDescription) {
+      this.form.description = this.imageAnalysisResult.suggestedDescription;
+      this.autoFilledFromImage = true;
+    }
+    this.showImageAnalysis = false;
+  }
+
+  closeImageAnalysis() {
+    this.showImageAnalysis = false;
+  }
+
+  getImageAnalysisSeverity(): string {
+    const severity = this.imageAnalysisResult?.severity?.toLowerCase();
+    switch (severity) {
+      case 'high': return 'bg-danger text-white';
+      case 'medium': return 'bg-warning text-dark';
+      case 'low': return 'bg-success text-white';
+      default: return 'bg-secondary text-white';
+    }
+  }
+
+  getImageAnalysisSeverityLabel(): string {
+    const severity = this.imageAnalysisResult?.severity?.toLowerCase();
+    switch (severity) {
+      case 'high': return 'شديدة';
+      case 'medium': return 'متوسطة';
+      case 'low': return 'خفيفة';
+      default: return 'غير محدد';
+    }
   }
 
   // ── Submit ───────────────────────────────────────────────────────

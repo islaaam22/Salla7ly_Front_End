@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Auth } from '../../../services/auth';
+import { RequestService } from '../../../services/request';
 
 interface Request {
   id: number;
@@ -13,6 +14,11 @@ interface Request {
   scheduledAt: string;
   categoryId: number;
   customerName: string;
+  // AI price estimation fields (admin only)
+  aiPriceMin: number;
+  aiPriceMax: number;
+  addressId?: number;
+  address?: string;
 }
 
 interface RequestDetail {
@@ -76,7 +82,11 @@ export class AdminRequests implements OnInit {
   deleting = false;
   deleteErrorMsg = '';
 
-  constructor(private http: HttpClient, private authService: Auth) {}
+  constructor(
+    private http: HttpClient,
+    private authService: Auth,
+    private requestService: RequestService
+  ) {}
 
   ngOnInit() {
     this.loadRequests();
@@ -199,14 +209,30 @@ export class AdminRequests implements OnInit {
     return new Date(dateStr).toISOString().slice(0, 16);
   }
 
+  // ── AI Price Display Helpers ───────────────────────────────────────────
+  hasAiPrice(request: { aiPriceMin?: number; aiPriceMax?: number } | null | undefined): boolean {
+    return !!(request?.aiPriceMin && request?.aiPriceMax);
+  }
+
+  formatPriceRange(request: { aiPriceMin?: number; aiPriceMax?: number }): string {
+    if (!this.hasAiPrice(request)) return 'غير محدد';
+    return `${request.aiPriceMin} — ${request.aiPriceMax} ج.م`;
+  }
+
+  getAiPriceRange(): string {
+    if (!this.viewRequest) return 'غير محدد';
+    if (!this.hasAiPrice(this.viewRequest)) return 'غير محدد';
+    return `${this.viewRequest.aiPriceMin} — ${this.viewRequest.aiPriceMax} ج.م`;
+  }
+
   // ── VIEW ─────────────────────────────────────────────────────────
   onView(request: Request) {
     this.showViewModal = true;
     this.viewLoading = true;
     this.viewRequest = null;
 
-    this.http.get<RequestDetail>(`${this.apiUrl}/requests/${request.id}`, { headers: this.authHeaders() }).subscribe({
-      next: (data) => {
+    this.requestService.getRequestById(request.id).subscribe({
+      next: (data: RequestDetail) => {
         this.viewRequest = data;
         this.viewLoading = false;
       },
@@ -228,8 +254,8 @@ export class AdminRequests implements OnInit {
     this.editLoading = true;
     this.editId = request.id;
 
-    this.http.get<RequestDetail>(`${this.apiUrl}/requests/${request.id}`, { headers: this.authHeaders() }).subscribe({
-      next: (data) => {
+    this.requestService.getRequestById(request.id).subscribe({
+      next: (data: RequestDetail) => {
         this.editTitle = data.title || '';
         this.editDescription = data.description || '';
         this.editScheduledAt = this.toInputDate(data.scheduledAt);

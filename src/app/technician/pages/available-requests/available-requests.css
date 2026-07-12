@@ -66,6 +66,26 @@
 .btn-bid:hover::before { opacity: 1; }
 .btn-bid:active { transform: translateY(0); }
 
+/* AI Price Badge */
+.ai-price-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #7dd3fc;
+  color: #0369a1;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.ai-price-badge i {
+  font-size: 11px;
+  color: #0284c7;
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed; inset: 0;
@@ -170,6 +190,101 @@
 .btn-save:active:not(:disabled) { transform: translateY(0); }
 .btn-save:disabled {
   opacity: 0.6; cursor: not-allowed;
+}
+
+/* Price Guide */
+.price-guide {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.price-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.price-guide-header i {
+  font-size: 12px;
+}
+
+.price-guide-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.price-item strong {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.price-item span {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.price-guide-note {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  color: #713f12;
+  font-size: 11px;
+  background: #fef3c7;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.price-guide-note i {
+  font-size: 10px;
+}
+
+/* Price Validation Classes */
+.is-valid {
+  border-color: #10b981 !important;
+  background: #f0fdf4 !important;
+}
+
+.is-invalid {
+  border-color: #ef4444 !important;
+  background: #fef2f2 !important;
+}
+
+/* Alert Styles */
+.edit-alert-danger {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: right;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row-reverse;
+}
+
+.edit-alert-danger i {
+  font-size: 12px;
 }
 
 /* empty state */
