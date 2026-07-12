@@ -71,7 +71,7 @@
           <div class="stat-card-icon" style="background: #e8f3ff">
             <i class="fa-solid fa-briefcase" style="color: #1787e0"></i>
           </div>
-          <div class="stat-card-val">{{ profile.completedJobs }}</div>
+          <div class="stat-card-val">{{ completedCount }}</div>
           <div class="stat-card-label">مهام منجزة</div>
         </div>
         <div class="stat-card">
@@ -119,7 +119,7 @@
               profile.isApproved ? 'fa-solid fa-shield-check' : 'fa-solid fa-triangle-exclamation'
             "
           ></i>
-            <span class="profile-role-badge">فني محترف</span>
+          <span class="profile-role-badge">فني محترف</span>
           {{ profile.isApproved ? 'موثّق' : 'غير موثّق' }}
         </div>
 
@@ -127,7 +127,7 @@
 
         <div class="profile-mini-stats">
           <div class="profile-mini-stat">
-            <div class="profile-mini-stat-val">{{ profile.completedJobs }}</div>
+            <div class="profile-mini-stat-val">{{ completedCount }}</div>
             <div class="profile-mini-stat-label">مهمة</div>
           </div>
           <div class="profile-mini-stat-divider"></div>

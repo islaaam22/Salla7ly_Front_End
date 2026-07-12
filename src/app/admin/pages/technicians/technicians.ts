@@ -30,7 +30,13 @@ export class TechniciansComponent implements OnInit {
   selectedTech: TechnicianWithVerification | null = null;
   rejecting = false;
 
-  // Approve / suspend loading per card
+  // Delete modal
+  showDeleteModal = false;
+  deleteTech: TechnicianWithVerification | null = null;
+  deleting = false;
+  deleteErrorMsg = '';
+
+  // Action loading per card
   processingId: number | null = null;
 
   filters: { label: string; value: FilterKey }[] = [
@@ -105,10 +111,6 @@ export class TechniciansComponent implements OnInit {
 
   isPending(tech: TechnicianWithVerification): boolean {
     return tech.uiStatus === 'pending';
-  }
-
-  isApproved(tech: TechnicianWithVerification): boolean {
-    return tech.uiStatus === 'approved';
   }
 
   isSuspended(tech: TechnicianWithVerification): boolean {
@@ -212,35 +214,6 @@ export class TechniciansComponent implements OnInit {
     });
   }
 
-  suspend(tech: TechnicianWithVerification): void {
-    if (!confirm(`هل تريد تعليق الفني "${tech.name}"؟`)) return;
-    this.processingId = tech.id;
-
-    const doSuspend = (userId: string) => {
-      this.techService.suspend(userId).subscribe({
-        next: () => { this.processingId = null; this.loadData(); },
-        error: () => { this.processingId = null; alert('حدث خطأ أثناء التعليق'); }
-      });
-    };
-
-    if (tech.userId) {
-      doSuspend(tech.userId);
-    } else {
-      // Fetch full details to get userId
-      this.techService.getTechnicianById(tech.id).subscribe({
-        next: (detail) => {
-          if (detail.userId) {
-            doSuspend(detail.userId);
-          } else {
-            this.processingId = null;
-            alert('لا يمكن تعليق هذا الفني: معرّف المستخدم غير متوفر');
-          }
-        },
-        error: () => { this.processingId = null; alert('حدث خطأ أثناء التعليق'); }
-      });
-    }
-  }
-
   reactivate(tech: TechnicianWithVerification): void {
     if (!confirm(`هل تريد إعادة تفعيل الفني "${tech.name}"؟`)) return;
     this.processingId = tech.id;
@@ -271,6 +244,38 @@ export class TechniciansComponent implements OnInit {
 
   viewProfile(id: number): void {
     this.router.navigate(['/admin/technicians', id]);
+  }
+
+  openDeleteModal(tech: TechnicianWithVerification): void {
+    this.deleteTech = tech;
+    this.deleteErrorMsg = '';
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.deleteTech = null;
+    this.deleteErrorMsg = '';
+  }
+
+  confirmDelete(): void {
+    if (!this.deleteTech) return;
+
+    this.deleting = true;
+    this.deleteErrorMsg = '';
+
+    this.techService.deleteTechnician(this.deleteTech.id).subscribe({
+      next: () => {
+        this.deleting = false;
+        this.allTechnicians = this.allTechnicians.filter(t => t.id !== this.deleteTech!.id);
+        this.applyFilter(this.activeFilter);
+        this.closeDeleteModal();
+      },
+      error: (err: any) => {
+        this.deleting = false;
+        this.deleteErrorMsg = err.error?.message || err.error?.title || 'حدث خطأ أثناء حذف الفني';
+      }
+    });
   }
 
   resolveImage(url: string | null | undefined): string {

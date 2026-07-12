@@ -100,6 +100,12 @@
             <span class="request-separator">·</span>
             <span>{{ formatDate(req.scheduledAt) }}</span>
 
+            <span *ngIf="hasAiPrice(req)" class="request-separator">·</span>
+            <span *ngIf="hasAiPrice(req)" class="request-ai-price" title="النطاق السعري المقدر">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              {{ formatPriceRange(req) }}
+            </span>
+
             <span *ngIf="req.isEmergency" class="fire-icon">
               <i class="fa-solid fa-fire"></i>
             </span>
@@ -221,11 +227,11 @@
             </div>
           </div>
 
-          <div *ngIf="viewRequest.aiPriceMin || viewRequest.aiPriceMax" class="col-12">
+          <div *ngIf="viewRequest && hasAiPrice(viewRequest)" class="col-12">
             <div class="modal-info-box text-end">
               <div class="modal-info-label">النطاق السعري المقدر</div>
               <div class="modal-info-value fw-semibold">
-                {{ viewRequest.aiPriceMin }} — {{ viewRequest.aiPriceMax }} ج
+                {{ getAiPriceRange() }}
               </div>
             </div>
           </div>

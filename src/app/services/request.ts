@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { AiService } from './ai.service';
 
 @Injectable({ providedIn: 'root' })
 export class RequestService {
   private apiUrl = 'https://sala7ly.runasp.net/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private aiService: AiService
+  ) {}
 
   private getHeaders() {
     const token = localStorage.getItem('token');
@@ -28,7 +33,18 @@ export class RequestService {
   getRequestById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/requests/${id}`, {
       headers: this.getHeaders()
-    });
+    }).pipe(
+      switchMap((request) =>
+        this.aiService.estimatePrice(id).pipe(
+          map((estimate) => ({
+            ...request,
+            aiPriceMin: estimate.minPrice,
+            aiPriceMax: estimate.maxPrice,
+          })),
+          catchError(() => of(request))
+        )
+      )
+    );
   }
 
   // GET /api/requests/open

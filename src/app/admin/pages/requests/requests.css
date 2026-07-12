@@ -316,6 +316,22 @@
   font-family: 'Cairo', sans-serif;
 }
 
+.request-ai-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f0f7ff;
+  color: #1787e0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.request-ai-price i {
+  font-size: 12px;
+}
+
 .request-actions {
   display: flex;
   align-items: center;

@@ -27,6 +27,10 @@ export class TechnicianAdminService {
     return this.http.get<TechnicianAdmin>(`${this.apiUrl}/Technician/${id}`);
   }
 
+  deleteTechnician(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/Technician/${id}`);
+  }
+
   getAllTechniciansEnriched(): Observable<TechnicianWithVerification[]> {
     return this.getAllTechnicians().pipe(
       switchMap((techs) => {

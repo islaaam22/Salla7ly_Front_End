@@ -19,14 +19,23 @@ export class AvailableRequests implements OnInit, OnDestroy {
   loading = true;
   errorMsg = '';
 
+  // bid modal
   showModal = false;
   selectedRequestId: number | null = null;
   bidPrice = '';
   bidTime = '';
   bidMessage = '';
   submitting = false;
+  priceValidationError = '';
+
+  // details (inline expand)
+  expandedId: number | null = null;
+  detailsLoading = false;
+  selectedDetails: any = null;
+  activeImage = '';
 
   private apiUrl = 'https://sala7ly.runasp.net/api';
+  private apiBase = 'https://sala7ly.runasp.net';
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -84,20 +93,57 @@ export class AvailableRequests implements OnInit, OnDestroy {
   }
 
   private listenToLiveUpdates(): void {
-    // لو فيه طلب جديد فتحه عميل آخر، نضيفه للقائمة لو لسه ملوش
     this.signalR.bidAccepted$
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ requestId }) => {
-        // الطلب اتقفل لأن عرض اتقبل عليه — نشيله من القائمة
         this.requests = this.requests.filter(r => r.id !== requestId);
       });
   }
 
+  // ── Inline details expand ──
+  toggleDetails(requestId: number) {
+    if (this.expandedId === requestId) {
+      this.expandedId = null;
+      this.selectedDetails = null;
+      return;
+    }
+
+    this.expandedId = requestId;
+    this.detailsLoading = true;
+    this.selectedDetails = null;
+    this.activeImage = '';
+
+    this.http.get<any>(`${this.apiUrl}/requests/${requestId}`, { headers: this.authHeaders() })
+      .subscribe({
+        next: (data) => {
+          this.selectedDetails = data;
+          this.activeImage = data.imageUrls?.[0] ? this.fullUrl(data.imageUrls[0]) : '';
+          this.detailsLoading = false;
+        },
+        error: () => {
+          this.detailsLoading = false;
+          this.errorMsg = 'تعذّر تحميل التفاصيل';
+        }
+      });
+  }
+
+  fullUrl(path: string): string {
+    if (!path) return '';
+    if (path.startsWith('http')) return path.replace('http://localhost:5296', this.apiBase);
+    return `${this.apiBase}${path}`;
+  }
+
+  setActiveImage(url: string) {
+    this.activeImage = this.fullUrl(url);
+  }
+
+  // ── Bid modal ──
   openBidModal(requestId: number) {
     this.selectedRequestId = requestId;
     this.bidPrice = '';
     this.bidTime = '';
     this.bidMessage = '';
+    this.priceValidationError = '';
     this.showModal = true;
   }
 
@@ -128,7 +174,8 @@ export class AvailableRequests implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.submitting = false;
-        console.error('Bid error:', err);
+        // Display backend error message to user
+        this.priceValidationError = err.error?.message || err.error?.title || 'حدث خطأ أثناء تقديم العرض';
       }
     });
   }
