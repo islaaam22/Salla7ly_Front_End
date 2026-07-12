@@ -78,15 +78,16 @@
                 <h6 class="fw-bold mb-0" style="color: #0f172a"><a class="" style="text-decoration: none;" routerLink="/src/app/technician/pages/profile">م . {{ bid.technicianName }} </a></h6>
                 </span>
                 <span
+                  *ngIf="bid.technicianIsVerified"
                   class="badge rounded-pill"
                   style="background: #e7f8ee; color: #16a34a; font-size: 11px; padding: 4px 8px"
                 >
                 <i class="fa-solid fa-check-circle me-1"></i>موثّق
                 </span>
               </div>
-              <div class="text-muted" style="font-size: 13px">
+              <div *ngIf="bid.technicianRating || bid.technicianCompletedJobs" class="text-muted" style="font-size: 13px">
                 <i class="fa-solid fa-star" style="color: #f5b50a"></i>
-                {{ bid.technicianId || '4.9' }} · {{ bid.technicianId || '134' }} مهمة
+                {{ bid.technicianRating ?? '—' }} · {{ bid.technicianCompletedJobs ?? 0 }} مهمة
               </div>
             </div>
             <img
@@ -114,7 +115,7 @@
               ><i class="fa-regular fa-clock me-1"></i
               >{{ formatDuration(bid.estimatedDurationMinutes) }}</span
             >
-            <span>منذ {{ bid.submittedAt | date: 'shortTime' }}</span>
+            <span>{{ timeAgo(bid.submittedAt) }}</span>
           </div>
 
           <!-- Message -->
@@ -127,14 +128,12 @@
             <button
               class="btn btn-light rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
               style="width: 42px; height: 42px"
+              [disabled]="rejectingBidId === bid.id"
+              (click)="rejectBid(group, bid.id)"
+              title="رفض العرض"
             >
-              <i class="fa-solid fa-xmark text-muted"></i>
-            </button>
-            <button
-              class="btn btn-light rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-              style="width: 42px; height: 42px"
-            >
-              <i class="fa-regular fa-comment-dots text-muted"></i>
+              <span *ngIf="rejectingBidId === bid.id" class="spinner-border spinner-border-sm text-muted" style="width:16px;height:16px"></span>
+              <i *ngIf="rejectingBidId !== bid.id" class="fa-solid fa-xmark text-muted"></i>
             </button>
             <button
               class="btn rounded-pill flex-grow-1 text-white fw-bold py-2"
@@ -151,6 +150,14 @@
             style="background: #e7f8ee; color: #16a34a"
           >
             ✅ تم قبول هذا العرض
+          </div>
+
+          <div
+            *ngIf="bid.status === 'rejected'"
+            class="text-center py-2 rounded-3 fw-semibold"
+            style="background: #f1f5f9; color: #64748b"
+          >
+            تم رفض هذا العرض
           </div>
         </div>
       </div>
