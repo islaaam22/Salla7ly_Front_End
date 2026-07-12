@@ -11,6 +11,11 @@ export interface Bid {
   validUntil: string;
   submittedAt: string;
   respondedAt: string | null;
+  // Optional technician metadata — only present if the backend includes it
+  // on the bid DTO. UI must fall back gracefully (never invent values) when absent.
+  technicianRating?: number;
+  technicianCompletedJobs?: number;
+  technicianIsVerified?: boolean;
 }
 
 export interface SubmitBidDto {

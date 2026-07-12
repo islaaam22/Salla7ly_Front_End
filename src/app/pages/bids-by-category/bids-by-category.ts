@@ -113,6 +113,47 @@ export class BidsByCategoryComponent implements OnInit, OnDestroy {
       });
   }
 
+  rejectingBidId: number | null = null;
+
+  rejectBid(group: RequestGroup, bidId: number): void {
+    if (this.rejectingBidId !== null) return;
+    this.rejectingBidId = bidId;
+
+    this.requestService.rejectBid(bidId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.rejectingBidId = null;
+          group.bids = group.bids.map(b =>
+            b.id === bidId ? { ...b, status: 'rejected' } : b
+          );
+        },
+        error: () => {
+          this.rejectingBidId = null;
+        }
+      });
+  }
+
+  /** Arabic relative time, e.g. "منذ 5 دقيقة" / "منذ ساعة" / "أمس" */
+  timeAgo(dateStr?: string): string {
+    if (!dateStr) return '';
+    const time = new Date(dateStr).getTime();
+    if (!Number.isFinite(time)) return '';
+
+    const diffMs = Date.now() - time;
+    const minutes = Math.floor(diffMs / 60000);
+    const hours = Math.floor(diffMs / 3600000);
+    const days = Math.floor(diffMs / 86400000);
+
+    if (diffMs < 0) return 'قريبًا';
+    if (minutes < 1) return 'الآن';
+    if (minutes < 60) return `منذ ${minutes} دقيقة`;
+    if (hours === 1) return 'منذ ساعة';
+    if (hours < 24) return `منذ ${hours} ساعات`;
+    if (days === 1) return 'أمس';
+    return `منذ ${days} أيام`;
+  }
+
   formatDuration(minutes: number): string {
     if (minutes < 60) return `${minutes} دقيقة`;
     const h = Math.floor(minutes / 60);
