@@ -60,32 +60,6 @@
           }
         </div>
 
-        <!-- Statistics -->
-        <div class="info-card">
-          <h4 class="card-title">
-            <i class="fa-solid fa-chart-bar"></i>
-            الإحصائيات
-          </h4>
-          <div class="stats-list">
-            <div class="stat-row">
-              <span class="stat-label">مهام مكتملة</span>
-              <span class="stat-value">{{ technician.completedJobs ?? 0 }}</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-label">معدل الإنجاز</span>
-              <span class="stat-value">{{ getCompletionRate() }}</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-label">سنوات الخبرة</span>
-              <span class="stat-value">{{ technician.experienceYears ?? 0 }}</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-label">التقييم العام</span>
-              <span class="stat-value">{{ technician.overallRating?.toFixed(1) ?? '0.0' }}</span>
-            </div>
-          </div>
-        </div>
-
         <!-- Verification status card -->
         @if (verification) {
           <div class="info-card">
@@ -139,16 +113,10 @@
             }
             <div class="hero-info">
               <h3>م. {{ technician.name }}</h3>
-              <p class="hero-specialty">فني {{ technician.specialization ?? 'غير محدد' }}</p>
               <div class="hero-meta">
                 <span [class]="'status-badge ' + getStatusClass()">
                   <i class="fa-solid fa-circle-check"></i>
                   {{ getStatusLabel() }}
-                </span>
-                <span class="hero-rating">
-                  <i class="fa-solid fa-star star-icon"></i>
-                  {{ technician.overallRating?.toFixed(1) ?? '0.0' }}
-                  ({{ technician.completedJobs ?? 0 }} تقييم)
                 </span>
               </div>
             </div>

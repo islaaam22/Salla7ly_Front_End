@@ -121,13 +121,6 @@ export class Dashboard implements OnInit {
       link: '/admin/reviews',
       color: '#f6ad55'
     },
-    {
-      title: 'إدارة المحافظ',
-      description: 'رصد المعاملات المالية وسحب الأرباح.',
-      icon: 'fa-wallet',
-      link: '/admin/wallets',
-      color: '#48bb78'
-    }
   ];
 
   constructor(

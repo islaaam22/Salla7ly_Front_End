@@ -321,7 +321,7 @@
             style="margin-bottom: 10px"
           >
             <i class="fa-solid fa-triangle-exclamation"></i>
-            تعذّر تحميل العناوين.
+            {{ addressesError }}
             <button type="button" class="btn-retry" (click)="loadAddresses()">
               إعادة المحاولة
             </button>
@@ -329,7 +329,7 @@
 
           <!-- Dropdown -->
           <div
-            *ngIf="!addressesLoading && !addressesError && uniqueAddresses.length > 0"
+            *ngIf="!addressesLoading && uniqueAddresses.length > 0"
             class="address-select-wrap"
           >
             <i class="fa-solid fa-location-dot address-select-icon"></i>
@@ -359,8 +359,10 @@
             class="address-empty"
           >
             <i class="fa-solid fa-map-pin"></i>
-            لا توجد عناوين محفوظة. يمكنك إضافة عنوانك في
-            <a routerLink="/customer/edit" style="color: #e8620a; font-weight: 700">ملفك الشخصي</a>.
+            لا توجد عناوين محفوظة.
+            <button type="button" class="btn-retry" (click)="openNewAddressForm()">
+              أضف عنوانك الآن
+            </button>
           </div>
 
           @if (submitted && !selectedAddressId) {
@@ -468,5 +470,97 @@
         </div>
       </div>
     }
+  </div>
+
+  <!-- ═══════════ Address Popup Modal ═══════════ -->
+  <div class="addr-modal-overlay" *ngIf="showAddressForm" (click)="cancelAddressForm()">
+    <div class="addr-modal" (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="addr-modal-header">
+        <span>
+          <i class="fa-solid fa-map-location-dot"></i>
+          {{ editingAddressId ? 'تعديل العنوان' : 'عناويني' }}
+        </span>
+        <button type="button" class="addr-modal-close" (click)="cancelAddressForm()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="addr-modal-body">
+
+        <div *ngIf="addressesError" class="edit-alert edit-alert-danger mb-3">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          {{ addressesError }}
+        </div>
+
+        <!-- add / edit form -->
+        <div class="edit-card mb-3" style="background:#fafaf8">
+          <div class="edit-field">
+            <label class="edit-label"><i class="fa-solid fa-tag"></i> اسم العنوان</label>
+            <input type="text" class="edit-input" [(ngModel)]="addressForm.title" name="addrTitle" placeholder="مثال: المنزل" />
+          </div>
+          <div class="edit-field">
+            <label class="edit-label"><i class="fa-solid fa-road"></i> الشارع</label>
+            <input type="text" class="edit-input" [(ngModel)]="addressForm.street" name="addrStreet" placeholder="اسم الشارع ورقم العقار" />
+          </div>
+          <div class="edit-field">
+            <label class="edit-label"><i class="fa-solid fa-city"></i> المدينة</label>
+            <input type="text" class="edit-input" [(ngModel)]="addressForm.city" name="addrCity" placeholder="القاهرة" />
+          </div>
+          <div class="edit-field">
+            <label class="edit-label"><i class="fa-solid fa-map"></i>  الحي </label>
+            <input type="text" class="edit-input" [(ngModel)]="addressForm.district" name="addrDistrict" placeholder="المعادي" />
+          </div>
+          <div class="edit-field d-flex align-items-center justify-content-end gap-2" *ngIf="!editingAddressId">
+            <label class="edit-label mb-0">اجعله العنوان الافتراضي</label>
+            <input type="checkbox" [(ngModel)]="addressForm.isDefault" name="addrIsDefault" />
+          </div>
+          <div class="d-flex gap-3 mt-2">
+            <button class="edit-save-btn" (click)="saveAddress()" [disabled]="addressSaving">
+              <i class="fa-solid fa-floppy-disk"></i>
+              {{ addressSaving ? 'جارٍ الحفظ...' : (editingAddressId ? 'تحديث العنوان' : 'حفظ العنوان') }}
+            </button>
+            <button class="edit-cancel-btn" (click)="cancelAddressForm()">إلغاء</button>
+          </div>
+        </div>
+
+        <!-- loading -->
+        <div *ngIf="addressesLoading" class="d-flex justify-content-center py-3">
+          <div class="spinner-border spinner-border-sm" style="color:#E8620A"></div>
+        </div>
+
+        <!-- empty -->
+        <div *ngIf="!addressesLoading && addresses.length === 0" class="text-muted text-center py-3">
+          لا توجد عناوين محفوظة بعد.
+        </div>
+
+        <!-- list -->
+        <div *ngFor="let addr of addresses" class="addr-item">
+          <div class="addr-item-right">
+            <div class="addr-item-name">
+              {{ addr.title || addr.street || 'عنوان' }}
+              <span *ngIf="addr.isDefault" class="addr-default-badge">افتراضي</span>
+            </div>
+            <div class="addr-item-detail">
+              {{ addr.street }}{{ addr.district ? '، ' + addr.district : '' }}{{ addr.city ? '، ' + addr.city : '' }}
+            </div>
+          </div>
+          <div class="addr-item-actions">
+            <button *ngIf="!addr.isDefault" class="addr-btn addr-btn-default" (click)="makeDefault(addr)">
+              تعيين كافتراضي
+            </button>
+            <button class="addr-btn addr-btn-edit" (click)="openEditForm(addr)">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="addr-btn addr-btn-delete" (click)="deleteAddress(addr)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>
