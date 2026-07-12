@@ -1,109 +1,92 @@
 <div class="container-fluid vh-100 p-0 overflow-hidden" dir="rtl">
   <div class="d-flex h-100">
-    <!-- القائمة - اليمين -->
 
-    <div class="border-start bg-white d-flex flex-column" style="width: 340px; min-width: 340px">
+    <!-- ── Conversation list (right) ── -->
+    <div class="convlist-panel d-flex flex-column">
       <div class="p-3 border-bottom">
-        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: #1a1a2e">
-          <i class="fa-regular fa-comment-dots" style="color: #1aacdc"></i>
+        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2 convlist-title">
+          <i class="fa-regular fa-comment-dots"></i>
           المحادثات
         </h6>
-        <div class="input-group input-group-sm">
-          <span class="input-group-text bg-light border-end-0">
-            <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        <div class="input-group input-group-sm convlist-search">
+          <span class="input-group-text border-end-0">
+            <i class="fa-solid fa-magnifying-glass"></i>
           </span>
           <input
             type="text"
-            class="form-control bg-light border-start-0"
+            class="form-control border-start-0"
             placeholder="ابحث عن محادثة..."
+            [(ngModel)]="searchTerm"
           />
         </div>
       </div>
 
       <div class="overflow-auto flex-grow-1">
         <div
-          *ngFor="let conv of conversations"
-          class="d-flex align-items-center gap-3 p-3 border-bottom conv-item"
+          *ngFor="let conv of filteredConversations"
+          class="d-flex align-items-center gap-3 p-3 conv-item"
           [class.active-conv]="conv.requestId === selectedRequestId"
           (click)="openConversation(conv.requestId)"
           role="button"
         >
-          <div
-            class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
-            style="width: 48px; height: 48px; background: #1aacdc; font-size: 20px"
-          >
+          <div class="conv-avatar flex-shrink-0">
             {{ conv.otherPartyName[0] }}
           </div>
 
           <div class="flex-grow-1 overflow-hidden">
             <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-semibold text-truncate" style="color: #1a1a2e">{{
-                conv.otherPartyName
-              }}</span>
-              <small class="text-muted flex-shrink-0 ms-2" style="font-size: 11px">
+              <span class="fw-semibold text-truncate conv-name">{{ conv.otherPartyName }}</span>
+              <small class="conv-time flex-shrink-0 ms-2">
                 {{ conv.lastMessageTime | date: 'shortTime' }}
               </small>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-1">
-              <small class="text-muted text-truncate">{{ conv.lastMessage }}</small>
-              <span
-                *ngIf="conv.unreadCount > 0"
-                class="badge rounded-pill ms-2"
-                style="background: #1aacdc; font-size: 11px"
-              >
+              <small class="conv-last text-truncate">{{ conv.lastMessage }}</small>
+              <span *ngIf="conv.unreadCount > 0" class="conv-unread ms-2">
                 {{ conv.unreadCount }}
               </span>
             </div>
           </div>
         </div>
 
-        <div *ngIf="conversations.length === 0" class="text-center text-muted p-5">
+        <div *ngIf="filteredConversations.length === 0" class="text-center convlist-empty p-5">
           <i class="fa-solid fa-inbox fs-2 d-block mb-2"></i>
-          لا توجد محادثات
+          {{ searchTerm ? 'لا توجد نتائج' : 'لا توجد محادثات' }}
         </div>
       </div>
     </div>
 
-    <!-- الشات - اليسار -->
-    <div class="flex-grow-1 h-100 d-flex flex-column">
+    <!-- ── Chat panel (left) ── -->
+    <div class="flex-grow-1 h-100 d-flex flex-column chat-panel">
       <ng-container *ngIf="selectedRequestId; else noChat">
+
         <!-- Header -->
-        <div class="d-flex align-items-center gap-3 px-4 py-3 border-bottom bg-white shadow-sm">
-          <div
-            class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
-            style="width: 44px; height: 44px; background: #1aacdc; font-size: 18px"
-          >
+        <div class="d-flex align-items-center gap-3 px-4 py-3 chat-header">
+          <div class="conv-avatar conv-avatar-sm flex-shrink-0">
             {{ getSelectedConversation()?.otherPartyName?.[0] ?? '?' }}
           </div>
           <div class="flex-grow-1">
-            <div class="fw-semibold" style="color: #1a1a2e">
+            <div class="fw-semibold chat-header-name">
               {{ getSelectedConversation()?.otherPartyName }}
             </div>
-            <small class="text-muted" style="font-size: 12px">
-              <span *ngIf="isTyping"> <i class="fa-solid fa-ellipsis"></i> جاري الكتابة... </span>
-              <span *ngIf="!isTyping">متصل الآن</span>
+            <small class="chat-header-status">
+              <span *ngIf="isTyping"><i class="fa-solid fa-ellipsis"></i> جاري الكتابة...</span>
+              <span *ngIf="!isTyping"><span class="online-dot"></span> متصل الآن</span>
             </small>
           </div>
         </div>
 
         <!-- Load More -->
-        <div class="text-center py-2" style="background: #f0f2f5">
-          <button
-            class="btn btn-sm btn-light rounded-pill px-4 shadow-sm"
-            (click)="loadMoreMessages()"
-          >
+        <div class="text-center py-2">
+          <button class="load-more-btn" (click)="loadMoreMessages()">
             <i class="fa-solid fa-arrow-up me-1"></i> تحميل المزيد
           </button>
         </div>
 
         <!-- Messages -->
-        <div
-          class="flex-grow-1 overflow-auto px-4 py-3 d-flex flex-column gap-2"
-          style="background: #f0f2f5"
-          #messagesContainer
-        >
-          <div *ngIf="isLoading" class="text-center text-muted py-4">
-            <div class="spinner-border spinner-border-sm me-2" style="color: #1aacdc"></div>
+        <div class="flex-grow-1 overflow-auto px-4 py-3 d-flex flex-column gap-1" #messagesContainer>
+          <div *ngIf="isLoading" class="text-center py-4 loading-text">
+            <div class="spinner-border spinner-border-sm me-2"></div>
             جاري التحميل...
           </div>
 
@@ -114,86 +97,73 @@
             [class.justify-content-end]="!isMyMessage(msg)"
           >
             <div
-              class="px-3 py-2 rounded-4 shadow-sm"
-              style="max-width: 65%"
-              [style.background]="isMyMessage(msg) ? '#1AACDC' : '#ffffff'"
-              [style.color]="isMyMessage(msg) ? '#ffffff' : '#1A1A2E'"
+              class="msg-bubble"
+              [class.msg-mine]="isMyMessage(msg)"
+              [class.msg-theirs]="!isMyMessage(msg)"
             >
-              <p class="mb-1" *ngIf="msg.messageType === 0">{{ msg.content }}</p>
+              <p class="mb-1 msg-text" *ngIf="msg.messageType === 0">{{ msg.content }}</p>
 
               <img
                 *ngIf="msg.messageType === 1"
                 [src]="msg.attachmentUrls?.[0]"
-                class="rounded-3 img-fluid"
-                style="max-width: 200px"
+                class="rounded-3 img-fluid msg-image"
               />
 
               <audio
                 *ngIf="msg.messageType === 2"
                 [src]="msg.attachmentUrls?.[0]"
                 controls
-                class="w-100"
+                class="w-100 mt-1"
               ></audio>
 
-              <div class="d-flex align-items-center justify-content-end gap-1 mt-1">
-                <small style="font-size: 10px; opacity: 0.7">{{
-                  msg.sentAt | date: 'shortTime'
-                }}</small>
+              <div class="d-flex align-items-center justify-content-end gap-1 mt-1 msg-meta">
+                <small class="msg-time">{{ msg.sentAt | date: 'shortTime' }}</small>
                 <i
                   *ngIf="isMyMessage(msg)"
-                  class="fa-solid"
+                  class="fa-solid msg-check"
                   [class.fa-check-double]="msg.isRead"
                   [class.fa-check]="!msg.isRead"
-                  [style.color]="msg.isRead ? '#ffffff' : 'rgba(255,255,255,0.7)'"
-                  style="font-size: 11px"
-                >
-                </i>
+                  [class.read]="msg.isRead"
+                ></i>
               </div>
             </div>
           </div>
 
           <div *ngIf="isTyping" class="d-flex">
-            <div class="bg-white rounded-4 px-3 py-2 shadow-sm text-muted">
+            <div class="typing-bubble">
               <i class="fa-solid fa-ellipsis"></i>
             </div>
           </div>
         </div>
 
         <!-- Input -->
-        <div class="px-4 py-3 border-top bg-white">
-          <div class="d-flex align-items-center gap-2">
-            <label
-              class="btn btn-light border rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0"
-              style="width: 40px; height: 40px"
-              title="إرفاق صورة"
-            >
-              <i class="fa-solid fa-paperclip text-muted"></i>
-              <input type="file" hidden accept="image/*" (change)="sendImage($event)" />
-            </label>
+        <div class="px-4 py-3 chat-input-zone">
+          <div class="chat-input-pill">
+            <button class="chat-send-btn" (click)="sendMessage()" title="إرسال">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
 
             <input
               type="text"
-              class="form-control rounded-pill"
+              class="chat-input-field"
               [(ngModel)]="messageText"
               (keyup)="onTyping()"
               (keyup.enter)="sendMessage()"
               placeholder="اكتب رسالتك..."
             />
 
-            <button
-              class="btn rounded-circle text-white d-flex align-items-center justify-content-center flex-shrink-0"
-              style="width: 40px; height: 40px; background: #1aacdc"
-              (click)="sendMessage()"
-            >
-              <i class="fa-solid fa-paper-plane"></i>
-            </button>
+            <label class="chat-attach-btn" title="إرفاق صورة">
+              <i class="fa-solid fa-paperclip"></i>
+              <input type="file" hidden accept="image/*" (change)="sendImage($event)" />
+            </label>
           </div>
         </div>
       </ng-container>
+
       <ng-template #noChat>
-        <div class="h-100 d-flex flex-column align-items-center justify-content-center">
-          <i class="fa-regular fa-comment-dots mb-3" style="font-size: 64px; color: #1aacdc"></i>
-          <p class="text-muted fs-5">اختر محادثة للبدء</p>
+        <div class="h-100 d-flex flex-column align-items-center justify-content-center chat-panel">
+          <i class="fa-regular fa-comment-dots mb-3 empty-icon"></i>
+          <p class="empty-text">اختر محادثة للبدء</p>
         </div>
       </ng-template>
     </div>
