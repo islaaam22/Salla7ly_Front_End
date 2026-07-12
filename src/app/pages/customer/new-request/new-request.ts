@@ -5,7 +5,9 @@ import { Router } from '@angular/router';
 import { RequestService } from '../../../services/request';
 import { AiService } from '../../../services/ai.service';
 import { AddressService } from '../../../services/address-service';
-import { CustomerAddress } from '../../../models/Address-model';
+import { CustomerService } from '../../../services/customer-service';
+import { CustomerProfileDetails } from '../../../models/customer-model';
+import { CustomerAddress, CreateAddressDto, UpdateAddressDto } from '../../../models/Address-model';
 
 @Component({
   selector: 'app-new-request',
@@ -28,15 +30,31 @@ export class NewRequest implements OnInit {
   categories: any[] = [];
   selectedFiles: File[] = [];
 
+  // ── Customer Info ────────────────────────────────────────────────
+  customerId = 0;
+  customerEmail = '';
+
   // ── Address ──────────────────────────────────────────────────────
   addresses: CustomerAddress[] = [];
   uniqueAddresses: CustomerAddress[] = [];
   addressesLoading = false;
-  addressesError   = false;
+  addressesError   = '';
   selectedAddressId: number | null = null;
 
+  // ── Address Popup State ──────────────────────────────────────────
+  showAddressForm   = false;
+  addressSaving     = false;
+  editingAddressId: number | null = null;
+  addressForm = {
+    title: '',
+    street: '',
+    city: '',
+    district: '',
+    isDefault: false
+  };
+
   urgencyLevels = [
-    { value: 0, label: 'عادي', desc: 'خلال ٢٤-٤٨ ساعة',              icon: 'fa-solid fa-clock',                color: '#1AACDC' },
+    { value: 0, label: 'عادي', desc: 'خلال ٢-٤٨ ساعة',              icon: 'fa-solid fa-clock',                color: '#1AACDC' },
     { value: 1, label: 'عاجل', desc: 'خلال بضع ساعات',               icon: 'fa-solid fa-triangle-exclamation', color: '#F59E0B' },
     { value: 2, label: 'طارئ', desc: 'فوراً — يدخل المزايدة مباشرة', icon: 'fa-solid fa-fire',                 color: '#EF4444' },
   ];
@@ -54,7 +72,7 @@ export class NewRequest implements OnInit {
     district: ''
   };
 
-  // ── AI State ─────────────────────────────────────────────────────
+  // ─ AI State ─────────────────────────────────────────────────────
   aiActive          = false;
   aiLoading         = false;
   aiError           = '';
@@ -77,10 +95,27 @@ export class NewRequest implements OnInit {
     private requestService: RequestService,
     private aiService:      AiService,
     private addressService: AddressService,
+    private customerService: CustomerService,
     private router:         Router
   ) {}
 
   ngOnInit() {
+    // نجيب بيانات البروفايل عشان ناخد customerId و email
+    this.customerService.getMyProfile().subscribe({
+      next: (data: CustomerProfileDetails) => {
+        console.log('Customer Profile Loaded:', data);
+        this.customerId = data.id;
+        this.customerEmail = data.email;
+        
+        // بعد ما نجيب الـ customerId، نحمل العناوين
+        this.loadAddresses();
+      },
+      error: (err) => {
+        console.error('Failed to load customer profile:', err);
+        this.addressesError = 'تعذّر تحميل بيانات المستخدم';
+      }
+    });
+
     this.requestService.getCategories().subscribe({
       next: (res) => {
         this.categories = res
@@ -88,84 +123,279 @@ export class NewRequest implements OnInit {
           .map((c: any) => ({ ...c, icon: this.getIconByName(c.nameAr) }));
       }
     });
-
-    this.loadAddresses();
   }
 
   // ── Address Loading ───────────────────────────────────────────────
- loadAddresses() {
-  this.addressesLoading = true;
-  this.addressesError = false;
+  loadAddresses() {
+    console.log('Loading addresses... customerId:', this.customerId);
+    this.addressesLoading = true;
+    this.addressesError   = '';
 
-  this.addressService.getMyAddresses().subscribe({
-    next: (list) => {
+    this.addressService.getMyAddresses().subscribe({
+      next: (list) => {
+        console.log('Addresses loaded:', list);
+        this.addresses = list ?? [];
 
-      this.addresses = list;
+        const seen = new Set<string>();
+        this.uniqueAddresses = this.addresses.filter(addr => {
+          const key = `${addr.street}-${addr.city}-${addr.district}`.trim();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
 
-      // إزالة العناوين المكررة
-      const seen = new Set<string>();
+        this.addressesLoading = false;
 
-      this.uniqueAddresses = list.filter(addr => {
-        const key = `${addr.street}-${addr.city}-${addr.district}`.trim();
-
-        if (seen.has(key)) {
-          return false;
+        // لو مفيش عنوان مختار حالياً، نختار الافتراضي أو الأول
+        if (!this.selectedAddressId && this.uniqueAddresses.length > 0) {
+          const def =
+            this.uniqueAddresses.find(a => a.isDefault) ??
+            this.uniqueAddresses[0];
+          if (def) this.selectAddress(def);
+        } else {
+          // لو العنوان المختار اتشال، نختار بديل
+          const stillExists = this.uniqueAddresses.find(a => a.id === this.selectedAddressId);
+          if (!stillExists && this.uniqueAddresses.length > 0) {
+            const fallback =
+              this.uniqueAddresses.find(a => a.isDefault) ??
+              this.uniqueAddresses[0];
+            if (fallback) this.selectAddress(fallback);
+          }
         }
-
-        seen.add(key);
-        return true;
-      });
-
-      this.addressesLoading = false;
-
-      const def =
-        this.uniqueAddresses.find(a => a.isDefault) ??
-        this.uniqueAddresses[0];
-
-      if (def) {
-        this.selectAddress(def);
+      },
+      error: (err) => {
+        console.error('Failed to load addresses:', err);
+        this.addressesLoading = false;
+        this.addressesError   = 'تعذّر تحميل العناوين.';
       }
-    },
-    error: () => {
-      this.addressesLoading = false;
-      this.addressesError = true;
-    }
-  });
-}
+    });
+  }
 
   selectAddress(addr: CustomerAddress) {
+    console.log('Address selected:', addr);
     this.selectedAddressId    = addr.id;
-    this.form.serviceAddress  = addr.street ?? '';
-    this.form.city            = addr.city    ?? '';
-    this.form.district        = addr.district ?? '';
+    this.form.serviceAddress  = addr.street    ?? '';
+    this.form.city            = addr.city      ?? '';
+    this.form.district        = addr.district  ?? '';
   }
 
-onAddressChange(value: any) {
+  // 🔻 تعديل: بدل ما يروح لصفحة تانية، بيفتح الـ popup
+  onAddressChange(value: any) {
+    console.log('Address change triggered, value:', value);
+    if (value === 'new') {
+      this.openNewAddressForm();
+      return;
+    }
 
-  if (value === 'new') {
-    this.router.navigate(['/customer/edit']);
-    return;
+    const addr = this.addresses.find(a => a.id == value);
+    if (addr) this.selectAddress(addr);
   }
-
-  const addr = this.addresses.find(a => a.id == value);
-
-  if (addr) {
-    this.selectAddress(addr);
-  }
-}
 
   addressLabel(addr: CustomerAddress): string {
     const parts = [addr.title, addr.street, addr.district, addr.city].filter(Boolean);
     return parts.join('، ');
   }
 
+  // ── Address Popup Methods ────────────────────────────────────────
+  openNewAddressForm() {
+    console.log('Opening new address form');
+    this.editingAddressId = null;
+    this.addressForm = {
+      title: '',
+      street: '',
+      city: '',
+      district: '',
+      isDefault: false
+    };
+    this.addressesError = '';
+    this.showAddressForm = true;
+  }
+
+  openEditForm(addr: CustomerAddress) {
+    console.log('Opening edit form for address:', addr);
+    this.editingAddressId = addr.id;
+    this.addressForm = {
+      title:    addr.title    ?? '',
+      street:   addr.street   ?? '',
+      city:     addr.city     ?? '',
+      district: addr.district ?? '',
+      isDefault: !!addr.isDefault
+    };
+    this.addressesError = '';
+    this.showAddressForm = true;
+  }
+
+  cancelAddressForm() {
+    console.log('Cancelling address form');
+    this.showAddressForm   = false;
+    this.editingAddressId  = null;
+    this.addressesError    = '';
+    this.addressForm = { title: '', street: '', city: '', district: '', isDefault: false };
+
+    // نرجع الـ dropdown على أول قيمة صالحة
+    if (this.selectedAddressId === null && this.uniqueAddresses.length > 0) {
+      const fallback =
+        this.uniqueAddresses.find(a => a.isDefault) ??
+        this.uniqueAddresses[0];
+      if (fallback) this.selectAddress(fallback);
+    }
+  }
+
+  saveAddress() {
+    console.log('Save address clicked');
+    console.log('Current customerId:', this.customerId);
+    console.log('Form data:', this.addressForm);
+    console.log('Editing address ID:', this.editingAddressId);
+
+    if (!this.addressForm.title || !this.addressForm.title.trim()) {
+      this.addressesError = 'رجاءً أدخل اسم العنوان.';
+      return;
+    }
+    if (!this.addressForm.street || !this.addressForm.street.trim()) {
+      this.addressesError = 'رجاءً أدخل الشارع.';
+      return;
+    }
+    if (!this.addressForm.city || !this.addressForm.city.trim()) {
+      this.addressesError = 'رجاءً أدخل المدينة.';
+      return;
+    }
+
+    this.addressSaving = true;
+    this.addressesError = '';
+
+    if (this.editingAddressId) {
+      console.log('Updating existing address...');
+      const dto: UpdateAddressDto = {
+        title: this.addressForm.title.trim(),
+        street: this.addressForm.street.trim(),
+        city: this.addressForm.city.trim(),
+        district: this.addressForm.district?.trim() || undefined
+      };
+      
+      console.log('Update DTO:', dto);
+      
+      this.addressService.updateAddress(this.editingAddressId, dto).subscribe({
+        next: (res) => {
+          console.log('Address updated successfully:', res);
+          this.onAddressSaved();
+        },
+        error: (err) => {
+          console.error('Address update failed:', err);
+          this.onAddressSaveError(err);
+        }
+      });
+    } else {
+      console.log('Creating new address...');
+      
+      if (!this.customerId) {
+        console.error('customerId is not set!');
+        this.addressesError = 'خطأ: لم يتم تحميل بيانات المستخدم. يرجى إعادة المحاولة.';
+        this.addressSaving = false;
+        return;
+      }
+
+      const dto: CreateAddressDto = {
+        customerId: this.customerId,
+        title: this.addressForm.title.trim(),
+        street: this.addressForm.street.trim(),
+        city: this.addressForm.city.trim(),
+        district: this.addressForm.district?.trim() || undefined,
+        isDefault: this.addressForm.isDefault
+      };
+      
+      console.log('Create DTO:', dto);
+      
+      this.addressService.createAddress(dto).subscribe({
+        next: (res) => {
+          console.log('Address created successfully:', res);
+          this.onAddressSaved();
+        },
+        error: (err) => {
+          console.error('Address creation failed:', err);
+          this.onAddressSaveError(err);
+        }
+      });
+    }
+  }
+
+  private onAddressSaved(): void {
+    console.log('Address saved successfully');
+    this.addressSaving = false;
+    this.showAddressForm = false;
+    this.editingAddressId = null;
+    this.addressForm = { title: '', street: '', city: '', district: '', isDefault: false };
+    
+    // إعادة تحميل العناوين
+    this.loadAddresses();
+    
+    // بعد ما نحمل العناوين، نختار أحدث واحد لو كان إضافة جديدة
+    setTimeout(() => {
+      if (!this.editingAddressId && this.uniqueAddresses.length > 0) {
+        const latest = this.uniqueAddresses[this.uniqueAddresses.length - 1];
+        this.selectAddress(latest);
+      }
+    }, 400);
+  }
+
+  private onAddressSaveError(err: any): void {
+    console.error('Address save failed:', err);
+    this.addressSaving = false;
+    
+    if (err.error?.message) {
+      this.addressesError = err.error.message;
+    } else if (err.error?.title) {
+      this.addressesError = err.error.title;
+    } else {
+      this.addressesError = 'تعذّر حفظ العنوان. حاول مرة أخرى.';
+    }
+    
+    this.loadAddresses();
+  }
+
+  makeDefault(addr: CustomerAddress): void {
+    if (addr.isDefault) return;
+    
+    console.log('Setting address as default:', addr.id);
+    
+    this.addressService.setDefault(addr.id, this.customerId).subscribe({
+      next: (res) => {
+        console.log('Set default response:', res);
+        this.loadAddresses();
+        this.selectAddress(addr);
+      },
+      error: (err) => {
+        console.error('Set default failed:', err.status, err.error);
+        this.addressesError = 'تعذّر تعيين العنوان الافتراضي. حاول مرة أخرى.';
+        this.loadAddresses();
+      }
+    });
+  }
+
+  deleteAddress(addr: CustomerAddress): void {
+    if (!confirm('هل تريد حذف هذا العنوان؟')) return;
+    
+    console.log('Deleting address:', addr.id);
+    
+    this.addressService.deleteAddress(addr.id, this.customerEmail).subscribe({
+      next: () => {
+        console.log('Address deleted successfully');
+        this.loadAddresses();
+      },
+      error: (err) => {
+        console.error('Address delete failed:', err);
+        this.addressesError = 'تعذّر حذف العنوان. حاول مرة أخرى.';
+        this.loadAddresses();
+      }
+    });
+  }
+
   // ── Icons ────────────────────────────────────────────────────────
   getIconByName(name: string): string {
-    if (name.includes('سباكة'))  return 'fa-solid fa-wrench';
-    if (name.includes('كهرباء')) return 'fa-solid fa-bolt';
-    if (name.includes('تكييف')) return 'fa-solid fa-snowflake';
-    if (name.includes('نجارة')) return 'fa-solid fa-hammer';
-    if (name.includes('أجهزة')) return 'fa-solid fa-tv';
+    if (name.includes('سباكة'))   return 'fa-solid fa-wrench';
+    if (name.includes('كهرباء'))  return 'fa-solid fa-bolt';
+    if (name.includes('تكييف'))   return 'fa-solid fa-snowflake';
+    if (name.includes('نجارة'))   return 'fa-solid fa-hammer';
+    if (name.includes('أجهزة'))   return 'fa-solid fa-tv';
     return 'fa-solid fa-tools';
   }
 
@@ -291,20 +521,17 @@ onAddressChange(value: any) {
     this.imageAnalyzing = true;
     this.imageAnalysisError = '';
 
-    // Analyze the first image
     this.aiService.analyzeImageUpload(this.selectedFiles[0]).subscribe({
       next: (result) => {
         this.imageAnalyzing = false;
         this.imageAnalysisResult = result;
         this.showImageAnalysis = true;
 
-        // Auto-fill form with AI suggestions
         if (result.suggestedDescription && !this.autoFilledFromImage) {
           this.form.description = result.suggestedDescription;
           this.autoFilledFromImage = true;
         }
 
-        // Auto-select category if AI detected one
         if (result.category) {
           const matchedCategory = this.categories.find(c =>
             c.nameAr.includes(result.category) || result.category.includes(c.nameAr)
@@ -336,20 +563,20 @@ onAddressChange(value: any) {
   getImageAnalysisSeverity(): string {
     const severity = this.imageAnalysisResult?.severity?.toLowerCase();
     switch (severity) {
-      case 'high': return 'bg-danger text-white';
+      case 'high':   return 'bg-danger text-white';
       case 'medium': return 'bg-warning text-dark';
-      case 'low': return 'bg-success text-white';
-      default: return 'bg-secondary text-white';
+      case 'low':    return 'bg-success text-white';
+      default:       return 'bg-secondary text-white';
     }
   }
 
   getImageAnalysisSeverityLabel(): string {
     const severity = this.imageAnalysisResult?.severity?.toLowerCase();
     switch (severity) {
-      case 'high': return 'شديدة';
+      case 'high':   return 'شديدة';
       case 'medium': return 'متوسطة';
-      case 'low': return 'خفيفة';
-      default: return 'غير محدد';
+      case 'low':    return 'خفيفة';
+      default:       return 'غير محدد';
     }
   }
 

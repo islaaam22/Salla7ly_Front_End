@@ -900,3 +900,391 @@
 .severity-badge.bg-secondary {
   background: #94a3b8;
 }
+
+
+/* ══════════ Address Modal Overlay ═══════════ */
+.addr-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ═══════════ Modal Container ═══════════ */
+.addr-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+  animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════ Modal Header ═══════════ */
+.addr-modal-header {
+  background: linear-gradient(135deg, #e8620a 0%, #f59e0b 100%);
+  color: #fff;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.addr-modal-header span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.addr-modal-header i {
+  font-size: 22px;
+}
+
+.addr-modal-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  font-size: 18px;
+}
+
+.addr-modal-close:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: rotate(90deg);
+}
+
+/* ═══════════ Modal Body ═══════════ */
+.addr-modal-body {
+  padding: 28px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ═══════════ Form Card ═══════════ */
+.edit-card {
+  background: #fafaf8;
+  border: 2px solid #f0e9e0;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.edit-field {
+  margin-bottom: 18px;
+}
+
+.edit-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.edit-label i {
+  color: #e8620a;
+  font-size: 16px;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s;
+  background: #fff;
+  font-family: inherit;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #e8620a;
+  box-shadow: 0 0 0 4px rgba(232, 98, 10, 0.1);
+}
+
+.edit-input::placeholder {
+  color: #aaa;
+}
+
+/* Checkbox Styling */
+.edit-field input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #e8620a;
+}
+
+/* Button Container */
+.d-flex {
+  display: flex;
+  gap: 12px;
+}
+
+.mt-2 {
+  margin-top: 12px;
+}
+
+/* Save Button */
+.edit-save-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #e8620a 0%, #f59e0b 100%);
+  color: #fff;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(232, 98, 10, 0.3);
+}
+
+.edit-save-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232, 98, 10, 0.4);
+}
+
+.edit-save-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.edit-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Cancel Button */
+.edit-cancel-btn {
+  flex: 1;
+  background: #f1f1f1;
+  color: #555;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.edit-cancel-btn:hover {
+  background: #e5e5e5;
+  transform: translateY(-2px);
+}
+
+/* Alert */
+.edit-alert {
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.edit-alert-danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* Loading Spinner */
+.spinner-border {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.text-muted {
+  color: #999;
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 14px;
+}
+
+/* Address List Items */
+.addr-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 2px solid #f0e9e0;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: all 0.3s;
+  background: #fff;
+}
+
+.addr-item:hover {
+  border-color: #e8620a;
+  box-shadow: 0 4px 12px rgba(232, 98, 10, 0.1);
+  transform: translateX(-3px);
+}
+
+.addr-item-right {
+  flex: 1;
+}
+
+.addr-item-name {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addr-default-badge {
+  background: linear-gradient(135deg, #e8620a, #f59e0b);
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.addr-item-detail {
+  font-size: 13px;
+  color: #777;
+}
+
+.addr-item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.addr-btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.addr-btn-default {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.addr-btn-default:hover {
+  background: #bfdbfe;
+}
+
+.addr-btn-edit {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.addr-btn-edit:hover {
+  background: #fde68a;
+}
+
+.addr-btn-delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.addr-btn-delete:hover {
+  background: #fecaca;
+}
+
+/* ═══════════ Animations ═══════════ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpModal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ═══════════ Responsive ═══════════ */
+@media (max-width: 640px) {
+  .addr-modal {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+  
+  .addr-modal-header {
+    padding: 16px 20px;
+  }
+  
+  .addr-modal-body {
+    padding: 20px 16px;
+  }
+  
+  .edit-card {
+    padding: 18px;
+  }
+  
+  .d-flex {
+    flex-direction: column;
+  }
+  
+  .addr-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .addr-item-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
