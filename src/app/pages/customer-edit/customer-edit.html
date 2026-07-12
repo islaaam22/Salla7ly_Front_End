@@ -52,6 +52,54 @@
             البيانات الشخصية
           </div>
 
+          <!-- ── PHOTO UPLOAD ── -->
+          <div class="photo-upload-section">
+            <div class="photo-upload-wrap">
+
+              <!-- Current photo / preview -->
+              <div class="photo-preview-wrap">
+                <img
+                  *ngIf="photoPreview"
+                  [src]="photoPreview"
+                  class="photo-preview-img"
+                  alt="صورة الملف"
+                />
+                <div *ngIf="!photoPreview" class="photo-preview-fallback">
+                  {{ initial }}
+                </div>
+                <!-- Camera overlay -->
+                <label class="photo-camera-overlay" for="photoInput" title="تغيير الصورة">
+                  <i class="fa-solid fa-camera"></i>
+                </label>
+              </div>
+
+              <div class="photo-upload-info">
+                <div class="photo-upload-title">صورة الملف الشخصي</div>
+                <div class="photo-upload-hint">JPG أو PNG — حجم أقصى 2MB</div>
+                <label class="photo-upload-btn" for="photoInput">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  {{ selectedPhotoFile ? selectedPhotoFile.name : 'اختر صورة' }}
+                </label>
+                <button
+                  *ngIf="selectedPhotoFile"
+                  class="photo-remove-btn"
+                  (click)="removePhoto()"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                  إزالة
+                </button>
+              </div>
+
+            </div>
+            <input
+              type="file"
+              id="photoInput"
+              accept="image/*"
+              hidden
+              (change)="onPhotoSelected($event)"
+            />
+          </div>
+
           <!-- Name -->
           <div class="edit-field">
             <label class="edit-label">
@@ -96,7 +144,7 @@
 
         </div>
 
-        <!-- ADDRESS BOOK (linked to /api/Address) -->
+        <!-- ADDRESS BOOK -->
         <div class="edit-card mt-4">
 
           <div class="edit-card-header d-flex justify-content-between">
@@ -146,35 +194,37 @@
             </div>
           </div>
 
-          <!-- addresses list -->
+          <!-- loading -->
           <div *ngIf="addressesLoading" class="d-flex justify-content-center py-3">
             <div class="spinner-border spinner-border-sm" style="color:#E8620A"></div>
           </div>
 
+          <!-- empty -->
           <div *ngIf="!addressesLoading && addresses.length === 0 && !showAddressForm" class="text-muted text-center py-3">
             لا توجد عناوين محفوظة بعد.
           </div>
 
-          <div *ngFor="let addr of addresses" class="edit-field d-flex align-items-center justify-content-between gap-2 border rounded-3 p-3 mb-2">
-            <div class="d-flex gap-2">
-              <button class="edit-cancel-btn" style="padding:8px 12px" (click)="deleteAddress(addr)">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-              <button class="edit-cancel-btn" style="padding:8px 12px" (click)="openEditForm(addr)">
-                <i class="fa-solid fa-pen"></i>
-              </button>
-              <button *ngIf="!addr.isDefault" class="edit-cancel-btn" style="padding:8px 12px" (click)="makeDefault(addr)">
+          <!-- list -->
+          <div *ngFor="let addr of addresses" class="addr-item">
+            <div class="addr-item-right">
+              <div class="addr-item-name">
+                {{ addr.title || addr.street || 'عنوان' }}
+                <span *ngIf="addr.isDefault" class="addr-default-badge">افتراضي</span>
+              </div>
+              <div class="addr-item-detail">
+                {{ addr.street }}{{ addr.district ? '، ' + addr.district : '' }}{{ addr.city ? '، ' + addr.city : '' }}
+              </div>
+            </div>
+            <div class="addr-item-actions">
+              <button *ngIf="!addr.isDefault" class="addr-btn addr-btn-default" (click)="makeDefault(addr)">
                 تعيين كافتراضي
               </button>
-            </div>
-            <div class="text-end">
-              <div class="fw-bold">
-                {{ addr.title || addr.street || 'عنوان' }}
-                <span *ngIf="addr.isDefault" class="badge" style="background:#E8620A">افتراضي</span>
-              </div>
-              <div class="text-muted small">
-                {{ addr.street }} {{ addr.district ? '، ' + addr.district : '' }} {{ addr.city ? '، ' + addr.city : '' }}
-              </div>
+              <button class="addr-btn addr-btn-edit" (click)="openEditForm(addr)">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="addr-btn addr-btn-delete" (click)="deleteAddress(addr)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </div>
           </div>
 
@@ -185,8 +235,16 @@
       <div class="col-lg-4">
         <div class="preview-card">
 
-          <div class="preview-avatar">
-            {{ initial }}
+          <div class="preview-avatar-wrap">
+            <img
+              *ngIf="photoPreview"
+              [src]="photoPreview"
+              class="preview-avatar-img"
+              alt="صورة الملف"
+            />
+            <div *ngIf="!photoPreview" class="preview-avatar">
+              {{ initial }}
+            </div>
           </div>
 
           <h4 class="preview-name">{{ name || 'اسمك هنا' }}</h4>

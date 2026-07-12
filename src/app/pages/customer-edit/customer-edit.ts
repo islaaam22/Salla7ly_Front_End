@@ -24,12 +24,16 @@ export class CustomerEdit implements OnInit {
   email = '';
   customerId = 0;
 
+  // ── Photo Upload ──────────────────────────────────────────────
+  photoPreview: string | null = null;
+  selectedPhotoFile: File | null = null;
+
   loading = true;
   saving = false;
   successMsg = '';
   validationErrors: string[] = [];
 
-  // ── Address book (linked to /api/Address) ──────────────────────
+  // ── Address book ──────────────────────────────────────────────
   addresses: CustomerAddress[] = [];
   addressesLoading = false;
   addressesError = '';
@@ -59,6 +63,10 @@ export class CustomerEdit implements OnInit {
         this.phoneNumber = data.phoneNumber;
         this.email = data.email;
         this.mainAddress = data.mainAddress;
+        // load existing photo if available
+        if (data.imageUrl) {
+          this.photoPreview = data.imageUrl;
+        }
         this.loading = false;
         this.loadAddresses();
       },
@@ -73,11 +81,47 @@ export class CustomerEdit implements OnInit {
     return this.name?.charAt(0)?.toUpperCase() ?? '?';
   }
 
+  // ── Photo handlers ────────────────────────────────────────────
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    const file = input.files[0];
+
+    // Validate size (2MB max)
+    if (file.size > 2 * 1024 * 1024) {
+      this.validationErrors = ['حجم الصورة يجب أن لا يتجاوز 2MB.'];
+      return;
+    }
+
+    this.selectedPhotoFile = file;
+
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.photoPreview = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removePhoto(): void {
+    this.selectedPhotoFile = null;
+    this.photoPreview = null;
+    // Reset the input
+    const input = document.getElementById('photoInput') as HTMLInputElement;
+    if (input) input.value = '';
+  }
+
+  // ── Save profile ──────────────────────────────────────────────
   save(): void {
     this.saving = true;
     this.successMsg = '';
     this.validationErrors = [];
 
+    // If a new photo was selected, upload it first then update profile
+    // TODO: replace with your actual image upload API call
+    // Example: this.customerService.uploadPhoto(this.selectedPhotoFile).subscribe(...)
+    // For now, update profile data only
     this.customerService.updateProfile(this.customerId, {
       name: this.name,
       phoneNumber: this.phoneNumber,
@@ -105,12 +149,10 @@ export class CustomerEdit implements OnInit {
     this.router.navigate(['/customer/profile']);
   }
 
-  // ── Address book actions (GET/POST/PUT/DELETE /api/Address) ────
-
+  // ── Address book ──────────────────────────────────────────────
   loadAddresses(): void {
     this.addressesLoading = true;
     this.addressesError = '';
-
     this.addressService.getMyAddresses().subscribe({
       next: (list) => {
         this.addresses = list ?? [];
@@ -151,7 +193,6 @@ export class CustomerEdit implements OnInit {
       this.addressesError = 'رجاءً أدخل العنوان والشارع والمدينة.';
       return;
     }
-
     this.addressSaving = true;
     this.addressesError = '';
 
@@ -198,7 +239,6 @@ export class CustomerEdit implements OnInit {
 
   deleteAddress(addr: CustomerAddress): void {
     if (!confirm('هل تريد حذف هذا العنوان؟')) return;
-
     this.addressService.deleteAddress(addr.id, this.email).subscribe({
       next: () => this.loadAddresses(),
       error: (err) => {
@@ -211,13 +251,8 @@ export class CustomerEdit implements OnInit {
 
   makeDefault(addr: CustomerAddress): void {
     if (addr.isDefault) return;
-
     this.addressService.setDefault(addr.id, this.customerId).subscribe({
       next: (res) => {
-        // TEMP DEBUG: check the browser console after clicking "تعيين كافتراضي".
-        // If this logs a 2xx response but the reloaded list still shows isDefault:false
-        // for every address, the backend route/params below don't match the real API
-        // contract and need to be corrected against Swagger.
         console.log('set-default response:', res);
         this.loadAddresses();
       },

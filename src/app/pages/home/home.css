@@ -1,7 +1,38 @@
 .hero-section {
   background: linear-gradient(160deg, #0b1d36 0%, #10233e 60%, #071426 100%);
-
   overflow: hidden;
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.hero-ambient {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(0);
+  animation: floatAmbient 8s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.hero-ambient-one {
+  width: 320px;
+  height: 320px;
+  top: -90px;
+  right: -80px;
+  background: radial-gradient(circle, rgba(232, 98, 10, 0.25) 0%, rgba(232, 98, 10, 0) 70%);
+}
+
+.hero-ambient-two {
+  width: 260px;
+  height: 260px;
+  bottom: -80px;
+  left: -50px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0) 70%);
+  animation-delay: -3s;
+}
+
+.hero-content {
+  animation: fadeUp 0.8s ease both;
 }
 
 .hero-title {
@@ -23,6 +54,33 @@
   font-size: 1.2rem;
   line-height: 2;
   max-width: 650px;
+}
+
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+.hero-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  backdrop-filter: blur(12px);
+  animation: fadeUp 0.9s ease both;
+  animation-delay: 0.2s;
+}
+
+.hero-stat i {
+  color: #e8620a;
 }
 
 .ai-badge:hover {
@@ -54,17 +112,38 @@
   font-weight: 600;
   background-color: #e8620a;
   color: white;
+  transition: all 0.3s ease;
 }
 
 .service-card {
   background: white;
-
   border-radius: 30px;
-
   padding: 35px;
-
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  position: relative;
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: linear-gradient(135deg, rgba(232, 98, 10, 0.08), transparent);
+  pointer-events: none;
+}
+
+.order .hero-btn:hover {
+  background-color: #ff6600;
+  transition: all 0.3s ease;
+  transform: translateY(-5px);
+}
+.order .btn-dark:hover {
+  background-color: #1a2235;
+  transition: all 0.3s ease;
+  transform: translateY(-5px);
 }
 
 .status-item {
@@ -118,6 +197,37 @@
   margin-top: 20px;
 }
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatAmbient {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.04);
+  }
+}
+
+@keyframes floatCard {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 @media (max-width: 992px) {
   .hero-title {
     font-size: 2.7rem;
@@ -126,8 +236,12 @@
   .service-card {
     margin-top: 40px;
   }
+
+  .hero-stats {
+    justify-content: center;
+  }
 }
-/* 
+/*
 .service-item {
   border: solid #e2e8f0 1px;
   border-radius: 15px;
