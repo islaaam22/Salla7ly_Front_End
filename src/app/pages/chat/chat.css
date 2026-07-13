@@ -1,12 +1,4 @@
-/* ═══════════════════════════════════════
-   THEME
-   --orange (primary)  #E8620A
-   --navy   (text)     #1A1A2E
-   --gold   (accent 3) #F4A340
-   --cream  (bg)       #F0ECE2
-   ═══════════════════════════════════════ */
 
-/* ── Conversation list panel ── */
 .convlist-panel {
   width: 340px;
   min-width: 340px;
@@ -169,7 +161,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;
+  width: 90%;
   background: #fff;
   border: 1px solid rgba(10, 15, 30, 0.08);
   border-radius: 999px;
@@ -221,6 +213,7 @@
   cursor: pointer;
   color: #7a7365;
   transition: color 0.2s, border-color 0.2s;
+  margin-left: 50px;
 }
 .chat-attach-btn:hover { border-color: #F4A340; color: #E8620A; }
 
