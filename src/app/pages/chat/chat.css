@@ -213,7 +213,6 @@
   cursor: pointer;
   color: #7a7365;
   transition: color 0.2s, border-color 0.2s;
-  margin-left: 50px;
 }
 .chat-attach-btn:hover { border-color: #F4A340; color: #E8620A; }
 
